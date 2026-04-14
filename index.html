@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Verse | Teroka Dimensi Baru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="antialiased">
+
+    <nav class="flex justify-between items-center p-6 max-w-7xl mx-auto">
+        <div class="text-2xl font-black tracking-tighter italic text-purple-500 logo">STORY VERSE</div>
+        <div class="space-x-8 hidden md:flex text-sm font-medium text-gray-400">
+            <a href="#" class="nav-link">Utama</a>
+            <a href="#" class="nav-link">Katalog</a>
+            <a href="#" class="nav-link">Genre</a>
+            <a href="#" class="nav-link">Premium</a>
+        </div>
+        <button class="btn-secondary">Log Masuk</button>
+    </nav>
+
+    <header class="relative overflow-hidden pt-16 pb-32 px-6">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div class="hero-content">
+                <span class="sub-title">Web Novel Hub</span>
+                <h1 class="hero-title">
+                    BACA TANPA <br> <span class="text-gradient">SEMPADAN.</span>
+                </h1>
+                <p class="hero-description">
+                    Sertai komuniti Story Verse dan nikmati beribu-ribu karya novel dari pelbagai genre yang unik.
+                </p>
+                <div class="flex space-x-4">
+                    <button class="btn-primary" id="btnExplore">Mula Membaca</button>
+                    <button class="btn-outline">Hantar Karya</button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="novel-card-large">
+                    <img src="https://via.placeholder.com/600x800" alt="Novel Cover" class="cover-img">
+                    <div class="overlay-text">
+                        <p class="novel-title">Shadow Bound: Verse 01</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <script src="script.js"></script>
+</body>
+</html>
