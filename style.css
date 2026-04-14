@@ -93,3 +93,57 @@ body {
     font-weight: 700;
     font-style: italic;
 }
+
+/* Light Mode Variables */
+body.light-mode {
+    background-color: #f4f4f4;
+    color: #1a1a1a;
+}
+
+body.light-mode .btn-secondary {
+    border-color: #ccc;
+    color: #1a1a1a;
+}
+
+body.light-mode .glass-card {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Novel Grid Style */
+.novel-card {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.card-image-wrapper {
+    position: relative;
+    aspect-ratio: 2/3;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.novel-card:hover .card-img {
+    transform: scale(1.1);
+}
+
+.card-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #ff0055;
+    color: white;
+    font-size: 10px;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
