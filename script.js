@@ -1,71 +1,54 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Elemen UI ---
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const btnExplore = document.getElementById('btnExplore');
-    const body = document.body;
     const grid = document.getElementById('novelGrid');
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
 
-    // --- 1. Logik Tukar Tema (Dark/Light) ---
-    function setTheme(theme) {
-        if (theme === 'light') {
-            body.classList.add('light-mode');
-            if(themeIcon) themeIcon.innerText = '☀️';
-            localStorage.setItem('theme', 'light');
-        } else {
-            body.classList.remove('light-mode');
-            if(themeIcon) themeIcon.innerText = '🌙';
-            localStorage.setItem('theme', 'dark');
+    // --- LOGIK TUKAR TEMA ---
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            localStorage.setItem('theme', body.classList.contains('light-mode') ? 'light' : 'dark');
+        });
+    }
+
+    if (localStorage.getItem('theme') === 'light') body.classList.add('light-mode');
+
+    // --- AMBIL DATA DARI FIRESTORE ---
+    async function fetchNovels() {
+        if (!grid) return;
+        
+        grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50">Menghubungkan ke Story Verse...</p>';
+
+        try {
+            // 'db' sudah sedia ada dari fail firebase-config.js
+            const snapshot = await db.collection('novels').get();
+            
+            if (snapshot.empty) {
+                grid.innerHTML = '<p class="col-span-full text-center py-10 text-gray-500">Tiada novel ditemui.</p>';
+                return;
+            }
+
+            grid.innerHTML = ''; 
+
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const card = `
+                    <div class="novel-card group">
+                        <div class="card-image-wrapper">
+                            <img src="${data.image || 'https://via.placeholder.com/300x450'}" class="card-img" onerror="this.src='https://via.placeholder.com/300x450?text=No+Cover'">
+                            <div class="card-badge">${data.tag || 'New'}</div>
+                        </div>
+                        <h3 class="mt-4 font-bold group-hover:text-purple-500 transition">${data.title || 'Untitled'}</h3>
+                        <p class="text-sm text-gray-500 italic">${data.genre || 'General'}</p>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        } catch (error) {
+            console.error("Error:", error);
+            grid.innerHTML = `<p class="col-span-full text-red-500 text-center font-bold">Gagal memuatkan database.</p>`;
         }
     }
 
-    // Semak pilihan lama dalam simpanan browser
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        setTheme(savedTheme);
-    }
-
-    // Event listener untuk butang toggle
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            const isLight = body.classList.contains('light-mode');
-            setTheme(isLight ? 'dark' : 'light');
-        });
-    }
-
-    // --- 2. Logik Butang Mula Membaca ---
-    if (btnExplore) {
-        btnExplore.addEventListener('click', () => {
-            document.getElementById('katalog').scrollIntoView({ behavior: 'smooth' });
-        });
-    }
-
-    // --- 3. Jana Data Novel ---
-    const novels = [
-        { title: "Shadow Bound", genre: "Fantasy", tag: "New" },
-        { title: "Neon Nights", genre: "Cyberpunk", tag: "Hot" },
-        { title: "Cinta Di Verse", genre: "Romance", tag: "Top" },
-        { title: "The Glitch", genre: "Thriller", tag: "New" },
-        { title: "Ancient Code", genre: "Isekai", tag: "Hot" }
-    ];
-
-    if (grid) {
-        // Kosongkan grid sebelum isi (untuk elak duplikasi)
-        grid.innerHTML = ''; 
-        novels.forEach(novel => {
-            const card = `
-                <div class="novel-card group">
-                    <div class="card-image-wrapper">
-                        <img src="https://via.placeholder.com/300x450?text=${novel.title}" alt="${novel.title}" class="card-img">
-                        <div class="card-badge">${novel.tag}</div>
-                    </div>
-                    <h3 class="mt-4 font-bold group-hover:text-purple-500 transition">${novel.title}</h3>
-                    <p class="text-sm text-gray-500 italic">${novel.genre}</p>
-                </div>
-            `;
-            grid.innerHTML += card;
-        });
-    }
-
-    console.log("Story Verse System: Ready");
+    fetchNovels();
 });
