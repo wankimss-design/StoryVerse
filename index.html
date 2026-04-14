@@ -12,13 +12,20 @@
 
     <nav class="flex justify-between items-center p-6 max-w-7xl mx-auto">
         <div class="text-2xl font-black tracking-tighter italic text-purple-500 logo">STORY VERSE</div>
+        
         <div class="space-x-8 hidden md:flex text-sm font-medium text-gray-400">
             <a href="#" class="nav-link">Utama</a>
             <a href="#" class="nav-link">Katalog</a>
             <a href="#" class="nav-link">Genre</a>
             <a href="#" class="nav-link">Premium</a>
         </div>
-        <button class="btn-secondary">Log Masuk</button>
+
+        <div class="flex items-center gap-4">
+            <button id="themeToggle" class="p-2 rounded-full border border-gray-700 hover:bg-gray-800 transition">
+                <span id="themeIcon">🌙</span>
+            </button>
+            <button class="btn-secondary">Log Masuk</button>
+        </div>
     </nav>
 
     <header class="relative overflow-hidden pt-16 pb-32 px-6">
@@ -28,14 +35,15 @@
                 <h1 class="hero-title">
                     BACA TANPA <br> <span class="text-gradient">SEMPADAN.</span>
                 </h1>
-                <p class="hero-description">
+                <p class="hero-description text-gray-400 mb-8">
                     Sertai komuniti Story Verse dan nikmati beribu-ribu karya novel dari pelbagai genre yang unik.
                 </p>
                 <div class="flex space-x-4">
-                    <button class="btn-primary" id="btnExplore">Mula Membaca</button>
-                    <button class="btn-outline">Hantar Karya</button>
+                    <button class="btn-primary text-white" id="btnExplore">Mula Membaca</button>
+                    <button class="btn-outline border border-gray-700 px-6 py-3 rounded-lg hover:bg-white hover:text-black transition">Hantar Karya</button>
                 </div>
             </div>
+            
             <div class="hero-visual">
                 <div class="novel-card-large">
                     <img src="https://via.placeholder.com/600x800" alt="Novel Cover" class="cover-img">
@@ -43,35 +51,30 @@
                         <p class="novel-title">Shadow Bound: Verse 01</p>
                     </div>
                 </div>
-            </div><div class="flex items-center gap-4">
-    <button id="themeToggle" class="p-2 rounded-full border border-gray-700 hover:bg-gray-800 transition">
-        <span id="themeIcon">🌙</span>
-    </button>
-    <button class="btn-secondary text-white">Log Masuk</button>
-</div>
-
-<section class="max-w-7xl mx-auto px-6 py-20" id="katalog">
-    <div class="flex justify-between items-end mb-12">
-        <div>
-            <h2 class="text-4xl font-black tracking-tighter">SIRI POPULAR</h2>
-            <p class="text-gray-500 mt-2">Karya pilihan editor minggu ini.</p>
-        </div>
-        <a href="#" class="text-purple-500 font-bold hover:underline">Lihat Semua →</a>
-    </div>
-    
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8" id="novelGrid">
-        <div class="novel-card group">
-            <div class="card-image-wrapper">
-                <img src="https://via.placeholder.com/300x450" alt="Cover" class="card-img">
-                <div class="card-badge">Hot</div>
             </div>
-            <h3 class="mt-4 font-bold group-hover:text-purple-500 transition">The Cyber Monk</h3>
-            <p class="text-sm text-gray-500 italic">Sci-Fi / Action</p>
-        </div>
-        </div>
-</section>
         </div>
     </header>
+
+    <section class="max-w-7xl mx-auto px-6 py-20" id="katalog">
+        <div class="flex justify-between items-end mb-12">
+            <div>
+                <h2 class="text-4xl font-black tracking-tighter">SIRI POPULAR</h2>
+                <p class="text-gray-500 mt-2">Karya pilihan editor minggu ini.</p>
+            </div>
+            <a href="#" class="text-purple-500 font-bold hover:underline">Lihat Semua →</a>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8" id="novelGrid">
+            <div class="novel-card group">
+                <div class="card-image-wrapper">
+                    <img src="https://via.placeholder.com/300x450" alt="Cover" class="card-img">
+                    <div class="card-badge">Hot</div>
+                </div>
+                <h3 class="mt-4 font-bold group-hover:text-purple-500 transition">The Cyber Monk</h3>
+                <p class="text-sm text-gray-500 italic">Sci-Fi / Action</p>
+            </div>
+            </div>
+    </section>
 
     <script src="script.js"></script>
 </body>
