@@ -1,8 +1,20 @@
-/* Asas */
+/* Warna asal (Dark) */
 body {
-    background-color: #0a0a0a;
+    background-color: #0a0a0a; /* Hitam */
     color: #ffffff;
-    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Tambah ini untuk smooth transition */
+}
+
+/* Warna Light Mode (Wajib di bawah) */
+body.light-mode {
+    background-color: #ffffff !important; /* Guna !important jika masih degil */
+    color: #1a1a1a !important;
+}
+
+/* Pastikan elemen lain juga bertukar warna */
+body.light-mode .nav-link, 
+body.light-mode .hero-description {
+    color: #4b5563 !important;
 }
 
 /* Tipografi & Warna */
