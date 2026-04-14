@@ -40,26 +40,26 @@
                 </p>
                 <div class="flex space-x-4">
                     <button class="btn-primary text-white" id="btnExplore">Mula Membaca</button>
-                    <button class="btn-outline border border-gray-700 px-6 py-3 rounded-lg hover:bg-white hover:text-black transition">Hantar Karya</button>
+                    <button class="btn-outline border border-gray-700 px-6 py-3 rounded-lg hover:bg-white hover:text-black transition text-sm font-bold" onclick="window.location.href='admin.html'">Hantar Karya</button>
                 </div>
             </div>
             
             <div class="hero-visual">
                 <div class="novel-card-large">
-                    <img src="https://via.placeholder.com/600x800" alt="Novel Cover" class="cover-img">
+                    <img src="https://images.unsplash.com/photo-1543004218-ee141104975a?q=80&w=600&auto=format&fit=crop" alt="Featured Novel" class="cover-img">
                     <div class="overlay-text">
-                        <p class="novel-title">Shadow Bound: Verse 01</p>
+                        <p class="novel-title text-white">Shadow Bound: Verse 01</p>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-   <section class="max-w-7xl mx-auto px-6 py-20" id="katalog">
+    <section class="max-w-7xl mx-auto px-6 py-20" id="katalog">
         <div class="flex justify-between items-end mb-12">
             <div>
-                <h2 class="text-4xl font-black tracking-tighter">SIRI POPULAR</h2>
-                <p class="text-gray-500 mt-2">Karya pilihan editor minggu ini.</p>
+                <h2 class="text-4xl font-black tracking-tighter uppercase">Siri Popular</h2>
+                <p class="text-gray-500 mt-2 italic">Karya pilihan editor minggu ini.</p>
             </div>
             <a href="#" class="text-purple-500 font-bold hover:underline">Lihat Semua →</a>
         </div>
@@ -67,26 +67,28 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8" id="novelGrid">
             </div>
     </section>
+
+    <footer class="py-12 px-6 border-t border-gray-900 mt-20">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+            <div>
+                <div class="text-xl font-black italic text-purple-500 mb-2 font-black tracking-tighter">STORY VERSE</div>
+                <p class="text-gray-500 text-sm">© 2026 Story Verse Media. Hak Cipta Terpelihara.</p>
+            </div>
+            
+            <div class="flex gap-8">
+                <a href="#" class="footer-link hover:text-white transition">Privasi</a>
+                <a href="#" class="footer-link hover:text-white transition">Terma</a>
+                <a href="#" class="footer-link hover:text-white transition text-purple-400">Discord</a>
+                <a href="#" class="footer-link hover:text-white transition text-blue-400">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <script src="firebase-config.js"></script>
-
     <script src="script.js"></script>
-    <footer class="py-12 px-6">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-        <div>
-            <div class="text-xl font-black italic text-purple-500 mb-2">STORY VERSE</div>
-            <p class="text-gray-500 text-sm">© 2026 Story Verse Media. Hak Cipta Terpelihara.</p>
-        </div>
-        
-        <div class="flex gap-8">
-            <a href="#" class="footer-link">Privasi</a>
-            <a href="#" class="footer-link">Terma</a>
-            <a href="#" class="footer-link">Discord</a>
-            <a href="#" class="footer-link">Twitter</a>
-        </div>
-    </div>
-</footer>
+
 </body>
 </html>
