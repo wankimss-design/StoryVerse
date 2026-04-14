@@ -1,0 +1,95 @@
+/* Asas */
+body {
+    background-color: #0a0a0a;
+    color: #ffffff;
+    overflow-x: hidden;
+}
+
+/* Tipografi & Warna */
+.text-gradient {
+    background: linear-gradient(90deg, #ff0055, #7000ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.sub-title {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: #a855f7; /* purple-400 */
+    font-weight: 700;
+}
+
+.hero-title {
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 900;
+    line-height: 0.9;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    letter-spacing: -0.05em;
+}
+
+/* Butang Ala Toonaki */
+.btn-primary {
+    background: linear-gradient(90deg, #ff0055, #7000ff);
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(112, 0, 255, 0.2);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(112, 0, 255, 0.4);
+}
+
+.btn-secondary {
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    border: 1px solid #374151;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+/* Novel Card Hero */
+.novel-card-large {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    background: #1a1a1a;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    border: 1px solid #333;
+    transform: rotate(3deg);
+    transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.novel-card-large:hover {
+    transform: rotate(0deg) scale(1.02);
+}
+
+.cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.6;
+}
+
+.overlay-text {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+}
+
+.novel-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-style: italic;
+}
