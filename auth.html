@@ -3,48 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Story Verse | Join the Dimension</title>
+    <title>Story Verse | Portal Dimensi Baru</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="antialiased">
+<body class="bg-[#0a0a0a] min-h-screen flex items-center justify-center p-6 antialiased">
 
-    <div class="auth-container">
-        <div class="blob"></div>
-        <div class="blob blob-2"></div>
-
-        <div class="glass-login max-w-md w-full p-10 rounded-[2rem] mx-4 relative">
+    <div id="container" class="container-sliding flex items-center justify-center">
+        
+        <div class="form-box login-form">
             <div class="text-center mb-10">
-                <h1 class="text-xs tracking-[0.5em] text-purple-400 font-bold uppercase mb-2">Access Portal</h1>
-                <h2 id="authTitle" class="text-4xl font-black italic tracking-tighter text-white">LOG MASUK</h2>
+                <h2 class="text-3xl font-black italic tracking-tighter text-white uppercase text-gradient">Log Masuk</h2>
+                <p class="text-gray-500 text-sm mt-2">Masuk ke portal Story Verse anda.</p>
             </div>
 
-            <form id="authForm" class="space-y-5">
-                <div class="relative">
-                    <input type="email" id="email" placeholder="Email Address" 
-                           class="input-glass w-full p-4 rounded-xl outline-none transition-all placeholder:text-gray-600" required>
-                </div>
+            <form id="loginForm" class="space-y-4">
+                <input type="email" id="loginEmail" placeholder="Alamat Emel" class="input-auth" required>
+                <input type="password" id="loginPassword" placeholder="Kata Laluan" class="input-auth" required>
                 
-                <div class="relative">
-                    <input type="password" id="password" placeholder="Password" 
-                           class="input-glass w-full p-4 rounded-xl outline-none transition-all placeholder:text-gray-600" required>
-                </div>
-
-                <button type="submit" id="submitBtn" 
-                        class="w-full bg-white text-black font-black py-4 rounded-xl hover:bg-purple-500 hover:text-white transition-all duration-500 transform hover:scale-[1.02] shadow-xl">
-                    ENTER VERSE
-                </button>
+                <button type="submit" class="btn-auth mt-4">LOG MASUK</button>
             </form>
 
-            <div class="mt-8 text-center">
-                <p class="text-sm text-gray-500">
-                    <span id="toggleText">Belum ada akses?</span>
-                    <button id="toggleAuth" class="text-white font-bold hover:text-purple-400 transition ml-1">Daftar Sekarang</button>
-                </p>
-                <a href="index.html" class="inline-block mt-6 text-xs text-gray-700 hover:text-gray-400 uppercase tracking-widest transition">
-                    ← Back to Story Verse
-                </a>
+            <p class="mt-8 text-center text-sm text-gray-500">
+                Belum ada akaun?
+                <button id="toRegister" class="text-purple-500 font-bold hover:underline transition">Daftar Sekarang</button>
+            </p>
+            <a href="index.html" class="block text-center mt-6 text-xs text-gray-700 hover:text-white transition">Back to Main</a>
+        </div>
+
+        <div class="form-box register-form">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-black italic tracking-tighter text-purple-400 uppercase">Daftar Akaun</h2>
+                <p class="text-gray-500 text-sm mt-2">Cipta identiti untuk membaca di Verse.</p>
             </div>
+
+            <form id="registerForm" class="space-y-4">
+                <input type="email" id="registerEmail" placeholder="Alamat Emel Baru" class="input-auth" required>
+                <input type="password" id="registerPassword" placeholder="Cipta Kata Laluan (min 6 char)" class="input-auth" required>
+                
+                <button type="submit" class="btn-auth mt-4">DAFTAR IDENTITI</button>
+            </form>
+
+            <p class="mt-8 text-center text-sm text-gray-500">
+                Sudah ada akaun?
+                <button id="toLogin" class="text-purple-500 font-bold hover:underline transition">Log Masuk Sini</button>
+            </p>
         </div>
     </div>
 
@@ -53,51 +56,47 @@
     <script src="firebase-config.js"></script>
 
     <script>
-        const authForm = document.getElementById('authForm');
-        const authTitle = document.getElementById('authTitle');
-        const submitBtn = document.getElementById('submitBtn');
-        const toggleAuth = document.getElementById('toggleAuth');
-        const toggleText = document.getElementById('toggleText');
+        // --- LOGIK NAVIGASI (ANIMASI BERGERAK) ---
+        const container = document.getElementById('container');
+        const toRegisterBtn = document.getElementById('toRegister');
+        const toLoginBtn = document.getElementById('toLogin');
 
-        let isLogin = true;
-
-        toggleAuth.addEventListener('click', () => {
-            isLogin = !isLogin;
-            authTitle.innerText = isLogin ? "LOG MASUK" : "DAFTAR AKAUN";
-            submitBtn.innerText = isLogin ? "ENTER VERSE" : "CREATE IDENTITY";
-            toggleText.innerText = isLogin ? "Belum ada akses?" : "Sudah ada akses?";
-            toggleAuth.innerText = isLogin ? "Daftar Sekarang" : "Log Masuk";
-            
-            // Animasi sedikit bila tukar
-            authTitle.style.transform = "scale(0.9)";
-            setTimeout(() => authTitle.style.transform = "scale(1)", 100);
+        // Bila orang klik "Daftar Sekarang", hantar borang ke Daftar
+        toRegisterBtn.addEventListener('click', () => {
+            container.classList.add('active'); // JavaScript menambah kelas 'active' ke CSS
         });
 
-        authForm.addEventListener('submit', (e) => {
+        // Bila orang klik "Log Masuk Sini", hantar borang kembali ke Log Masuk
+        toLoginBtn.addEventListener('click', () => {
+            container.classList.remove('active'); // JavaScript membuang kelas 'active'
+        });
+
+        // --- LOGIK FIREBASE (Bekerja di Belakang Tab) ---
+        
+        // 1. Borang Log Masuk
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Kod asal Firebase awak
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then(() => window.location.href = 'index.html') // Berjaya, balik ke page utama
+                .catch(err => alert("Gagal Log Masuk: " + err.message));
+        });
 
-            submitBtn.innerText = "AUTHENTICATING...";
-            submitBtn.disabled = true;
+        // 2. Borang Daftar
+        const registerForm = document.getElementById('registerForm');
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
 
-            if (isLogin) {
-                firebase.auth().signInWithEmailAndPassword(email, password)
-                    .then(() => window.location.href = 'index.html')
-                    .catch(err => {
-                        alert(err.message);
-                        submitBtn.innerText = "ENTER VERSE";
-                        submitBtn.disabled = false;
-                    });
-            } else {
-                firebase.auth().createUserWithEmailAndPassword(email, password)
-                    .then(() => window.location.href = 'index.html')
-                    .catch(err => {
-                        alert(err.message);
-                        submitBtn.innerText = "CREATE IDENTITY";
-                        submitBtn.disabled = false;
-                    });
-            }
+            // Kod asal Firebase awak
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then(() => window.location.href = 'index.html') // Berjaya, balik ke page utama
+                .catch(err => alert("Gagal Daftar: " + err.message));
         });
     </script>
 </body>
