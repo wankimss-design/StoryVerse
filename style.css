@@ -1,23 +1,39 @@
-/* Warna asal (Dark) */
+/* --- 1. ASAS & DARK MODE (DEFAULT) --- */
 body {
-    background-color: #0a0a0a; /* Hitam */
+    background-color: #0a0a0a;
     color: #ffffff;
-    transition: background-color 0.3s ease, color 0.3s ease; /* Tambah ini untuk smooth transition */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: 'Inter', sans-serif;
 }
 
-/* Warna Light Mode (Wajib di bawah) */
+/* --- 2. PERKEMAS LIGHT MODE (GABUNGAN) --- */
 body.light-mode {
-    background-color: #ffffff !important; /* Guna !important jika masih degil */
+    background-color: #f4f4f4 !important;
     color: #1a1a1a !important;
 }
 
-/* Pastikan elemen lain juga bertukar warna */
 body.light-mode .nav-link, 
-body.light-mode .hero-description {
+body.light-mode .hero-description,
+body.light-mode .text-gray-400 {
     color: #4b5563 !important;
 }
 
-/* Tipografi & Warna */
+body.light-mode footer {
+    background-color: #ffffff;
+    border-top: 1px solid #eeeeee;
+}
+
+body.light-mode .card-image-wrapper {
+    background: #e5e7eb;
+    border: 1px solid #ddd;
+}
+
+body.light-mode .btn-secondary {
+    border-color: #ccc;
+    color: #1a1a1a;
+}
+
+/* --- 3. ELEMEN VISUAL (TOONAKI STYLE) --- */
 .text-gradient {
     background: linear-gradient(90deg, #ff0055, #7000ff);
     -webkit-background-clip: text;
@@ -29,7 +45,7 @@ body.light-mode .hero-description {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.3em;
-    color: #a855f7; /* purple-400 */
+    color: #a855f7;
     font-weight: 700;
 }
 
@@ -42,7 +58,7 @@ body.light-mode .hero-description {
     letter-spacing: -0.05em;
 }
 
-/* Butang Ala Toonaki */
+/* --- 4. BUTANG & KAD --- */
 .btn-primary {
     background: linear-gradient(90deg, #ff0055, #7000ff);
     padding: 1rem 2rem;
@@ -57,20 +73,6 @@ body.light-mode .hero-description {
     box-shadow: 0 15px 30px rgba(112, 0, 255, 0.4);
 }
 
-.btn-secondary {
-    padding: 0.5rem 1.25rem;
-    border-radius: 9999px;
-    border: 1px solid #374151;
-    font-size: 0.875rem;
-    transition: all 0.3s ease;
-}
-
-.btn-secondary:hover {
-    background-color: #ffffff;
-    color: #000000;
-}
-
-/* Novel Card Hero */
 .novel-card-large {
     position: relative;
     width: 100%;
@@ -87,118 +89,7 @@ body.light-mode .hero-description {
     transform: rotate(0deg) scale(1.02);
 }
 
-.cover-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.6;
-}
-
-.overlay-text {
-    position: absolute;
-    bottom: 2rem;
-    left: 2rem;
-}
-
-.novel-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    font-style: italic;
-}
-
-/* Light Mode Variables */
-body.light-mode {
-    background-color: #f4f4f4;
-    color: #1a1a1a;
-}
-
-body.light-mode .btn-secondary {
-    border-color: #ccc;
-    color: #1a1a1a;
-}
-
-body.light-mode .glass-card {
-    background: rgba(0, 0, 0, 0.05);
-}
-
-/* Novel Grid Style */
-.novel-card {
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.card-image-wrapper {
-    position: relative;
-    aspect-ratio: 2/3;
-    border-radius: 1rem;
-    overflow: hidden;
-    background: #1a1a1a;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.card-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.novel-card:hover .card-img {
-    transform: scale(1.1);
-}
-
-.card-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: #ff0055;
-    color: white;
-    font-size: 10px;
-    font-weight: 900;
-    padding: 4px 10px;
-    border-radius: 4px;
-    text-transform: uppercase;
-}
-
-/* --- Footer Style --- */
-footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    background-color: #0d0d0d;
-}
-
-body.light-mode footer {
-    background-color: #ffffff;
-    border-top: 1px solid #eeeeee;
-}
-
-.footer-link {
-    color: #666;
-    transition: color 0.3s ease;
-    font-size: 0.9rem;
-}
-
-.footer-link:hover {
-    color: #a855f7;
-}
-
-/* --- Perkemas Light Mode --- */
-/* Pastikan teks deskripsi dan nav link bertukar warna dalam Light Mode */
-body.light-mode .hero-description, 
-body.light-mode .text-gray-400,
-body.light-mode .nav-link {
-    color: #4b5563; /* Gray-600 */
-}
-
-body.light-mode .nav-link:hover {
-    color: #000000;
-}
-
-body.light-mode .card-image-wrapper {
-    background: #e5e7eb;
-    border: 1px solid #ddd;
-}
-
-/* --- Animasi Masuk (Fade In) --- */
+/* --- 5. ANIMASI MASUK (FIXED) --- */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -211,121 +102,43 @@ body.light-mode .card-image-wrapper {
 }
 
 .hero-content {
-    animation: fadeInUp 0.8s ease out forwards;
+    animation: fadeInUp 0.8s ease-out forwards; /* Dah betulkan ease-out */
 }
 
 .hero-visual {
-    animation: fadeInUp 1.2s ease out forwards;
+    animation: fadeInUp 1.2s ease-out forwards; /* Dah betulkan ease-out */
 }
 
-/* --- Login Page Special Styles --- */
-.auth-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #050505;
-    overflow: hidden;
-    position: relative;
-}
-
-/* Bulatan Berwarna di Belakang (Animated Blobs) */
-.blob {
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    background: linear-gradient(180deg, #ff0055 0%, #7000ff 100%);
-    filter: blur(80px);
-    border-radius: 50%;
-    z-index: 0;
-    animation: move 20s infinite alternate;
-}
-
-.blob-2 {
-    background: #00d4ff;
-    right: 10%;
-    bottom: 10%;
-    animation-delay: -5s;
-}
-
-@keyframes move {
-    from { transform: translate(-50px, -50px); }
-    to { transform: translate(100px, 100px); }
-}
-
-/* Kad Glassmorphism */
-.glass-login {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-    z-index: 10;
-}
-
-.input-glass {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: white !important;
-    backdrop-filter: blur(5px);
-}
-
-.input-glass:focus {
-    border-color: #7000ff !important;
-    box-shadow: 0 0 15px rgba(112, 0, 255, 0.3);
-}
-
-/* --- Konfigurasi Kontena Utama Untuk Animasi Bertindih --- */
+/* --- 6. AUTH & SLIDING ANIMATION --- */
 .container-sliding {
     position: relative;
-    width: 380px; /* Lebar kad awak */
-    min-height: 520px; /* Tinggi minimum kad awak */
+    width: 380px;
+    min-height: 520px;
     background: #1a1a1a;
     border-radius: 2rem;
-    overflow: hidden; /* Penting! Supaya page yang tak nampak tak keluar dari kad */
+    overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
 }
 
-/* Gaya Asas Untuk Borang (Log Masuk & Daftar) */
 .form-box {
     position: absolute;
     width: 100%;
     height: 100%;
     padding: 40px;
     top: 0;
-    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Animasi bergerak yang smooth */
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-/* --- Kedudukan Asal (Halaman Log Masuk) --- */
-.login-form {
-    left: 0;
-}
+.login-form { left: 0; }
+.register-form { left: 100%; opacity: 0; }
 
-/* --- Kedudukan Asal (Halaman Daftar) --- */
-.register-form {
-    left: 100%; /* Pada asalnya, Daftar berada di luar grid (sebelah kanan) */
-    opacity: 0; /* Tak nampak */
-}
+.container-sliding.active .login-form { left: -100%; opacity: 0; }
+.container-sliding.active .register-form { left: 0; opacity: 1; }
 
-/* --- LOGIK PERGERAKAN JAVASCRIPT --- */
-
-/* Apabila kontena utama ditambah kelas 'active' (Menghantar borang Log Masuk ke Kiri) */
-.container-sliding.active .login-form {
-    left: -100%; /* Log masuk keluar ke kiri */
-    opacity: 0;
-}
-
-/* Apabila kontena utama ditambah kelas 'active' (Membawa borang Daftar ke Tengah) */
-.container-sliding.active .register-form {
-    left: 0; /* Daftar masuk ke tengah */
-    opacity: 1;
-}
-
-/* Kemas Kini Gaya Input & Butang supaya selaras dengan rupa video */
 .input-auth {
     width: 100%;
     padding: 12px 15px;
@@ -334,10 +147,7 @@ body.light-mode .card-image-wrapper {
     border-radius: 10px;
     color: white;
     outline: none;
-}
-
-.input-auth:focus {
-    border-color: #7000ff;
+    margin-bottom: 15px;
 }
 
 .btn-auth {
@@ -351,9 +161,4 @@ body.light-mode .card-image-wrapper {
     text-transform: uppercase;
     cursor: pointer;
     transition: all 0.3s ease;
-}
-
-.btn-auth:hover {
-    background: #8b31ff;
-    transform: translateY(-2px);
 }
