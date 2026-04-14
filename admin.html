@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Verse | Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="antialiased bg-[#0a0a0a] text-white p-6">
+
+    <div class="max-w-2xl mx-auto">
+        <a href="index.html" class="text-purple-500 hover:underline">← Kembali ke Utama</a>
+        
+        <h1 class="text-4xl font-black tracking-tighter mt-6 mb-8 text-gradient">TAMBAH NOVEL BARU</h1>
+
+        <div class="bg-[#1a1a1a] p-8 rounded-2xl border border-gray-800 shadow-2xl">
+            <form id="adminForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-400 mb-2">Tajuk Novel</label>
+                    <input type="text" id="title" class="w-full bg-[#0d0d0d] border border-gray-800 p-3 rounded-lg focus:outline-none focus:border-purple-500 transition" placeholder="Contoh: Shadow Bound" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-400 mb-2">Genre</label>
+                        <input type="text" id="genre" class="w-full bg-[#0d0d0d] border border-gray-800 p-3 rounded-lg focus:outline-none focus:border-purple-500" placeholder="E.g. Fantasy" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-400 mb-2">Tag</label>
+                        <input type="text" id="tag" class="w-full bg-[#0d0d0d] border border-gray-800 p-3 rounded-lg focus:outline-none focus:border-purple-500" placeholder="E.g. Hot, New">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-400 mb-2">URL Gambar Cover</label>
+                    <input type="url" id="image" class="w-full bg-[#0d0d0d] border border-gray-800 p-3 rounded-lg focus:outline-none focus:border-purple-500" placeholder="https://imgur.com/link-gambar.jpg" required>
+                </div>
+
+                <button type="submit" class="btn-primary w-full text-white py-4 mt-4">HANTAR KE STORY VERSE</button>
+            </form>
+            <p id="statusMessage" class="mt-4 text-center text-sm font-medium"></p>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
+    <script src="firebase-config.js"></script>
+
+    <script>
+        const form = document.getElementById('adminForm');
+        const status = document.getElementById('statusMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            status.innerText = "Sila tunggu...";
+            status.className = "mt-4 text-center text-gray-400";
+
+            // Ambil data dari input
+            const novelData = {
+                title: document.getElementById('title').value,
+                genre: document.getElementById('genre').value,
+                tag: document.getElementById('tag').value,
+                image: document.getElementById('image').value,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp() // Tambah timestamp
+            };
+
+            try {
+                // Masukkan ke koleksi 'novels'
+                await db.collection('novels').add(novelData);
+                
+                status.innerText = "Berjaya! Novel telah ditambah ke dalam Verse.";
+                status.className = "mt-4 text-center text-green-500";
+                form.reset(); // Kosongkan borang semula
+            } catch (error) {
+                console.error("Error:", error);
+                status.innerText = "Gagal: " + error.message;
+                status.className = "mt-4 text-center text-red-500";
+            }
+        });
+    </script>
+</body>
+</html>
