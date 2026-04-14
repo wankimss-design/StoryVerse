@@ -147,3 +147,61 @@ body.light-mode .glass-card {
     border-radius: 4px;
     text-transform: uppercase;
 }
+
+/* --- Footer Style --- */
+footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: #0d0d0d;
+}
+
+body.light-mode footer {
+    background-color: #ffffff;
+    border-top: 1px solid #eeeeee;
+}
+
+.footer-link {
+    color: #666;
+    transition: color 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.footer-link:hover {
+    color: #a855f7;
+}
+
+/* --- Perkemas Light Mode --- */
+/* Pastikan teks deskripsi dan nav link bertukar warna dalam Light Mode */
+body.light-mode .hero-description, 
+body.light-mode .text-gray-400,
+body.light-mode .nav-link {
+    color: #4b5563; /* Gray-600 */
+}
+
+body.light-mode .nav-link:hover {
+    color: #000000;
+}
+
+body.light-mode .card-image-wrapper {
+    background: #e5e7eb;
+    border: 1px solid #ddd;
+}
+
+/* --- Animasi Masuk (Fade In) --- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hero-content {
+    animation: fadeInUp 0.8s ease out forwards;
+}
+
+.hero-visual {
+    animation: fadeInUp 1.2s ease out forwards;
+}
