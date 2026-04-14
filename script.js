@@ -78,3 +78,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchNovels();
 });
+
+// --- LOGIK AUTHENTICATION ---
+const authBtn = document.getElementById('authBtn');
+
+// Pantau status pengguna (Login atau tidak)
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        // Pengguna sudah login
+        authBtn.innerText = "Log Keluar";
+        authBtn.onclick = () => firebase.auth().signOut();
+    } else {
+        // Pengguna belum login
+        authBtn.innerText = "Log Masuk";
+        authBtn.onclick = () => window.location.href = 'auth.html';
+    }
+});
+
+// Fungsi untuk semak akses sebelum baca (Panggil fungsi ini bila klik novel)
+function checkAccess(novelId) {
+    const user = firebase.auth().currentUser;
+    if (user) {
+        alert("Membuka novel..."); // Nanti kita tukar ke page bacaan
+    } else {
+        alert("Sila log masuk dahulu untuk membaca!");
+        window.location.href = 'auth.html';
+    }
+}
