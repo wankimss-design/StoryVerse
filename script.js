@@ -5,22 +5,26 @@ window.addEventListener('load', () => {
     const text = document.querySelector('.loader-text');
     const svg = document.querySelector('.loader-text text');
     
-    // Pastikan preloader ikut warna tema masa refresh
-    const currentTheme = localStorage.getItem('theme');
-    if (currentTheme === 'light') {
-    document.getElementById('preloader').style.background = '#fdfbf7';
-}
-    if (!preloader) return;
-
-    // Kekalkan tema yang disimpan sebelum preloader hilang
+    // 1. Ambil tema dari storage
     const savedTheme = localStorage.getItem('theme');
+    
+    // 2. Jika tema 'light', set warna preloader dan body SEGERA
     if (savedTheme === 'light') {
+        if (preloader) preloader.style.background = '#fdfbf7'; // Warna cream
         document.body.classList.add('light-mode');
-        // Pastikan ikon dalam nav ikut tema asal
+        
+        // Tukar ikon nav ke matahari (sun)
         const themeIcon = document.getElementById('themeIconLucide');
         themeIcon?.setAttribute('data-lucide', 'sun');
     }
 
+    if (!preloader) {
+        // Jika preloader tiada, terus lukis ikon
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+        return;
+    }
+
+    // 3. Animasi Preloader
     setTimeout(() => {
         circle?.classList.add('break');
         setTimeout(() => {
@@ -33,7 +37,7 @@ window.addEventListener('load', () => {
                 
                 setTimeout(() => { 
                     preloader.style.display = 'none'; 
-                    // Inisialisasi ikon Lucide selepas preloader hilang
+                    // PENTING: Lukis semua ikon (termasuk footer & nav) selepas preloader hilang
                     if (typeof lucide !== 'undefined') lucide.createIcons();
                 }, 1300);
             }, 3000);
@@ -56,11 +60,11 @@ themeBtn?.addEventListener('click', () => {
         themeIcon?.setAttribute('data-lucide', 'moon');
     }
     
-    // Refresh ikon lucide untuk paparkan perubahan
+    // Refresh semua ikon lucide dalam halaman
     if (typeof lucide !== 'undefined') lucide.createIcons();
     
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
-}); // <-- SINI: Tadi ada extra }); yang buat error, sekarang dah OK.
+});
 
 // --- 3. FETCH NOVELS FROM FIRESTORE ---
 async function fetchNovels() {
