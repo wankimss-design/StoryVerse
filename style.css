@@ -1,7 +1,30 @@
-/* --- ASAS --- */
-:root { --primary-gradient: linear-gradient(90deg, #ff0055, #7000ff); }
-body { background-color: #0a0a0a; transition: 0.3s; margin: 0; overflow-x: hidden; }
-.text-gradient { background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+/* --- ASAS & TEMA --- */
+:root {
+    --primary-gradient: linear-gradient(90deg, #ff0055, #7000ff);
+}
+
+body {
+    background-color: #0a0a0a;
+    color: white;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.text-gradient {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* --- NAVIGASI --- */
+.nav-link {
+    transition: color 0.3s;
+    font-weight: 500;
+}
+.nav-link:hover {
+    color: white;
+}
 
 /* --- BUTTONS --- */
 .btn-primary {
@@ -9,39 +32,75 @@ body { background-color: #0a0a0a; transition: 0.3s; margin: 0; overflow-x: hidde
     padding: 1rem 2.5rem;
     border-radius: 0.75rem;
     font-weight: 800;
-    display: inline-block;
-    transition: 0.3s;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 30px rgba(112, 0, 255, 0.3);
 }
-.btn-outline {
-    border: 1px solid #333;
-    padding: 1rem 2.5rem;
-    border-radius: 0.75rem;
-    font-weight: 800;
-    transition: 0.3s;
-}
-.btn-outline:hover { background: white; color: black; }
 
-/* --- HERO VISUAL (FIX BINGKAI) --- */
+.btn-primary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(112, 0, 255, 0.5);
+}
+
+.btn-secondary {
+    padding: 0.5rem 1.5rem;
+    border-radius: 9999px;
+    border: 1px solid #374151;
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: 0.3s;
+}
+.btn-secondary:hover {
+    background: white;
+    color: black;
+}
+
+/* --- HERO VISUAL (BINGKAI GAMBAR) --- */
+.hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .novel-card-large {
     width: 100%;
-    height: 550px;
+    max-width: 450px;
+    height: 550px; /* SANGAT PENTING: Supaya bingkai tak hilang */
     background: #1a1a1a;
     border-radius: 2rem;
     position: relative;
     overflow: hidden;
     transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
     box-shadow: -30px 30px 60px rgba(0,0,0,0.5);
-    transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.novel-card-large img {
+
+.cover-img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: cover; /* Pastikan gambar tak penyet */
     opacity: 0.8;
+    display: block;
 }
-.novel-card-large:hover { transform: rotateY(0) rotateX(0) scale(1.02); }
 
-/* --- PRELOADER (FIX HANTU) --- */
+.novel-card-large:hover {
+    transform: rotateY(0deg) rotateX(0deg) scale(1.02);
+}
+
+.overlay-text {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 2.5rem;
+    z-index: 10;
+}
+
+.novel-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    font-style: italic;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+/* --- PRELOADER --- */
 #preloader {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100vh;
@@ -49,38 +108,54 @@ body { background-color: #0a0a0a; transition: 0.3s; margin: 0; overflow-x: hidde
     z-index: 99999;
     transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1), visibility 0s 1.2s;
 }
-#preloader.lift-up { transform: translateY(-100%); visibility: hidden; pointer-events: none; }
 
+#preloader.lift-up {
+    transform: translateY(-100%);
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader-wrapper { position: relative; text-align: center; }
 .loader-circle {
-    width: 100px; height: 100px;
+    width: 110px; height: 110px;
     border: 4px solid rgba(112, 0, 255, 0.1);
     border-top: 4px solid #7000ff;
     border-right: 4px solid #ff0055;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
-    transition: 0.6s;
 }
+
 @keyframes spin { to { transform: rotate(360deg); } }
-.loader-circle.break { width: 400px; height: 400px; opacity: 0; }
+
+.loader-circle.break { width: 400px; height: 400px; opacity: 0; transition: 0.6s ease; }
 
 .loader-text {
     width: 400px; position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%) scale(0.8);
-    opacity: 0; transition: 0.8s;
+    opacity: 0; transition: 0.8s ease;
 }
+
 .loader-text.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
 .loader-text text {
     font-family: 'Dancing Script', cursive; font-size: 70px;
     stroke: #7000ff; fill: transparent; stroke-dasharray: 800; stroke-dashoffset: 800;
 }
+
 @keyframes writeText { to { stroke-dashoffset: 0; fill: white; } }
 
 /* --- NOVEL GRID --- */
-.card-image-wrapper { aspect-ratio: 2/3; border-radius: 1rem; overflow: hidden; position: relative; }
+.card-image-wrapper { aspect-ratio: 2/3; border-radius: 1rem; overflow: hidden; position: relative; background: #111; }
 .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
 .novel-card:hover .card-img { transform: scale(1.1); }
 
+/* --- LIGHT MODE --- */
+body.light-mode { background-color: white !important; color: #1a1a1a !important; }
+body.light-mode .btn-secondary { border-color: #ddd; }
+body.light-mode .nav-link { color: #4b5563; }
+body.light-mode .nav-link:hover { color: black; }
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
-    .novel-card-large { height: 350px; transform: none; }
+    .novel-card-large { height: 350px; transform: none !important; margin: 0 auto; }
 }
