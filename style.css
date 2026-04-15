@@ -226,3 +226,42 @@ body.light-mode .nav-btn-auth:hover {
     .hero-title { font-size: 3.5rem !important; }
     .novel-card-large { height: 350px; transform: none !important; margin: 0 auto; }
 }
+
+/* --- FOOTER ICONS STYLE --- */
+.footer-icon-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.03);
+    color: #888;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.footer-icon-link i {
+    width: 18px;
+    height: 18px;
+}
+
+.footer-icon-link:hover {
+    background: #1a1a1a;
+    color: #a855f7; /* Warna ungu bila hover */
+    transform: translateY(-3px);
+    border-color: rgba(168, 85, 247, 0.4);
+}
+
+/* Penyelarasan untuk Light Mode (Cream) */
+body.light-mode .footer-icon-link {
+    background: rgba(0, 0, 0, 0.05);
+    color: #777;
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .footer-icon-link:hover {
+    background: #ffffff;
+    color: #7000ff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
