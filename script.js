@@ -9,30 +9,35 @@ window.addEventListener('load', () => {
     const loaderText = document.querySelector('.loader-text');
     const svgText = document.querySelector('.loader-text text');
 
-    if (preloader) {
-        // Mula animasi pecah selepas 1.5s
+    // Pastikan elemen wujud sebelum jalankan animasi
+    if (!preloader) return;
+
+    // 1. Mula pusing sekejap (1.5 saat)
+    setTimeout(() => {
+        // 2. Pecahkan bulatan
+        if (loaderCircle) loaderCircle.classList.add('break');
+        
         setTimeout(() => {
-            if (loaderCircle) loaderCircle.classList.add('break');
+            // 3. Munculkan tulisan berantai
+            if (loaderText) loaderText.classList.add('show');
+            if (svgText) svgText.style.animation = 'writeText 2s ease-in-out forwards';
             
+            // 4. INI BAHAGIAN GULUNG (LIFT UP)
             setTimeout(() => {
-                if (loaderText) loaderText.classList.add('show');
-                if (svgText) svgText.style.animation = 'writeText 2s ease-in-out forwards';
+                console.log("Memulakan efek gulung..."); // Untuk awak check kat console F12
+                preloader.classList.add('lift-up');
                 
-                // --- EFEK GULUNG KERTAS (LIFT UP) ---
+                // Panggil data novel
+                if (typeof fetchNovels === 'function') fetchNovels();
+
+                // Selepas habis gulung, buang dari pandangan
                 setTimeout(() => {
-                    preloader.classList.add('lift-up'); // Kesan gulung ke atas
-                    
-                    // Tarik data novel semasa skrin sedang digulung
-                    fetchNovels();
-                    
-                    // Buang terus dari memori selepas animasi tamat
-                    setTimeout(() => {
-                        preloader.style.display = 'none';
-                    }, 1200); 
-                }, 3000); // Beri masa pengguna tengok tulisan StoryVerse
-            }, 400); 
-        }, 1500);
-    }
+                    preloader.style.display = 'none';
+                }, 1300);
+            }, 3000); // 3 saat untuk orang baca nama web
+
+        }, 400); 
+    }, 1000);
 });
 
 // --- 2. TEMA & DOM READY ---
