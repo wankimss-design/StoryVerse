@@ -54,6 +54,35 @@ body {
     color: black;
 }
 
+/* --- GAYA TULISAN HERO --- */
+.hero-title {
+    /* Menggunakan font Inter sebagai asas, atau anda boleh tukar ke font lain */
+    font-family: 'Inter', sans-serif; 
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    cursor: default;
+    display: inline-block; /* Penting untuk animasi scale berfungsi */
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animasi smooth */
+}
+
+/* KESAN MEMBESAR APABILA HOVER */
+.hero-title:hover {
+    transform: scale(1.05); /* Membesar 5% */
+}
+
+/* Jika anda mahu font nampak seperti dalam gambar (handwriting), 
+   anda perlu tambah font 'Dancing Script' atau font sistem yang bulat */
+.hero-title span.text-gradient {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+/* Kesan tambahan jika kursor lalu pada bahagian gradient sahaja */
+.hero-title span.text-gradient:hover {
+    transform: translateY(-5px); /* Sedikit ke atas */
+}
+
 /* --- HERO VISUAL (BINGKAI GAMBAR) --- */
 .hero-visual {
     display: flex;
