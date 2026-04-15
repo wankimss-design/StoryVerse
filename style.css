@@ -2,7 +2,7 @@
 :root {
     --primary-gradient: linear-gradient(90deg, #ff0055, #7000ff);
     --bg-dark: #0a0a0a;
-    --bg-light: #f8f9fa;
+    --bg-light: #fdfbf7;
 }
 
 body {
@@ -169,7 +169,7 @@ body {
 /* --- 7. LIGHT MODE FIX (BAHAGIAN PENTING) --- */
 body.light-mode {
     background-color: var(--bg-light) !important;
-    color: #1a1a1a !important;
+    color: #2c2c2c !important;
 }
 
 /* Baiki tulisan Hero yang hilang di Light Mode */
@@ -183,15 +183,16 @@ body.light-mode .hero-description {
 
 /* Kemaskini Nav Bar di Light Mode */
 body.light-mode .nav-container-floating {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: #ddd;
+    background: rgba(255, 255, 255, 0.6); /* Biar dia nampak macam kaca nipis atas warna cream */
+    border-color: rgba(0, 0, 0, 0.05);
 }
 
 body.light-mode .nav-btn-icon, 
 body.light-mode .nav-btn-auth {
-    background: #eee;
-    border-color: #ddd;
-    color: #555;
+    background: #ffffff;
+    border-color: #eee;
+    color: #777;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02); /* Tambah shadow halus biar nampak timbul atas cream */
 }
 
 body.light-mode .nav-btn-icon:hover, 
