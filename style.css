@@ -165,3 +165,17 @@ body {
     opacity: 1;
     transform: scale(1);
 }
+
+/* Polish tambahan untuk Light Mode */
+body.light-mode .novel-card h3 {
+    color: #1a1a1a;
+}
+
+body.light-mode .card-image-wrapper {
+    background: #e5e7eb;
+    border: 1px solid #d1d5db;
+}
+
+body.light-mode .sub-title {
+    color: #7000ff; /* Kekalkan warna ungu supaya branding kuat */
+}
