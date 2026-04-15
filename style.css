@@ -54,49 +54,37 @@ body {
     color: black;
 }
 
-/* --- GAYA TULISAN HERO --- */
-.hero-title {
-    /* Menggunakan font Inter sebagai asas, atau anda boleh tukar ke font lain */
-    font-family: 'Inter', sans-serif; 
-    font-weight: 900;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    cursor: default;
-    display: inline-block; /* Penting untuk animasi scale berfungsi */
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animasi smooth */
+/* --- GAYA WEB NOVEL HUB (UNGU) --- */
+.sub-title-purple {
+    display: block; /* Paksa dia duduk sebaris sendiri di atas */
+    color: #a855f7 !important; /* Warna ungu (purple-500) */
+    font-family: 'Itim', cursive !important;
+    font-weight: bold;
+    letter-spacing: 0.2em; /* Jarak antara huruf biar nampak pro */
+    margin-bottom: 10px; /* Jarak dengan tulisan BACA TANPA */
+    font-size: 0.9rem;
+    text-transform: uppercase;
 }
 
-/* GAYA TULISAN SEPERTI GAMBAR */
+/* --- ADJUST BALIK HERO TITLE --- */
 .hero-title {
-    font-family: 'Itim', cursive !important; /* Font bulat/santai */
-    font-size: 5rem !important; /* Saiz besar */
-    line-height: 1 !important;
-    color: white;
+    font-family: 'Itim', cursive !important;
+    font-size: 5rem !important; 
+    line-height: 0.9 !important; /* Rapatkan sikit baris atas dan bawah */
+    margin-top: 0;
+    margin-bottom: 20px;
     display: inline-block;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: pointer;
-    text-transform: uppercase; /* Biar nampak bold macam gambar */
+    transition: transform 0.3s ease;
 }
 
-/* KESAN MEMBESAR BILA CURSOR LALU */
 .hero-title:hover {
-    transform: scale(1.08) rotate(-1deg); /* Membesar & senget sikit biar nampak hidup */
-    filter: drop-shadow(0 0 15px rgba(255, 0, 85, 0.3));
+    transform: scale(1.05);
 }
 
-/* GAYA UNTUK PERKATAAN GRADIENT (SEMPADAN.) */
-.text-gradient {
-    background: linear-gradient(90deg, #ff0055, #7000ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: inline-block;
-}
-
-/* GAYA PERENGGAN BAWAH (DESCRIPTION) */
+/* --- ADJUST DESCRIPTION --- */
 .hero-description {
     font-family: 'Itim', cursive !important;
-    font-size: 1.2rem !important;
-    opacity: 0.8;
+    margin-top: 10px;
 }
 
 /* --- HERO VISUAL (BINGKAI GAMBAR) --- */
