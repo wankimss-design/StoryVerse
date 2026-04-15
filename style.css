@@ -1,13 +1,7 @@
-/* --- ASAS & TEMA --- */
-:root {
-    --primary-gradient: linear-gradient(90deg, #ff0055, #7000ff);
-}
-
-.text-gradient {
-    background: var(--primary-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+/* --- ASAS --- */
+:root { --primary-gradient: linear-gradient(90deg, #ff0055, #7000ff); }
+body { background-color: #0a0a0a; transition: 0.3s; margin: 0; overflow-x: hidden; }
+.text-gradient { background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
 /* --- BUTTONS --- */
 .btn-primary {
@@ -15,98 +9,78 @@
     padding: 1rem 2.5rem;
     border-radius: 0.75rem;
     font-weight: 800;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 10px 30px rgba(112, 0, 255, 0.3);
+    display: inline-block;
+    transition: 0.3s;
 }
-
-.btn-primary:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(112, 0, 255, 0.5);
+.btn-outline {
+    border: 1px solid #333;
+    padding: 1rem 2.5rem;
+    border-radius: 0.75rem;
+    font-weight: 800;
+    transition: 0.3s;
 }
+.btn-outline:hover { background: white; color: black; }
 
-/* --- HERO VISUAL (3D) --- */
+/* --- HERO VISUAL (FIX BINGKAI) --- */
 .novel-card-large {
+    width: 100%;
     height: 550px;
     background: #1a1a1a;
     border-radius: 2rem;
     position: relative;
     overflow: hidden;
-    transform: rotateY(-15deg) rotateX(5deg);
+    transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
     box-shadow: -30px 30px 60px rgba(0,0,0,0.5);
-    transition: all 0.6s ease;
+    transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
-
-.novel-card-large:hover {
-    transform: rotateY(0deg) rotateX(0deg) scale(1.02);
+.novel-card-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.8;
 }
+.novel-card-large:hover { transform: rotateY(0) rotateX(0) scale(1.02); }
 
-/* --- PRELOADER (ROLL UP) --- */
+/* --- PRELOADER (FIX HANTU) --- */
 #preloader {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100vh;
-    background: #050505;
-    display: flex; justify-content: center; align-items: center;
+    top: 0; left: 0; width: 100%; height: 100vh;
+    background: #050505; display: flex; justify-content: center; align-items: center;
     z-index: 99999;
-    transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
+    transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1), visibility 0s 1.2s;
 }
-
-#preloader.lift-up {
-    transform: translateY(-100%);
-    pointer-events: none;
-}
-
-.loader-wrapper { position: relative; text-align: center; }
+#preloader.lift-up { transform: translateY(-100%); visibility: hidden; pointer-events: none; }
 
 .loader-circle {
-    width: 110px; height: 110px;
+    width: 100px; height: 100px;
     border: 4px solid rgba(112, 0, 255, 0.1);
     border-top: 4px solid #7000ff;
     border-right: 4px solid #ff0055;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
-    transition: all 0.6s ease;
+    transition: 0.6s;
 }
-
 @keyframes spin { to { transform: rotate(360deg); } }
-
-.loader-circle.break {
-    width: 400px; height: 400px; opacity: 0;
-}
+.loader-circle.break { width: 400px; height: 400px; opacity: 0; }
 
 .loader-text {
-    width: 400px; position: absolute;
-    top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8);
-    opacity: 0; transition: all 0.8s ease;
+    width: 400px; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0; transition: 0.8s;
 }
-
 .loader-text.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-
 .loader-text text {
-    font-family: 'Dancing Script', cursive;
-    font-size: 70px; stroke: #7000ff; fill: transparent;
-    stroke-dasharray: 800; stroke-dashoffset: 800;
+    font-family: 'Dancing Script', cursive; font-size: 70px;
+    stroke: #7000ff; fill: transparent; stroke-dasharray: 800; stroke-dashoffset: 800;
 }
+@keyframes writeText { to { stroke-dashoffset: 0; fill: white; } }
 
-@keyframes writeText {
-    to { stroke-dashoffset: 0; fill: white; }
-}
-
-/* --- CARDS GRID --- */
-.card-image-wrapper {
-    aspect-ratio: 2/3; border-radius: 1rem; overflow: hidden;
-    position: relative; background: #111;
-}
-
+/* --- NOVEL GRID --- */
+.card-image-wrapper { aspect-ratio: 2/3; border-radius: 1rem; overflow: hidden; position: relative; }
 .card-img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
 .novel-card:hover .card-img { transform: scale(1.1); }
 
-.card-badge {
-    position: absolute; top: 10px; left: 10px;
-    background: #ff0055; color: white; font-size: 10px;
-    padding: 3px 8px; border-radius: 4px; font-weight: 900;
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .novel-card-large { height: 350px; transform: none; }
 }
-
-/* Light Mode */
-body.light-mode { background: #fff !important; color: #1a1a1a !important; }
-body.light-mode .btn-secondary { border-color: #ddd; }
