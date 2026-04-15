@@ -4,7 +4,12 @@ window.addEventListener('load', () => {
     const circle = document.querySelector('.loader-circle');
     const text = document.querySelector('.loader-text');
     const svg = document.querySelector('.loader-text text');
-
+    
+    // Pastikan preloader ikut warna tema masa refresh
+    const currentTheme = localStorage.getItem('theme');
+    if (currentTheme === 'light') {
+    document.getElementById('preloader').style.background = '#fdfbf7';
+}
     if (!preloader) return;
 
     // Kekalkan tema yang disimpan sebelum preloader hilang
