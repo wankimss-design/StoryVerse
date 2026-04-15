@@ -7,6 +7,15 @@ window.addEventListener('load', () => {
 
     if (!preloader) return;
 
+    // Kekalkan tema yang disimpan sebelum preloader hilang
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        // Pastikan ikon dalam nav ikut tema asal
+        const themeIcon = document.getElementById('themeIconLucide');
+        themeIcon?.setAttribute('data-lucide', 'sun');
+    }
+
     setTimeout(() => {
         circle?.classList.add('break');
         setTimeout(() => {
@@ -15,34 +24,38 @@ window.addEventListener('load', () => {
 
             setTimeout(() => {
                 preloader.classList.add('lift-up');
-                // Panggil data dari Firestore selepas loading
                 if (typeof fetchNovels === 'function') fetchNovels();
                 
-                // Padam terus preloader dari skrin selepas 1.2s
-                setTimeout(() => { preloader.style.display = 'none'; }, 1300);
+                setTimeout(() => { 
+                    preloader.style.display = 'none'; 
+                    // Inisialisasi ikon Lucide selepas preloader hilang
+                    if (typeof lucide !== 'undefined') lucide.createIcons();
+                }, 1300);
             }, 3000);
         }, 400);
     }, 1000);
 });
 
-// --- 2. THEME SWITCHER ---
-document.addEventListener('DOMContentLoaded', () => {
-    const themeBtn = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    
-    // Check saved theme
-    if (localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light-mode');
-        if (themeIcon) themeIcon.innerText = '☀️';
-    }
+// --- 2. THEME TOGGLE LOGIC ---
+const themeBtn = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIconLucide');
 
-    themeBtn?.addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-        if (themeIcon) themeIcon.innerText = isLight ? '☀️' : '🌙';
-    });
-});
+themeBtn?.addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+    const isLight = document.body.classList.contains('light-mode');
+    
+    // Tukar ikon Lucide secara dinamik
+    if (isLight) {
+        themeIcon?.setAttribute('data-lucide', 'sun');
+    } else {
+        themeIcon?.setAttribute('data-lucide', 'moon');
+    }
+    
+    // Refresh ikon lucide untuk paparkan perubahan
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+    
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}); // <-- SINI: Tadi ada extra }); yang buat error, sekarang dah OK.
 
 // --- 3. FETCH NOVELS FROM FIRESTORE ---
 async function fetchNovels() {
@@ -98,9 +111,8 @@ if (typeof firebase !== 'undefined') {
 
 // Fungsi Klik Novel
 function checkAccess(id) {
-    const user = firebase.auth().currentUser;
+    const user = firebase.auth()?.currentUser;
     if (user) {
-        // Jika dah login, boleh bawa ke page bacaan
         alert("Menuju ke dimensi novel...");
         // window.location.href = `read.html?id=${id}`;
     } else {
