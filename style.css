@@ -56,35 +56,39 @@ body {
 
 /* --- GAYA WEB NOVEL HUB (UNGU) --- */
 .sub-title-purple {
-    display: block; /* Paksa dia duduk sebaris sendiri di atas */
-    color: #a855f7 !important; /* Warna ungu (purple-500) */
+    display: block !important;
+    color: #a855f7 !important; /* Warna Purple 500 */
     font-family: 'Itim', cursive !important;
     font-weight: bold;
-    letter-spacing: 0.2em; /* Jarak antara huruf biar nampak pro */
-    margin-bottom: 10px; /* Jarak dengan tulisan BACA TANPA */
-    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+    margin-bottom: 5px; /* Kurangkan sedikit jarak bawah */
+    font-size: 0.95rem;
     text-transform: uppercase;
 }
 
-/* --- ADJUST BALIK HERO TITLE --- */
+/* --- HERO TITLE --- */
 .hero-title {
     font-family: 'Itim', cursive !important;
-    font-size: 5rem !important; 
-    line-height: 0.9 !important; /* Rapatkan sikit baris atas dan bawah */
-    margin-top: 0;
-    margin-bottom: 20px;
+    font-size: 5.5rem !important; /* Besarkan sikit lagi */
+    line-height: 0.85 !important; /* Sangat rapat biar nampak impact */
+    margin-top: 0 !important;
+    margin-bottom: 25px !important;
     display: inline-block;
-    transition: transform 0.3s ease;
+    color: white;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .hero-title:hover {
-    transform: scale(1.05);
+    transform: scale(1.03); /* Membesar sikit bila cursor lalu */
 }
 
-/* --- ADJUST DESCRIPTION --- */
+/* --- DESCRIPTION --- */
 .hero-description {
     font-family: 'Itim', cursive !important;
-    margin-top: 10px;
+    font-size: 1.2rem !important;
+    line-height: 1.5;
+    margin-top: 5px;
+    max-width: 500px;
 }
 
 /* --- HERO VISUAL (BINGKAI GAMBAR) --- */
