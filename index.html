@@ -7,7 +7,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
-    
+
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -24,22 +25,27 @@
     </div>
 
     <nav class="flex justify-between items-center p-6 max-w-7xl mx-auto">
-        <div class="text-2xl font-black tracking-tighter italic text-purple-500 logo">STORY VERSE</div>
-        
-       <div class="space-x-8 flex text-sm font-medium text-gray-400">
-            <a href="index.html" class="nav-link">Utama</a>
-            <a href="katalog.html" class="nav-link">Katalog</a>
-            <a href="#" class="nav-link">Genre</a>
-            <a href="#" class="nav-link">Premium</a>
-        </div>
+    <div class="text-2xl font-black tracking-tighter italic text-purple-500 logo">STORY VERSE</div>
+    
+    <div class="nav-container-floating flex items-center bg-[#151515] p-2 rounded-2xl border border-white/5 shadow-2xl">
+        <a href="index.html" class="nav-btn-icon" title="Home">
+            <i data-lucide="home"></i>
+        </a>
+        <a href="katalog.html" class="nav-btn-icon" title="Archive">
+            <i data-lucide="archive"></i>
+        </a>
+        <a href="#" class="nav-btn-icon" title="Profile">
+            <i data-lucide="user"></i>
+        </a>
+        <button id="themeToggle" class="nav-btn-icon" title="Toggle Mode">
+            <i data-lucide="moon" id="themeIconLucide"></i>
+        </button>
+    </div>
 
-        <div class="flex items-center gap-4">
-            <button id="themeToggle" class="p-2 rounded-full border border-gray-700 hover:bg-gray-800 transition">
-                <span id="themeIcon">🌙</span>
-            </button>
-            <button id="authBtn" class="btn-secondary">Log Masuk</button>
-        </div>
-    </nav>
+       <div class="flex items-center gap-4">
+        <button id="authBtn" class="btn-secondary">Log Masuk</button>
+    </div>
+</nav>
 
     <header class="relative overflow-hidden pt-16 pb-32 px-6">
         <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
@@ -104,6 +110,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script src="script.js"></script>
-
+    <script>
+    // Ini akan menukarkan <i data-lucide="..."> kepada ikon sebenar
+    lucide.createIcons();
+    </script>
 </body>
 </html>
