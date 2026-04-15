@@ -105,3 +105,28 @@ function checkAccess(novelId) {
         window.location.href = 'auth.html';
     }
 }
+
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    const loaderCircle = document.querySelector('.loader-circle');
+    const loaderText = document.querySelector('.loader-text');
+    const svgText = document.querySelector('.loader-text text');
+
+    // 1. Berhenti pusing & letupkan bulatan selepas 1.5 saat
+    setTimeout(() => {
+        loaderCircle.classList.add('break'); // Bulatan membesar & hilang
+        
+        // 2. Tepat masa dia putus, munculkan tulisan
+        setTimeout(() => {
+            loaderText.classList.add('show');
+            // Mula animasi menulis stroke
+            svgText.style.animation = 'writeText 2s ease-in-out forwards';
+            
+            // 3. Selepas selesai menulis, masuk ke website
+            setTimeout(() => {
+                preloader.classList.add('fade-out');
+            }, 2800); // Masa untuk orang tengok tulisan tu sekejap
+
+        }, 400); // Delay kecil selepas bulatan pecah
+    }, 1500);
+});
