@@ -1,164 +1,141 @@
-/* --- 1. ASAS & DARK MODE (DEFAULT) --- */
-body {
-    background-color: #0a0a0a;
-    color: #ffffff;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    font-family: 'Inter', sans-serif;
+/* Web Novel Specific Styles - EXACT Toonaki Design */
+.logo-icon {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-right: 8px;
 }
 
-/* --- 2. PERKEMAS LIGHT MODE (GABUNGAN) --- */
-body.light-mode {
-    background-color: #f4f4f4 !important;
-    color: #1a1a1a !important;
-}
-
-body.light-mode .nav-link, 
-body.light-mode .hero-description,
-body.light-mode .text-gray-400 {
-    color: #4b5563 !important;
-}
-
-body.light-mode footer {
-    background-color: #ffffff;
-    border-top: 1px solid #eeeeee;
-}
-
-body.light-mode .card-image-wrapper {
-    background: #e5e7eb;
-    border: 1px solid #ddd;
-}
-
-body.light-mode .btn-secondary {
-    border-color: #ccc;
-    color: #1a1a1a;
-}
-
-/* --- 3. ELEMEN VISUAL (TOONAKI STYLE) --- */
-.text-gradient {
-    background: linear-gradient(90deg, #ff0055, #7000ff);
+.logo-text {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ffffff, #e2e8f0);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-.sub-title {
-    display: block;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    color: #a855f7;
-    font-weight: 700;
-}
-
-.hero-title {
-    font-size: clamp(3rem, 8vw, 5rem);
-    font-weight: 900;
-    line-height: 0.9;
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-    letter-spacing: -0.05em;
-}
-
-/* --- 4. BUTANG & KAD --- */
-.btn-primary {
-    background: linear-gradient(90deg, #ff0055, #7000ff);
-    padding: 1rem 2rem;
-    border-radius: 0.5rem;
-    font-weight: 700;
-    transition: all 0.3s ease;
-    box-shadow: 0 10px 20px rgba(112, 0, 255, 0.2);
-}
-
-.btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(112, 0, 255, 0.4);
-}
-
-.novel-card-large {
-    position: relative;
-    width: 100%;
-    height: 500px;
-    background: #1a1a1a;
-    border-radius: 1.5rem;
-    overflow: hidden;
-    border: 1px solid #333;
-    transform: rotate(3deg);
-    transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.novel-card-large:hover {
-    transform: rotate(0deg) scale(1.02);
-}
-
-/* --- 5. ANIMASI MASUK (FIXED) --- */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.hero-content {
-    animation: fadeInUp 0.8s ease-out forwards; /* Dah betulkan ease-out */
-}
-
-.hero-visual {
-    animation: fadeInUp 1.2s ease-out forwards; /* Dah betulkan ease-out */
-}
-
-/* --- 6. AUTH & SLIDING ANIMATION --- */
-.container-sliding {
-    position: relative;
-    width: 380px;
-    min-height: 520px;
-    background: #1a1a1a;
-    border-radius: 2rem;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
-}
-
-.form-box {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    padding: 40px;
-    top: 0;
-    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+.library-btn .btn-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.1);
     display: flex;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
-}
-
-.login-form { left: 0; }
-.register-form { left: 100%; opacity: 0; }
-
-.container-sliding.active .login-form { left: -100%; opacity: 0; }
-.container-sliding.active .register-form { left: 0; opacity: 1; }
-
-.input-auth {
-    width: 100%;
-    padding: 12px 15px;
-    background: #0d0d0d;
-    border: 1px solid #333;
-    border-radius: 10px;
-    color: white;
-    outline: none;
-    margin-bottom: 15px;
-}
-
-.btn-auth {
-    width: 100%;
-    padding: 14px;
-    background: #7000ff;
-    border: none;
-    border-radius: 10px;
-    color: white;
-    font-weight: 900;
-    text-transform: uppercase;
-    cursor: pointer;
+    color: #94a3b8;
     transition: all 0.3s ease;
 }
+
+.library-btn .btn-icon:hover {
+    background: rgba(59, 130, 246, 0.3);
+    color: #3b82f6;
+    transform: scale(1.05);
+}
+
+/* Hero Novel Mockup */
+.novel-mockup {
+    position: relative;
+}
+
+.novel-cover {
+    border-radius: 24px;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+    max-width: 400px;
+}
+
+.novel-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    animation: pulse 2s infinite;
+}
+
+.floating-book {
+    position: absolute;
+    top: 20%;
+    right: 10%;
+    width: 200px;
+    opacity: 0.8;
+    animation: float 6s ease-in-out infinite;
+}
+
+.hero-stats {
+    display: flex;
+    gap: 4rem;
+    margin-top: 3rem;
+    padding: 2rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+/* Featured Novels Grid */
+.featured-novels {
+    padding: 6rem 0;
+    background: linear-gradient(180deg, rgba(15,15,35,0.8) 0%, rgba(30,27,75,0.8) 100%);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ffffff, #e2e8f0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.section-view-all {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.novels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.novel-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+}
+
+.novel-card:hover {
+    transform: translateY(-20px) scale(1.02);
+    box-shadow: 0 40px 80px rgba(0, 0, 0,
