@@ -100,3 +100,25 @@ function checkAccess(id) {
         window.location.href = 'auth.html';
     }
 }
+
+// Letakkan ini di bahagian paling bawah script.js
+if (typeof firebase !== 'undefined') {
+    firebase.auth().onAuthStateChanged((user) => {
+        const authBtn = document.getElementById('authBtn');
+        if (authBtn) {
+            if (user) {
+                // Jika user dah login
+                authBtn.innerText = "Log Keluar";
+                authBtn.onclick = () => {
+                    firebase.auth().signOut().then(() => window.location.reload());
+                };
+            } else {
+                // Jika user belum login
+                authBtn.innerText = "Log Masuk";
+                authBtn.onclick = () => {
+                    window.location.href = 'auth.html'; // Pastikan fail auth.html wujud
+                };
+            }
+        }
+    });
+}
