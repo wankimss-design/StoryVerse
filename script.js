@@ -21,16 +21,16 @@ window.addEventListener('load', () => {
         return;
     }
 
-   setTimeout(() => {
+      setTimeout(() => {
         if (preloader) {
             preloader.classList.add('lift-up');
             if (typeof fetchNovels === 'function') fetchNovels();
             
             setTimeout(() => {
                 preloader.style.display = 'none';
-            }, 1000); // Masa untuk transisi lift-up selesai
+            }, 1200);
         }
-    }, 4500); 
+    }, 5200); // Masa yang cukup untuk bulatan + melukis berangkai
 });
 
 // --- 2. THEME TOGGLE LOGIC (FONT AWESOME VERSION) ---
