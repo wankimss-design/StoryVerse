@@ -20,27 +20,26 @@ function toggleAuth() {
     const loginSec = document.getElementById('loginSection');
     const regSec = document.getElementById('registerSection');
 
-    // Buang kelas lama supaya boleh trigger semula
-    loginSec.classList.remove('slide-up-custom');
-    regSec.classList.remove('slide-up-custom');
+    // Buang kelas animasi supaya boleh diulang
+    loginSec.classList.remove('tiktok-flip');
+    regSec.classList.remove('tiktok-flip');
 
     if (loginSec.style.display === 'none') {
         loginSec.style.display = 'block';
         regSec.style.display = 'none';
         
-        // Trigger animasi Slide Up untuk Login
+        // Trigger animasi untuk Login
         void loginSec.offsetWidth; 
-        loginSec.classList.add('slide-up-custom');
+        loginSec.classList.add('tiktok-flip');
     } else {
         loginSec.style.display = 'none';
         regSec.style.display = 'block';
         
-        // Trigger animasi Slide Up untuk Register
+        // Trigger animasi untuk Register
         void regSec.offsetWidth;
-        regSec.classList.add('slide-up-custom');
+        regSec.classList.add('tiktok-flip');
     }
 }
-
 // --- 3. LOGIK LOGIN ---
 document.getElementById('loginForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
