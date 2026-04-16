@@ -1,56 +1,22 @@
-/* Glass Card Animation */
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.98); }
-    to { opacity: 1; transform: scale(1); }
-}
-
+/* --- 1. SETTING UTAMA (PERSPECTIVE) --- */
 #loginSection, #registerSection {
-    animation: fadeIn 0.4s ease-in-out;
-}
-
-/* --- FIX UNTUK BUTANG MATA (EYE TOGGLE) --- */
-.relative {
-    position: relative;
+    /* Wajib ada untuk kesan 3D RotateX nampak nyata */
+    perspective: 1200px;
+    backface-visibility: hidden;
     width: 100%;
 }
 
-/* Kita gunakan class khusus '.eye-btn' supaya tidak mengganggu butang lain */
-.eye-btn {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 30;
-    cursor: pointer;
-    background: transparent !important;
-    border: none !important;
-    outline: none !important;
-    color: #6b7280;
-    padding: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.eye-btn:hover {
-    color: #a855f7;
-}
-
-/* Pastikan teks input tidak masuk bawah mata */
-.relative input {
-    padding-right: 3rem !important;
-}
-
-/* --- GAYA ANIMASI TIKTOK STYLE --- */
+/* --- 2. ANIMASI TIKTOK STYLE (FLIP, SLIDE & BLUR) --- */
 .tiktok-flip {
+    display: block !important;
     animation: tiktokSlide 0.7s cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
 @keyframes tiktokSlide {
     0% {
         opacity: 0;
-        transform: translateY(30px) scale(0.9) rotateX(-10deg);
-        filter: blur(10px);
+        transform: translateY(40px) scale(0.85) rotateX(-20deg);
+        filter: blur(12px);
     }
     100% {
         opacity: 1;
@@ -59,7 +25,70 @@
     }
 }
 
-/* Tambahkan sedikit efek pada container card agar tidak nampak kaku */
+/* --- 3. FIX UNTUK BUTANG MATA (EYE TOGGLE) --- */
+.relative {
+    position: relative;
+    width: 100%;
+}
+
+/* Spesifik untuk butang mata supaya tidak kacau butang Login/Daftar */
+.eye-btn {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40; /* Pastikan paling atas */
+    cursor: pointer;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    color: #6b7280;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.eye-btn:hover {
+    color: #a855f7;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.eye-btn:active {
+    transform: translateY(-50%) scale(0.9);
+}
+
+/* Jarak teks dalam input supaya tidak bertindih dengan ikon mata */
+.relative input {
+    padding-right: 3.5rem !important;
+}
+
+/* --- 4. GAYA INPUT CUSTOM (BACKUP JIKA TAILWIND LAMBAT) --- */
+input:focus {
+    box-shadow: 0 0 0 2px rgba(168, 85, 247, 0.2);
+}
+
+/* --- 5. GLASS CARD SMOOTHING --- */
 .w-full.max-w-md {
-    transition: all 0.5s ease;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    animation: cardEntrance 0.8s ease-out;
+}
+
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* --- 6. PENAMBAHBAIKAN MOBILE --- */
+@media (max-width: 480px) {
+    .tiktok-flip {
+        animation-duration: 0.5s; /* Lebih laju sikit di phone */
+    }
 }
