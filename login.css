@@ -73,3 +73,17 @@
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* Pastikan butang mata berada di atas input dan boleh diklik */
+.relative button {
+    z-index: 20;
+    cursor: pointer;
+    background: none;
+    border: none;
+    outline: none;
+    padding: 10px; /* Besarkan kawasan klik */
+}
+
+.relative input {
+    z-index: 10;
+}
