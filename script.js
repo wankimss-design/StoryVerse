@@ -21,24 +21,16 @@ window.addEventListener('load', () => {
         return;
     }
 
-    setTimeout(() => {
-        circle?.classList.add('break');
-        setTimeout(() => {
-            text?.classList.add('show');
-            if (svg) svg.style.animation = "writeText 2s ease-in-out forwards";
-
+   setTimeout(() => {
+        if (preloader) {
+            preloader.classList.add('lift-up');
+            if (typeof fetchNovels === 'function') fetchNovels();
+            
             setTimeout(() => {
-                preloader.classList.add('lift-up');
-                
-                // Jalankan fungsi ambil data novel
-                fetchNovels();
-                
-                setTimeout(() => { 
-                    preloader.style.display = 'none'; 
-                }, 1300);
-            }, 3000);
-        }, 400);
-    }, 1000);
+                preloader.style.display = 'none';
+            }, 1000); // Masa untuk transisi lift-up selesai
+        }
+    }, 4500); 
 });
 
 // --- 2. THEME TOGGLE LOGIC (FONT AWESOME VERSION) ---
