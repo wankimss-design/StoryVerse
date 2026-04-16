@@ -20,26 +20,24 @@ function toggleAuth() {
     const loginSec = document.getElementById('loginSection');
     const regSec = document.getElementById('registerSection');
 
-    // Reset animasi dengan membuang kelas sedia ada
-    loginSec.classList.remove('fade-in-custom');
-    regSec.classList.remove('fade-in-custom');
+    // Buang kelas lama supaya boleh trigger semula
+    loginSec.classList.remove('slide-up-custom');
+    regSec.classList.remove('slide-up-custom');
 
     if (loginSec.style.display === 'none') {
-        // Tunjukkan Login
         loginSec.style.display = 'block';
         regSec.style.display = 'none';
         
-        // Paksa browser "refresh" kelas supaya animasi jalan semula
+        // Trigger animasi Slide Up untuk Login
         void loginSec.offsetWidth; 
-        loginSec.classList.add('fade-in-custom');
+        loginSec.classList.add('slide-up-custom');
     } else {
-        // Tunjukkan Register
         loginSec.style.display = 'none';
         regSec.style.display = 'block';
         
-        // Paksa browser "refresh" kelas supaya animasi jalan semula
+        // Trigger animasi Slide Up untuk Register
         void regSec.offsetWidth;
-        regSec.classList.add('fade-in-custom');
+        regSec.classList.add('slide-up-custom');
     }
 }
 
