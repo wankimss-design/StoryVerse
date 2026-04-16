@@ -41,25 +41,23 @@
     padding-right: 3rem !important;
 }
 
-/* --- ANIMASI PERTUKARAN --- */
-
-/* Kelas untuk animasi masuk */
-.fade-in-custom {
-    animation: authSlideIn 0.5s ease-out forwards;
+/* --- ANIMASI SLIDE UP --- */
+.slide-up-custom {
+    animation: authSlideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
-@keyframes authSlideIn {
+@keyframes authSlideUp {
     from {
         opacity: 0;
-        transform: translateY(15px); /* Mula dari bawah sikit */
+        transform: translateY(50px); /* Mula 50px dari bawah */
     }
     to {
         opacity: 1;
-        transform: translateY(0); /* Naik ke tempat asal */
+        transform: translateY(0); /* Berhenti di posisi asal */
     }
 }
 
-/* Supaya pertukaran nampak lebih smooth */
+/* Tambahkan sedikit smoothing pada container utama */
 #loginSection, #registerSection {
-    transition: all 0.4s ease-in-out;
+    backface-visibility: hidden;
 }
