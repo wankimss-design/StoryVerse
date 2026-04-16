@@ -41,23 +41,25 @@
     padding-right: 3rem !important;
 }
 
-/* --- ANIMASI SLIDE UP --- */
-.slide-up-custom {
-    animation: authSlideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+/* --- GAYA ANIMASI TIKTOK STYLE --- */
+.tiktok-flip {
+    animation: tiktokSlide 0.7s cubic-bezier(0.19, 1, 0.22, 1) forwards;
 }
 
-@keyframes authSlideUp {
-    from {
+@keyframes tiktokSlide {
+    0% {
         opacity: 0;
-        transform: translateY(50px); /* Mula 50px dari bawah */
+        transform: translateY(30px) scale(0.9) rotateX(-10deg);
+        filter: blur(10px);
     }
-    to {
+    100% {
         opacity: 1;
-        transform: translateY(0); /* Berhenti di posisi asal */
+        transform: translateY(0) scale(1) rotateX(0deg);
+        filter: blur(0);
     }
 }
 
-/* Tambahkan sedikit smoothing pada container utama */
-#loginSection, #registerSection {
-    backface-visibility: hidden;
+/* Tambahkan sedikit efek pada container card agar tidak nampak kaku */
+.w-full.max-w-md {
+    transition: all 0.5s ease;
 }
