@@ -1,107 +1,136 @@
-/* --- ASAS & GRID NOVEL --- */
-.katalog-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
+/* --- ASAS & TIPOGRAFI --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-@media (min-width: 768px) {
-    .katalog-grid { grid-template-columns: repeat(4, 1fr); }
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: background-color 0.5s ease, color 0.5s ease;
+    overflow-x: hidden;
 }
 
-@media (min-width: 1024px) {
-    .katalog-grid { grid-template-columns: repeat(5, 1fr); gap: 2rem; }
+/* --- NAVIGASI MODEN --- */
+nav {
+    transition: all 0.4s ease;
 }
 
-/* --- SEARCH BAR (MODEN & DINAMIK) --- */
-.search-container {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    max-width: 500px; /* Menghadkan saiz bar carian */
+.logo-text {
+    transition: color 0.4s ease;
 }
 
+/* SEARCH BAR STYLE */
 .search-input {
-    width: 100%;
-    background: #151515;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: white;
-    font-size: 10px;
-    padding: 10px 15px 10px 40px;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .search-input:focus {
-    border-color: #a855f7;
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.15);
-    background: #1a1a1a;
+    background: rgba(168, 85, 247, 0.05) !important;
+    border-color: #a855f7 !important;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
 }
 
-/* --- GENRE CHIPS (TABLE) --- */
-.genre-chip input { display: none; }
-.genre-chip span {
+/* --- FILTER BOX (BENTO STYLE) --- */
+.filter-card {
+    transition: all 0.4s ease;
+}
+
+/* CHIPS / PILLS */
+.modern-chip input {
+    display: none;
+}
+
+.modern-chip span {
     display: inline-block;
-    padding: 6px 14px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    color: #888;
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 100px;
+    font-size: 11px;
     font-weight: 700;
-    font-size: 10px;
-    text-transform: uppercase;
+    color: #6b7280;
     cursor: pointer;
-    transition: 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
 }
 
-.genre-chip input:checked + span {
-    background: linear-gradient(to right, #9333ea, #db2777);
-    color: white;
-    border-color: transparent;
+.modern-chip span:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #e5e7eb;
 }
 
-/* --- LIGHT MODE OVERRIDES (PEMBETULAN TULISAN HILANG) --- */
+/* APABILA CHIP DIPILIH */
+.modern-chip input:checked + span {
+    background: white;
+    color: black;
+    border-color: white;
+    box-shadow: 0 8px 15px rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* --- NOVEL CARD TIKTOK STYLE --- */
+.novel-card {
+    animation: slideUp 0.6s ease forwards;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.novel-card img {
+    border-radius: 24px;
+    transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.novel-card:hover img {
+    transform: scale(1.05) translateY(-8px);
+}
+
+/* --- PEMBETULAN LIGHT MODE (FULL) --- */
 body.light-mode {
-    background-color: #f8f9fa !important;
-    color: #1a1a1a !important;
+    background-color: #f9fafb !important;
+    color: #111827 !important;
 }
 
 body.light-mode nav {
-    background: rgba(255, 255, 255, 0.85) !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(0, 0, 0, 0.05);
 }
 
 body.light-mode .logo-text,
-body.light-mode .nav-name,
 body.light-mode .title-main,
-body.light-mode .novel-title {
-    color: #1a1a1a !important;
+body.light-mode .nav-name {
+    color: #111827 !important;
 }
 
 body.light-mode .search-input {
     background: #ffffff !important;
-    border-color: #d1d5db !important;
-    color: #1a1a1a !important;
+    color: #111827 !important;
+    border-color: #e5e7eb !important;
 }
 
-body.light-mode .search-input::placeholder {
-    color: #9ca3af;
-}
-
-body.light-mode .bg-filter {
+body.light-mode .filter-card {
     background: #ffffff !important;
-    border: 1px solid #e5e7eb !important;
+    border: 1px solid #edf2f7 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
 }
 
-/* --- CARD ANIMATION --- */
-.novel-card {
-    animation: fadeIn 0.6s ease-out forwards;
+body.light-mode .modern-chip span {
+    background: #f3f4f6;
+    border-color: #e5e7eb;
+    color: #6b7280;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
+body.light-mode .modern-chip input:checked + span {
+    background: #111827;
+    color: white;
+    border-color: #111827;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .novel-title {
+    color: #111827;
 }
