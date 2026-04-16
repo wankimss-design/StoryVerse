@@ -3,100 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Story Verse | Portal Dimensi Baru</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>StoryVerse | Masuk ke Dimensi</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Itim&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="login.css">
 </head>
-<body class="bg-[#0a0a0a] min-h-screen flex items-center justify-center p-6 antialiased">
+<body class="bg-[#0a0a0a] min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
 
-    <div id="container" class="container-sliding flex items-center justify-center">
+    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-900/20 blur-[120px] rounded-full"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-pink-900/10 blur-[120px] rounded-full"></div>
+
+    <div class="w-full max-w-md bg-[#151515]/80 backdrop-blur-xl p-10 rounded-[2.5rem] border border-white/5 shadow-2xl relative z-10">
         
-        <div class="form-box login-form">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-black italic tracking-tighter text-white uppercase text-gradient">Log Masuk</h2>
-                <p class="text-gray-500 text-sm mt-2">Masuk ke portal Story Verse anda.</p>
-            </div>
+        <a href="index.html" class="text-gray-500 hover:text-purple-500 text-sm transition flex items-center gap-2 mb-8 group">
+            <i class="fa-solid fa-arrow-left transition-transform group-hover:-translate-x-1"></i> Kembali ke Home
+        </a>
 
-            <form id="loginForm" class="space-y-4">
-                <input type="email" id="loginEmail" placeholder="Alamat Emel" class="input-auth" required>
-                <input type="password" id="loginPassword" placeholder="Kata Laluan" class="input-auth" required>
-                
-                <button type="submit" class="btn-auth mt-4">LOG MASUK</button>
-            </form>
-
-            <p class="mt-8 text-center text-sm text-gray-500">
-                Belum ada akaun?
-                <button id="toRegister" class="text-purple-500 font-bold hover:underline transition">Daftar Sekarang</button>
-            </p>
-            <a href="index.html" class="block text-center mt-6 text-xs text-gray-700 hover:text-white transition">Back to Main</a>
+        <div class="mb-10 text-center">
+            <h1 class="text-4xl font-black italic text-purple-500 tracking-tighter mb-2">STORY VERSE</h1>
+            <p class="text-gray-400 text-sm italic">Sambung pengembaraan novel anda...</p>
         </div>
 
-        <div class="form-box register-form">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl font-black italic tracking-tighter text-purple-400 uppercase">Daftar Akaun</h2>
-                <p class="text-gray-500 text-sm mt-2">Cipta identiti untuk membaca di Verse.</p>
+        <form id="loginForm" class="space-y-5">
+            <div class="space-y-2">
+                <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Emel</label>
+                <input type="email" id="email" required 
+                    class="w-full bg-black/40 border border-white/5 p-4 rounded-2xl text-white focus:outline-none focus:border-purple-500/50 transition"
+                    placeholder="nama@email.com">
             </div>
 
-            <form id="registerForm" class="space-y-4">
-                <input type="email" id="registerEmail" placeholder="Alamat Emel Baru" class="input-auth" required>
-                <input type="password" id="registerPassword" placeholder="Cipta Kata Laluan (min 6 char)" class="input-auth" required>
-                
-                <button type="submit" class="btn-auth mt-4">DAFTAR IDENTITI</button>
-            </form>
+            <div class="space-y-2">
+                <div class="flex justify-between">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Kata Laluan</label>
+                    <a href="#" class="text-xs text-purple-500 hover:underline">Lupa?</a>
+                </div>
+                <input type="password" id="password" required 
+                    class="w-full bg-black/40 border border-white/5 p-4 rounded-2xl text-white focus:outline-none focus:border-purple-500/50 transition"
+                    placeholder="••••••••">
+            </div>
 
-            <p class="mt-8 text-center text-sm text-gray-500">
-                Sudah ada akaun?
-                <button id="toLogin" class="text-purple-500 font-bold hover:underline transition">Log Masuk Sini</button>
-            </p>
+            <button type="submit" 
+                class="w-full bg-gradient-to-r from-purple-600 to-pink-600 p-4 rounded-2xl font-bold text-white shadow-lg shadow-purple-900/20 hover:scale-[1.02] transition-transform mt-4">
+                Masuk Sekarang
+            </button>
+        </form>
+
+        <div class="mt-8 text-center text-sm text-gray-500">
+            Belum ada akaun? <a href="#" class="text-white font-bold hover:text-purple-500 transition">Daftar Sini</a>
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="firebase-config.js"></script>
-
     <script>
-        // --- LOGIK NAVIGASI (ANIMASI BERGERAK) ---
-        const container = document.getElementById('container');
-        const toRegisterBtn = document.getElementById('toRegister');
-        const toLoginBtn = document.getElementById('toLogin');
-
-        // Bila orang klik "Daftar Sekarang", hantar borang ke Daftar
-        toRegisterBtn.addEventListener('click', () => {
-            container.classList.add('active'); // JavaScript menambah kelas 'active' ke CSS
-        });
-
-        // Bila orang klik "Log Masuk Sini", hantar borang kembali ke Log Masuk
-        toLoginBtn.addEventListener('click', () => {
-            container.classList.remove('active'); // JavaScript membuang kelas 'active'
-        });
-
-        // --- LOGIK FIREBASE (Bekerja di Belakang Tab) ---
-        
-        // 1. Borang Log Masuk
         const loginForm = document.getElementById('loginForm');
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            
-            // Kod asal Firebase awak
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
             firebase.auth().signInWithEmailAndPassword(email, password)
-                .then(() => window.location.href = 'index.html') // Berjaya, balik ke page utama
-                .catch(err => alert("Gagal Log Masuk: " + err.message));
-        });
-
-        // 2. Borang Daftar
-        const registerForm = document.getElementById('registerForm');
-        registerForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-
-            // Kod asal Firebase awak
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then(() => window.location.href = 'index.html') // Berjaya, balik ke page utama
-                .catch(err => alert("Gagal Daftar: " + err.message));
+                .then(() => {
+                    window.location.href = 'index.html';
+                })
+                .catch(error => {
+                    alert("Ops! Sesuatu tak kena: " + error.message);
+                });
         });
     </script>
 </body>
