@@ -167,24 +167,18 @@ body {
     opacity: 1; /* Gambar jadi terang sikit bila hover */
 }
 
-/* --- 6. PRELOADER (SNAKE SVG ANIMATION) --- */
+/* --- 6. PRELOADER: TALI PUTUS & MENULIS BERANGKAI --- */
 #preloader {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100vh;
-    background: #050505; /* Warna asal dark mode */
+    background: #050505; 
     display: flex; justify-content: center; align-items: center;
     z-index: 99999;
-    transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1), visibility 0s 1.2s;
+    transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
 }
 
-/* Mod Light untuk Preloader */
 body.light-mode #preloader {
     background: var(--bg-light);
-}
-
-#preloader.lift-up { 
-    transform: translateY(-100%); 
-    visibility: hidden; 
 }
 
 .loader-wrapper {
@@ -195,73 +189,71 @@ body.light-mode #preloader {
     width: 100%;
 }
 
-/* 1. Bulatan Loading Awal */
+/* 1. Bulatan Tali yang Berpusing */
 .loader-circle {
     position: absolute;
     width: 120px; height: 120px;
-    border: 3px solid rgba(112, 0, 255, 0.05);
-    border-top: 3px solid #7000ff;
+    border: 3px solid transparent;
+    border-top: 3px solid #a855f7; /* Warna ungu tali */
     border-radius: 50%;
-    animation: spin 1s linear infinite, fadeOut 0.5s ease forwards 1.5s;
+    /* Berpusing 2 kali kemudian 'unravel' (putus) */
+    animation: 
+        spin 0.8s linear infinite, 
+        unravel 0.6s cubic-bezier(0.4, 0, 1, 1) forwards 1.5s;
 }
 
-/* 2. SVG Ular & Tulisan */
+/* 2. SVG Tulisan StoryVerse */
 .snake-svg {
-    width: 450px; /* Lebar tulisan */
+    width: 500px;
     overflow: visible;
 }
 
 .snake-text {
-    font-family: 'Itim', cursive; /* Guna font yang sama dengan Hero */
-    font-weight: 900;
-    font-size: 70px;
+    font-family: 'Dancing Script', cursive;
+    font-size: 85px;
     fill: transparent;
     stroke: #a855f7;
-    stroke-width: 1.2;
-    stroke-dasharray: 800;
-    stroke-dashoffset: 800;
-    filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.3));
-    /* Mula melukis selepas bulatan loading (1.5s delay) */
-    animation: drawSnake 3s ease-in-out forwards 1.5s;
+    stroke-width: 1.5;
+    stroke-linecap: round; /* Hujung tulisan nampak bulat/halus */
+    stroke-linejoin: round;
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    /* Mula melukis tepat masa bulatan mengecil */
+    animation: drawCursive 3s ease-in-out forwards 1.8s;
 }
 
-/* --- ANIMATIONS --- */
+/* --- KEYFRAMES ANIMASI --- */
 
 @keyframes spin { 
     to { transform: rotate(360deg); } 
 }
 
-@keyframes fadeOut {
-    to { opacity: 0; transform: scale(1.2); }
+/* Efek tali ditarik masuk ke tengah */
+@keyframes unravel {
+    0% { transform: rotate(360deg) scale(1); opacity: 1; }
+    100% { transform: rotate(1080deg) scale(0); opacity: 0; }
 }
 
-@keyframes drawSnake {
+@keyframes drawCursive {
     0% {
-        stroke-dashoffset: 800;
-        fill: transparent;
+        stroke-dashoffset: 1200;
     }
-    60% {
+    70% {
         stroke-dashoffset: 0;
         fill: transparent;
-        stroke-width: 1.2;
-    }
-    85% {
-        fill: rgba(168, 85, 247, 0.2);
-        stroke-width: 0.8;
     }
     100% {
         stroke-dashoffset: 0;
-        fill: #a855f7;
-        stroke-width: 0; /* Hilangkan stroke, tinggal fill warna penuh */
+        fill: #a855f7; /* Warna masuk penuh */
     }
 }
 
-/* Responsive Preloader */
+/* Responsive */
 @media (max-width: 768px) {
-    .snake-svg { width: 300px; }
-    .snake-text { font-size: 50px; }
-    .loader-circle { width: 90px; height: 90px; }
+    .snake-svg { width: 320px; }
+    .snake-text { font-size: 55px; }
 }
+
 /* --- 7. LIGHT MODE FIX (BAHAGIAN PENTING) --- */
 body.light-mode {
     background-color: var(--bg-light) !important;
