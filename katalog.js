@@ -1,41 +1,57 @@
-// Tunggu sehingga DOM sedia
-document.addEventListener('DOMContentLoaded', () => {
-    loadKatalog();
+// 1. PENGURUSAN STATUS LOGIN (NAVBAR)
+firebase.auth().onAuthStateChanged((user) => {
+    const navAuthText = document.getElementById('navAuthText');
+    const navAuthBtn = document.getElementById('navAuthBtn');
+
+    if (user) {
+        navAuthText.innerText = user.displayName || "Profil";
+        navAuthBtn.href = "profile.html";
+    } else {
+        navAuthText.innerText = "Masuk";
+        navAuthBtn.href = "auth.html";
+    }
 });
 
-async function loadKatalog() {
-    const gridContainer = document.querySelector('.katalog-grid');
-    if (!gridContainer) return;
+// 2. KESAN SKROL NAVBAR
+window.addEventListener('scroll', () => {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 50) {
+        nav.classList.add('bg-[#0a0a0a]/95', 'h-16');
+        nav.classList.remove('bg-[#0a0a0a]/70', 'h-20');
+    } else {
+        nav.classList.add('bg-[#0a0a0a]/70', 'h-20');
+        nav.classList.remove('bg-[#0a0a0a]/95', 'h-16');
+    }
+});
 
-    // Sini nanti kita sambung dengan Firebase Firestore
-    // Contoh cara tarik data:
-    /*
-    const snapshot = await firebase.firestore().collection('novels').get();
-    gridContainer.innerHTML = ''; // Kosongkan placeholder
+// 3. LOAD DATA NOVEL (DUMMY DATA UNTUK TEST UI)
+document.addEventListener('DOMContentLoaded', () => {
+    const grid = document.getElementById('katalogGrid');
     
-    snapshot.forEach((doc) => {
-        const data = doc.data();
-        gridContainer.innerHTML += createNovelCard(data);
-    });
-    */
-    
-    console.log("Katalog JS sedia untuk ditarik dari Firebase!");
-}
+    // Contoh data novel (Nanti tarik dari Firestore)
+    const sampleNovels = [
+        { title: "Sumpahan Penulis Terakhir", author: "KaryaMisteri", cover: "https://images.unsplash.com/photo-1543004629-142a76f50c8e?w=500" },
+        { title: "Cinta Di Balik Dimensi", author: "Aries_99", cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500" },
+        { title: "Kod Rahsia StoryVerse", author: "DevWriter", cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=500" },
+        { title: "Malam Tanpa Bintang", author: "Senja_Hati", cover: "https://images.unsplash.com/photo-1532012197367-6849412628ad?w=500" }
+    ];
 
-// Fungsi Helper untuk bina HTML kad
-function createNovelCard(data) {
-    return `
-        <div class="novel-card">
-            <div class="cover-wrapper">
-                <img src="${data.coverUrl || 'placeholder.jpg'}" alt="${data.title}">
-                <div class="novel-info-overlay">
-                    <button class="bg-purple-600 text-white text-[10px] font-bold py-2 rounded-lg hover:bg-purple-500 transition">
-                        BACA SEKARANG
-                    </button>
+    grid.innerHTML = ''; // Kosongkan placeholder
+
+    sampleNovels.forEach(novel => {
+        grid.innerHTML += `
+            <div class="novel-card">
+                <div class="cover-wrapper">
+                    <img src="${novel.cover}" alt="${novel.title}">
+                    <div class="info-overlay">
+                        <button class="bg-purple-600 text-white text-[9px] font-black uppercase py-2.5 rounded-xl hover:bg-purple-500 transition shadow-lg shadow-purple-900/40">
+                            Baca Sekarang
+                        </button>
+                    </div>
                 </div>
+                <h3 class="novel-title">${novel.title}</h3>
+                <p class="novel-author">Oleh @${novel.author}</p>
             </div>
-            <h3 class="novel-title">${data.title}</h3>
-            <p class="novel-author">Oleh @${data.authorName}</p>
-        </div>
-    `;
-}
+        `;
+    });
+});
