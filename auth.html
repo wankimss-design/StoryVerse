@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StoryVerse | Masuk ke Dimensi</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="login.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Itim&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="login.css">
 </head>
 <body class="bg-[#0a0a0a] min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
 
@@ -21,58 +21,79 @@
             <i class="fa-solid fa-arrow-left transition-transform group-hover:-translate-x-1"></i> Kembali ke Home
         </a>
 
-        <div class="mb-10 text-center">
-            <h1 class="text-4xl font-black italic text-purple-500 tracking-tighter mb-2">STORY VERSE</h1>
-            <p class="text-gray-400 text-sm italic">Sambung pengembaraan novel anda...</p>
-        </div>
-
-        <form id="loginForm" class="space-y-5">
-            <div class="space-y-2">
-                <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Emel</label>
-                <input type="email" id="email" required 
-                    class="w-full bg-black/40 border border-white/5 p-4 rounded-2xl text-white focus:outline-none focus:border-purple-500/50 transition"
-                    placeholder="nama@email.com">
+        <div id="loginSection">
+            <div class="mb-10 text-center">
+                <h1 class="text-4xl font-black italic text-purple-500 tracking-tighter mb-2">STORY VERSE</h1>
+                <p class="text-gray-400 text-sm italic">Selamat kembali, pembaca.</p>
             </div>
 
-            <div class="space-y-2">
-                <div class="flex justify-between">
-                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Kata Laluan</label>
-                    <a href="#" class="text-xs text-purple-500 hover:underline">Lupa?</a>
+            <form id="loginForm" class="space-y-5">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Emel</label>
+                    <input type="email" id="loginEmail" required 
+                        class="w-full bg-black/40 border border-white/5 p-4 rounded-2xl text-white focus:outline-none focus:border-purple-500/50 transition"
+                        placeholder="nama@email.com">
                 </div>
-                <input type="password" id="password" required 
-                    class="w-full bg-black/40 border border-white/5 p-4 rounded-2xl text-white focus:outline-none focus:border-purple-500/50 transition"
-                    placeholder="••••••••">
+
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Kata Laluan</label>
+                        <a href="#" class="text-xs text-purple-500 hover:underline">Lupa?</a>
+                    </div>
+                    <input type="password" id="loginPassword" required 
+                        class="w-full bg-black/40 border border-white/5 p-4 rounded-2xl text-white focus:outline-none focus:border-purple-500/50 transition"
+                        placeholder="••••••••">
+                </div>
+
+                <button type="submit" 
+                    class="w-full bg-gradient-to-r from-purple-600 to-pink-600 p-4 rounded-2xl font-bold text-white shadow-lg shadow-purple-900/20 hover:scale-[1.02] transition-transform mt-4">
+                    Masuk Sekarang
+                </button>
+            </form>
+
+            <div class="mt-8 text-center text-sm text-gray-500">
+                Belum ada akaun? <a href="javascript:void(0)" onclick="toggleAuth()" class="text-white font-bold hover:text-purple-500 transition">Daftar Sini</a>
+            </div>
+        </div>
+
+        <div id="registerSection" style="display: none;">
+            <div class="mb-10 text-center">
+                <h1 class="text-4xl font-black italic text-pink-500 tracking-tighter mb-2">DAFTAR</h1>
+                <p class="text-gray-400 text-sm italic">Mulakan dimensi pengembaraan anda.</p>
             </div>
 
-            <button type="submit" 
-                class="w-full bg-gradient-to-r from-purple-600 to-pink-600 p-4 rounded-2xl font-bold text-white shadow-lg shadow-purple-900/20 hover:scale-[1.02] transition-transform mt-4">
-                Masuk Sekarang
-            </button>
-        </form>
+            <form id="registerForm" class="space-y-5">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Emel</label>
+                    <input type="email" id="regEmail" required 
+                        class="w-full bg-black/40 border border-white/5 p-4 rounded-2xl text-white focus:outline-none focus:border-pink-500/50 transition"
+                        placeholder="emel@anda.com">
+                </div>
 
-        <div class="mt-8 text-center text-sm text-gray-500">
-            Belum ada akaun? <a href="#" class="text-white font-bold hover:text-purple-500 transition">Daftar Sini</a>
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Kata Laluan Baru</label>
+                    <input type="password" id="regPassword" required 
+                        class="w-full bg-black/40 border border-white/5 p-4 rounded-2xl text-white focus:outline-none focus:border-pink-500/50 transition"
+                        placeholder="Minimal 6 aksara">
+                </div>
+
+                <button type="submit" 
+                    class="w-full bg-gradient-to-r from-pink-600 to-purple-600 p-4 rounded-2xl font-bold text-white shadow-lg shadow-pink-900/20 hover:scale-[1.02] transition-transform mt-4">
+                    Cipta Akaun
+                </button>
+            </form>
+
+            <div class="mt-8 text-center text-sm text-gray-500">
+                Sudah ada akaun? <a href="javascript:void(0)" onclick="toggleAuth()" class="text-white font-bold hover:text-purple-500 transition">Log Masuk</a>
+            </div>
         </div>
+
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="firebase-config.js"></script>
-    <script>
-        const loginForm = document.getElementById('loginForm');
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-
-            firebase.auth().signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    window.location.href = 'index.html';
-                })
-                .catch(error => {
-                    alert("Ops! Sesuatu tak kena: " + error.message);
-                });
-        });
-    </script>
+    
+    <script src="auth.js"></script>
 </body>
 </html>
