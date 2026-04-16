@@ -16,17 +16,30 @@ function togglePassword(inputId, eyeId) {
     }
 }
 
-// --- 2. TOGGLE ANTARA LOGIN & REGISTER ---
 function toggleAuth() {
     const loginSec = document.getElementById('loginSection');
     const regSec = document.getElementById('registerSection');
 
+    // Reset animasi dengan membuang kelas sedia ada
+    loginSec.classList.remove('fade-in-custom');
+    regSec.classList.remove('fade-in-custom');
+
     if (loginSec.style.display === 'none') {
+        // Tunjukkan Login
         loginSec.style.display = 'block';
         regSec.style.display = 'none';
+        
+        // Paksa browser "refresh" kelas supaya animasi jalan semula
+        void loginSec.offsetWidth; 
+        loginSec.classList.add('fade-in-custom');
     } else {
+        // Tunjukkan Register
         loginSec.style.display = 'none';
         regSec.style.display = 'block';
+        
+        // Paksa browser "refresh" kelas supaya animasi jalan semula
+        void regSec.offsetWidth;
+        regSec.classList.add('fade-in-custom');
     }
 }
 
