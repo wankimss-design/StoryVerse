@@ -21,17 +21,20 @@ window.addEventListener('load', () => {
         return;
     }
 
-      setTimeout(() => {
-        if (preloader) {
-            preloader.classList.add('lift-up');
-            if (typeof fetchNovels === 'function') fetchNovels();
-            
-            setTimeout(() => {
-                preloader.style.display = 'none';
-            }, 1200);
-        }
-    }, 5200); // Masa yang cukup untuk bulatan + melukis berangkai
-});
+          // TIMING: Bulatan (1.5s) + Menulis (3.5s) + Extra (0.3s) = 5.3s
+        setTimeout(() => {
+            if (preloader) {
+                preloader.classList.add('lift-up'); // Jalankan rollup
+                
+                if (typeof fetchNovels === 'function') fetchNovels();
+                
+                // Tunggu rollup 1.5s selesai baru buang terus dari DOM
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 1500);
+            }
+        }, 5300); 
+    });
 
 // --- 2. THEME TOGGLE LOGIC (FONT AWESOME VERSION) ---
 const themeBtn = document.getElementById('themeToggle');
