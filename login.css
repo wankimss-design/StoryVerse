@@ -1,82 +1,42 @@
-/* --- LOGIN PAGE SPECIFIC STYLE --- */
-.auth-body {
-    background-color: #0a0a0a;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-}
-
-/* Background Glow */
-.auth-glow {
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(112, 0, 255, 0.15) 0%, transparent 70%);
-    border-radius: 50%;
-    filter: blur(60px);
-    z-index: 1;
-}
-
 /* Glass Card Animation */
-@keyframes authFadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Transition untuk tukar antara Login & Daftar */
-#loginSection, #registerSection {
-    animation: fadeIn 0.4s ease-in-out;
-}
-
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.98); }
     to { opacity: 1; transform: scale(1); }
 }
 
-/* --- FIX UNTUK BUTANG MATA (PASSWORD TOGGLE) --- */
+#loginSection, #registerSection {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+/* --- FIX UNTUK BUTANG MATA (EYE TOGGLE) --- */
 .relative {
     position: relative;
     width: 100%;
 }
 
-.relative button {
+/* Kita gunakan class khusus '.eye-btn' supaya tidak mengganggu butang lain */
+.eye-btn {
     position: absolute;
-    right: 10px; /* Jarak dari kanan */
+    right: 15px;
     top: 50%;
-    transform: translateY(-50%); /* Letak tengah secara menegak */
-    z-index: 30 !important; /* Pastikan di atas input */
+    transform: translateY(-50%);
+    z-index: 30;
     cursor: pointer;
-    background: transparent;
-    border: none;
-    outline: none;
-    padding: 8px;
-    color: #6b7280; /* Warna kelabu (gray-500) */
-    transition: color 0.2s;
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    color: #6b7280;
+    padding: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.relative button:hover {
-    color: #a855f7; /* Tukar ungu bila hover */
+.eye-btn:hover {
+    color: #a855f7;
 }
 
-/* Pastikan input tidak menutup ikon */
+/* Pastikan teks input tidak masuk bawah mata */
 .relative input {
-    padding-right: 3.5rem !important; /* Ruang untuk ikon mata */
-}
-
-/* --- TAMBAHAN UNTUK INPUT STYLE (Jika Tailwind tak load) --- */
-.auth-input-custom {
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.3s;
-}
-
-.auth-input-custom:focus {
-    border-color: rgba(168, 85, 247, 0.5);
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.1);
+    padding-right: 3rem !important;
 }
