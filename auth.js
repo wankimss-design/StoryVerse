@@ -1,16 +1,18 @@
-// --- 1. TOGGLE TUNJUK/SOROK PASSWORD (MATA) ---
+// Gantikan fungsi togglePassword lama dengan yang ini
 function togglePassword(inputId, eyeId) {
     const passwordInput = document.getElementById(inputId);
     const eyeIcon = document.getElementById(eyeId);
 
+    if (!passwordInput || !eyeIcon) return; // Elakkan ralat jika ID salah
+
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
-        eyeIcon.classList.remove("fa-eye");
-        eyeIcon.classList.add("fa-eye-slash");
+        // Tukar ikon kepada mata bergaris
+        eyeIcon.classList.replace("fa-eye", "fa-eye-slash");
     } else {
         passwordInput.type = "password";
-        eyeIcon.classList.remove("fa-eye-slash");
-        eyeIcon.classList.add("fa-eye");
+        // Tukar balik kepada ikon mata biasa
+        eyeIcon.classList.replace("fa-eye-slash", "fa-eye");
     }
 }
 
