@@ -227,41 +227,36 @@ body.light-mode .nav-btn-auth:hover {
     .novel-card-large { height: 350px; transform: none !important; margin: 0 auto; }
 }
 
-/* --- FOOTER ICONS STYLE --- */
+/* --- FOOTER ICONS FINE-TUNING --- */
 .footer-icon-link {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.03);
-    color: #888;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    width: 35px; /* Kecilkan sikit */
+    height: 35px;
+    background: transparent; /* Buang kotak kelabu tu */
+    color: #666; /* Warna asal lebih malap */
+    border-radius: 50%; /* Bulat lebih elegan */
     transition: all 0.3s ease;
+    border: 1px solid transparent;
 }
 
 .footer-icon-link i {
-    width: 18px;
-    height: 18px;
+    font-size: 1.2rem; /* Saiz ikon yang konsisten */
 }
 
 .footer-icon-link:hover {
-    background: #1a1a1a;
-    color: #a855f7; /* Warna ungu bila hover */
+    color: #a855f7; /* Warna ungu Story Verse */
+    background: rgba(168, 85, 247, 0.1); /* Glow ungu halus di belakang */
     transform: translateY(-3px);
-    border-color: rgba(168, 85, 247, 0.4);
 }
 
-/* Penyelarasan untuk Light Mode (Cream) */
+/* Untuk Light Mode (Cream) */
 body.light-mode .footer-icon-link {
-    background: rgba(0, 0, 0, 0.05);
-    color: #777;
-    border-color: rgba(0, 0, 0, 0.05);
+    color: #999;
 }
 
 body.light-mode .footer-icon-link:hover {
-    background: #ffffff;
     color: #7000ff;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    background: rgba(112, 0, 255, 0.05);
 }
