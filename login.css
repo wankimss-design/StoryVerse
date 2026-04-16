@@ -40,3 +40,26 @@
 .relative input {
     padding-right: 3rem !important;
 }
+
+/* --- ANIMASI PERTUKARAN --- */
+
+/* Kelas untuk animasi masuk */
+.fade-in-custom {
+    animation: authSlideIn 0.5s ease-out forwards;
+}
+
+@keyframes authSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px); /* Mula dari bawah sikit */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Naik ke tempat asal */
+    }
+}
+
+/* Supaya pertukaran nampak lebih smooth */
+#loginSection, #registerSection {
+    transition: all 0.4s ease-in-out;
+}
