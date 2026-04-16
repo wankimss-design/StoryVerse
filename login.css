@@ -20,70 +20,63 @@
     z-index: 1;
 }
 
-/* Glass Card */
-.auth-card {
-    background: rgba(21, 21, 21, 0.8);
-    backdrop-filter: blur(20px);
-    padding: 40px;
-    border-radius: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    width: 100%;
-    max-width: 400px;
-    position: relative;
-    z-index: 10;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-    animation: authFadeUp 0.8s ease-out;
-}
-
-.auth-input {
-    width: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 15px;
-    border-radius: 15px;
-    color: white;
-    margin-top: 8px;
-    transition: all 0.3s;
-}
-
-.auth-input:focus {
-    outline: none;
-    border-color: #a855f7;
-    background: rgba(168, 85, 247, 0.05);
-}
-
-.auth-btn {
-    width: 100%;
-    background: linear-gradient(90deg, #ff0055, #7000ff);
-    color: white;
-    padding: 15px;
-    border-radius: 15px;
-    font-weight: 800;
-    margin-top: 20px;
-    cursor: pointer;
-    transition: transform 0.3s;
-}
-
-.auth-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(112, 0, 255, 0.3);
-}
-
+/* Glass Card Animation */
 @keyframes authFadeUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Pastikan butang mata berada di atas input dan boleh diklik */
-.relative button {
-    z-index: 20;
-    cursor: pointer;
-    background: none;
-    border: none;
-    outline: none;
-    padding: 10px; /* Besarkan kawasan klik */
+/* Transition untuk tukar antara Login & Daftar */
+#loginSection, #registerSection {
+    animation: fadeIn 0.4s ease-in-out;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* --- FIX UNTUK BUTANG MATA (PASSWORD TOGGLE) --- */
+.relative {
+    position: relative;
+    width: 100%;
+}
+
+.relative button {
+    position: absolute;
+    right: 10px; /* Jarak dari kanan */
+    top: 50%;
+    transform: translateY(-50%); /* Letak tengah secara menegak */
+    z-index: 30 !important; /* Pastikan di atas input */
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 8px;
+    color: #6b7280; /* Warna kelabu (gray-500) */
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.relative button:hover {
+    color: #a855f7; /* Tukar ungu bila hover */
+}
+
+/* Pastikan input tidak menutup ikon */
 .relative input {
-    z-index: 10;
+    padding-right: 3.5rem !important; /* Ruang untuk ikon mata */
+}
+
+/* --- TAMBAHAN UNTUK INPUT STYLE (Jika Tailwind tak load) --- */
+.auth-input-custom {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s;
+}
+
+.auth-input-custom:focus {
+    border-color: rgba(168, 85, 247, 0.5);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.1);
 }
