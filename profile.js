@@ -201,3 +201,18 @@ if(editFormElement) {
 window.logout = function() {
     firebase.auth().signOut().then(() => { window.location.href = "index.html"; });
 }
+
+// Logik ringkas tukar mode (Light/Dark)
+const themeBtn = document.getElementById('themeToggle');
+if (themeBtn) {
+    themeBtn.onclick = () => {
+        document.body.classList.toggle('light-mode');
+        const icon = themeBtn.querySelector('i');
+        if (document.body.classList.contains('light-mode')) {
+            icon.classList.replace('fa-moon', 'fa-sun');
+            // Tambah gaya light mode di CSS jika perlu
+        } else {
+            icon.classList.replace('fa-sun', 'fa-moon');
+        }
+    };
+}
