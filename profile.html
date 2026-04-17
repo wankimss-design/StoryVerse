@@ -41,9 +41,9 @@
                         <span class="bg-purple-500/10 text-purple-400 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-purple-500/20 inline-block w-fit mx-auto md:mx-0">Pembaca Setia</span>
                         <span class="bg-white/5 text-gray-400 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-white/10 inline-block w-fit mx-auto md:mx-0">Akaun Disahkan</span>
                     </div>
-                    <h1 id="userName" class="text-4xl md:text-6xl font-black italic tracking-tighter uppercase mb-2 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">Nama Pengguna</h1>
+                    <h1 id="userName" class="text-4xl md:text-6xl font-black italic tracking-tighter uppercase mb-2 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">ADMIN12</h1>
                     <p id="userEmail" class="text-gray-500 text-sm mb-6 font-medium flex items-center justify-center md:justify-start gap-2">
-                        <i class="fa-regular fa-envelope opacity-50"></i> emel@pengguna.com
+                        <i class="fa-regular fa-envelope opacity-50"></i> respectzero47@gmail.com
                     </p>
                     
                     <div class="flex flex-wrap gap-4 justify-center md:justify-start">
@@ -81,7 +81,7 @@
                         <div class="aspect-square rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center group cursor-help" title="Pembaca Terawal">
                             <i class="fa-solid fa-crown text-purple-500 group-hover:scale-125 transition-transform"></i>
                         </div>
-                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -90,15 +90,34 @@
                     <div class="flex gap-8 pb-1 relative">
                         <button class="tab-btn active" data-tab="reading">Sedang Dibaca</button>
                         <button class="tab-btn" data-tab="saved">Simpanan</button>
-                        
+                        <button class="tab-btn" data-tab="my-novels">Karya Saya</button> 
                         <div id="tabIndicator" class="absolute bottom-[-1px] left-0 h-[2px] bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.5)] transition-all duration-300 ease-in-out"></div>
                     </div>
                 </div>
 
-                <div id="readingList" class="grid grid-cols-2 gap-6">
-                    </div>
-            </div>
+                <div id="novelContainer">
+                    <div id="readingList" class="grid grid-cols-2 gap-6">
+                        </div>
 
+                    <div id="analyticsSection" class="hidden mt-12">
+                        <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6 italic text-center md:text-left">Analitik Trafik Penulis</h3>
+                        <div class="overflow-x-auto rounded-2xl border border-white/5 bg-white/5">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-white/5 text-[10px] uppercase tracking-widest text-gray-400">
+                                    <tr>
+                                        <th class="px-6 py-4 font-black">Tajuk Novel</th>
+                                        <th class="px-6 py-4 font-black">Pembaca Unik</th>
+                                        <th class="px-6 py-4 font-black">Jumlah Klik</th>
+                                        <th class="px-6 py-4 font-black">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="trafficTableBody" class="divide-y divide-white/5 text-gray-300">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="editModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6">
