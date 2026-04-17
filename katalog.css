@@ -85,3 +85,21 @@ body { transition: background-color 0.4s ease; overflow-x: hidden; }
 body.light-mode { background: #fdfdfd !important; color: #111 !important; }
 body.light-mode .title-main-container { color: #111 !important; }
 body.light-mode .menu-box, body.light-mode .dropdown-btn { background: white !important; color: #111 !important; border-color: #eee !important; }
+/* --- PENAMBAHBAIKAN NAV UNTUK LIGHT MODE --- */
+body.light-mode nav {
+    background-color: rgba(255, 255, 255, 0.8) !important; /* Putih Transparen */
+    border-color: rgba(0, 0, 0, 0.05) !important; /* Border sangat nipis */
+    backdrop-filter: blur(12px); /* Blur yang lebih halus */
+}
+
+/* Ubah warna teks Search Bar dalam Light Mode supaya nampak */
+body.light-mode .search-input {
+    background: rgba(0, 0, 0, 0.03) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    color: #111 !important;
+}
+
+/* Ubah warna ikon dalam nav */
+body.light-mode nav i {
+    color: #444 !important;
+}
