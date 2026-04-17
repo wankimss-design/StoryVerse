@@ -1,114 +1,105 @@
-// --- 1. AUTH GUARD & PROFILE ---
+// --- 1. PENGURUSAN AUTH ---
 firebase.auth().onAuthStateChanged((user) => {
     if (!user) {
-        // Jika tidak login, hantar balik ke auth.html
         window.location.href = "auth.html";
     } else {
-        // Kemaskini maklumat profil
-        const navName = document.getElementById('navUserName');
         const navAvatar = document.getElementById('navAvatar');
+        const navName = document.getElementById('navUserName');
         
-        if (navName) navName.innerText = user.displayName || "Penulis";
         if (navAvatar) navAvatar.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}&background=a855f7&color=fff`;
+        if (navName) navName.innerText = user.displayName || "Admin";
         
-        // Mulakan load data
-        loadKatalog();
+        loadKatalog(); // Muat data setelah auth sah
     }
 });
 
-// --- 2. DATA CONTOH (Sesuai untuk test) ---
-const databaseNovels = [
+// --- 2. LOGIK DROPDOWN ---
+function toggleDropdown(id) {
+    const menus = ['genreMenu', 'statusMenu'];
+    menus.forEach(menuId => {
+        const menu = document.getElementById(menuId);
+        if (menuId === id) {
+            menu.classList.toggle('hidden');
+        } else {
+            menu.classList.add('hidden');
+        }
+    });
+}
+
+// Tutup menu jika klik di luar kawasan dropdown
+window.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown-group')) {
+        document.getElementById('genreMenu')?.classList.add('hidden');
+        document.getElementById('statusMenu')?.classList.add('hidden');
+    }
+});
+
+// --- 3. DATA & FILTERING ---
+const novels = [
     { title: "Sumpahan Penulis Terakhir", genre: "Seram", status: "Complete", cover: "https://images.unsplash.com/photo-1543004629-142a76f50c8e?w=500" },
     { title: "Cinta Di Balik Dimensi", genre: "Romantik", status: "Ongoing", cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500" },
     { title: "Malam Tanpa Bintang", genre: "Romantik", status: "Complete", cover: "https://images.unsplash.com/photo-1532012197367-6849412628ad?w=500" },
-    { title: "Rahsia StoryVerse", genre: "Fantasi", status: "Ongoing", cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=500" },
     { title: "Kembara Digital", genre: "Aksi", status: "Ongoing", cover: "https://images.unsplash.com/photo-1589998059171-988d887df646?w=500" }
 ];
 
-// --- 3. FUNGSI UTAMA: LOAD & TAPIS ---
 function loadKatalog() {
     const grid = document.getElementById('katalogGrid');
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const term = document.getElementById('searchInput').value.toLowerCase();
     
-    // Ambil semua genre/status yang di-check
-    const selectedFilters = Array.from(document.querySelectorAll('.modern-chip input:checked'))
+    // Ambil pilihan daripada checkbox
+    const selectedFilters = Array.from(document.querySelectorAll('.dropdown-item input:checked'))
                                  .map(input => input.value);
 
-    // Proses Tapis
-    const filtered = databaseNovels.filter(novel => {
-        const matchSearch = novel.title.toLowerCase().includes(searchTerm);
+    const filtered = novels.filter(n => {
+        const matchSearch = n.title.toLowerCase().includes(term);
         const matchFilter = selectedFilters.length === 0 || 
-                           selectedFilters.includes(novel.genre) || 
-                           selectedFilters.includes(novel.status);
-        
+                           selectedFilters.includes(n.genre) || 
+                           selectedFilters.includes(n.status);
         return matchSearch && matchFilter;
     });
 
-    // Paparkan
-    displayNovels(filtered);
+    renderGrid(filtered);
 }
 
-function displayNovels(novels) {
+function renderGrid(data) {
     const grid = document.getElementById('katalogGrid');
-    
-    if (novels.length === 0) {
-        grid.innerHTML = `<div class="col-span-full text-center py-20 opacity-50 uppercase tracking-widest text-[10px]">Tiada karya ditemui...</div>`;
+    if (data.length === 0) {
+        grid.innerHTML = `<p class="col-span-full text-center py-20 opacity-40 text-[10px] uppercase tracking-[0.2em]">Tiada hasil ditemui...</p>`;
         return;
     }
 
-    grid.innerHTML = novels.map(n => `
+    grid.innerHTML = data.map(n => `
         <div class="novel-card group cursor-pointer">
-            <div class="relative overflow-hidden rounded-[24px] bg-[#111] aspect-[3/4]">
-                <img src="${n.cover}" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                     <span class="bg-white text-black text-[9px] font-black px-4 py-2 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform">LIHAT CERITA</span>
-                </div>
+            <div class="overflow-hidden rounded-[24px] bg-[#111] aspect-[3/4]">
+                <img src="${n.cover}" class="w-full h-full object-cover group-hover:opacity-80 transition-all">
             </div>
-            <h3 class="novel-title font-bold mt-4 text-sm line-clamp-1">${n.title}</h3>
-            <div class="flex items-center gap-2 mt-1">
-                <span class="text-[9px] font-bold text-purple-500 uppercase tracking-tighter">${n.genre}</span>
-                <span class="text-[9px] text-gray-500">•</span>
-                <span class="text-[9px] text-gray-500 uppercase tracking-tighter">${n.status}</span>
-            </div>
+            <h3 class="font-bold mt-4 text-sm truncate">${n.title}</h3>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">${n.genre} • ${n.status}</p>
         </div>
     `).join('');
 }
 
-// --- 4. EVENT LISTENERS ---
-document.getElementById('searchInput').addEventListener('input', loadKatalog);
-
-document.querySelectorAll('.modern-chip input').forEach(checkbox => {
-    checkbox.addEventListener('change', loadKatalog);
-});
-
-// --- 5. THEME TOGGLE (LOGIK STABIL) ---
+// --- 4. THEME & LOGOUT ---
 function toggleTheme() {
     const body = document.body;
     const icon = document.getElementById('themeIcon');
-    
     body.classList.toggle('light-mode');
     
     const isLight = body.classList.contains('light-mode');
-    
-    // Tukar Ikon
-    if (isLight) {
-        icon.classList.replace('fa-circle-half-stroke', 'fa-sun');
-        localStorage.setItem('theme', 'light');
-    } else {
-        icon.classList.replace('fa-sun', 'fa-circle-half-stroke');
-        localStorage.setItem('theme', 'dark');
-    }
+    icon.classList.replace(isLight ? 'fa-circle-half-stroke' : 'fa-sun', isLight ? 'fa-sun' : 'fa-circle-half-stroke');
+    localStorage.setItem('katalog-theme', isLight ? 'light' : 'dark');
 }
 
-// Semak tema asal semasa load
-if (localStorage.getItem('theme') === 'light') {
+// Kekalkan tema pilihan
+if (localStorage.getItem('katalog-theme') === 'light') {
     document.body.classList.add('light-mode');
     document.getElementById('themeIcon')?.classList.replace('fa-circle-half-stroke', 'fa-sun');
 }
 
-// Fungsi Keluar
 function logout() {
-    firebase.auth().signOut().then(() => {
-        window.location.href = "auth.html";
-    });
+    firebase.auth().signOut().then(() => window.location.href = "auth.html");
 }
+
+// Event Listeners
+document.getElementById('searchInput')?.addEventListener('input', loadKatalog);
+document.querySelectorAll('.dropdown-item input').forEach(el => el.addEventListener('change', loadKatalog));
