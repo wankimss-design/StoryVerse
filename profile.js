@@ -1,4 +1,4 @@
-// 1. DATA SIMULASI & GLOBAL VARIABLES
+// 1. DATA SIMULASI
 let myNovels = [
     { title: "Cinta Di Verse 01", views: "1.2k", clicks: "4.5k", status: "Published", cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400" }
 ];
@@ -12,26 +12,111 @@ const userReading = [
 document.addEventListener('DOMContentLoaded', () => {
     initFirebase();
     initTabs();
-    initTheme(); // Inisialisasi tema
+    initTheme();
 });
 
 function initFirebase() {
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onAuthStateChanged(async (user) => {
         if (user) {
-            document.getElementById('userName').innerText = user.displayName || "Admin12";
+            const db = firebase.firestore();
             document.getElementById('userEmail').innerText = user.email;
-            if (user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
+
+            // Tarik data dari Firestore (Nama, Bio, Base64 Photo)
+            try {
+                const doc = await db.collection('users').doc(user.uid).get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('userName').innerText = data.name || user.displayName || "Admin12";
+                    document.getElementById('userBio').innerText = data.bio || "Tiada bio lagi.";
+                    if (data.photoURL) document.getElementById('userAvatar').src = data.photoURL;
+                } else {
+                    document.getElementById('userName').innerText = user.displayName || "Admin12";
+                }
+            } catch (e) {
+                console.log("Tiada data tambahan di Firestore");
+            }
             
-            // Muat kandungan pertama secara automatik
             loadUserContent();
         } else {
-            // Jika tidak login, hantar ke index (atau login page)
             window.location.href = "index.html";
         }
     });
 }
 
-// 3. LOGIK TAB
+// 3. LOGIK MUAT NAIK (BASE64)
+window.previewImage = function(input) {
+    const fileName = input.files[0]?.name || "Pilih fail gambar...";
+    document.getElementById('fileNameDisplay').innerText = fileName;
+};
+
+const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+});
+
+// 4. FUNGSI SAVE (GABUNGAN NAMA, BIO & BASE64)
+window.saveProfile = async function() {
+    const btn = event.target;
+    const newName = document.getElementById('editName').value.trim();
+    const newBio = document.getElementById('editBio').value.trim();
+    const photoFile = document.getElementById('editPhotoFile').files[0];
+    const user = firebase.auth().currentUser;
+    const db = firebase.firestore();
+
+    if (!user) return;
+
+    try {
+        btn.innerText = "Menyimpan...";
+        btn.disabled = true;
+
+        let finalPhoto = document.getElementById('userAvatar').src;
+
+        if (photoFile) {
+            if (photoFile.size > 1048487) { 
+                alert("Gambar terlalu besar! Sila guna gambar bawah 1MB.");
+                btn.innerText = "Simpan";
+                btn.disabled = false;
+                return;
+            }
+            finalPhoto = await toBase64(photoFile);
+        }
+
+        // Simpan ke Firestore
+        await db.collection('users').doc(user.uid).set({
+            name: newName,
+            bio: newBio,
+            photoURL: finalPhoto
+        }, { merge: true });
+
+        // Update UI
+        document.getElementById('userName').innerText = newName;
+        document.getElementById('userBio').innerText = newBio;
+        document.getElementById('userAvatar').src = finalPhoto;
+
+        window.toggleEditModal();
+        alert("Profil berjaya dikemaskini!");
+
+    } catch (error) {
+        console.error(error);
+        alert("Ralat simpan profil.");
+    } finally {
+        btn.innerText = "Simpan";
+        btn.disabled = false;
+    }
+};
+
+// 5. MODAL & TABS (LOGIK ASAL ANDA)
+window.toggleEditModal = function() {
+    const modal = document.getElementById('editModal');
+    modal.classList.toggle('hidden');
+    if (!modal.classList.contains('hidden')) {
+        document.getElementById('editName').value = document.getElementById('userName').innerText;
+        document.getElementById('editBio').value = document.getElementById('userBio').innerText;
+    }
+}
+
 function initTabs() {
     const tabs = document.querySelectorAll('.tab-btn');
     const indicator = document.getElementById('tabIndicator');
@@ -40,50 +125,34 @@ function initTabs() {
         btn.onclick = () => {
             tabs.forEach(t => t.classList.remove('active'));
             btn.classList.add('active');
-            
             if (indicator) {
                 indicator.style.width = btn.offsetWidth + "px";
                 indicator.style.left = btn.offsetLeft + "px";
             }
-
-            const tab = btn.getAttribute('data-tab');
-            switchTabContent(tab);
+            switchTabContent(btn.getAttribute('data-tab'));
         };
     });
-
-    // Set posisi awal indicator
-    const activeTab = document.querySelector('.tab-btn.active');
-    if (activeTab && indicator) {
-        setTimeout(() => {
-            indicator.style.width = `${activeTab.offsetWidth}px`;
-            indicator.style.left = `${activeTab.offsetLeft}px`;
-        }, 300);
-    }
 }
 
 function switchTabContent(tab) {
     const grid = document.getElementById('readingList');
     const analytics = document.getElementById('analyticsSection');
-
     analytics.classList.add('hidden');
     grid.innerHTML = '';
 
     if (tab === 'reading') loadUserContent();
-    else if (tab === 'saved') window.displaySaved(); // Panggil secara global
+    else if (tab === 'saved') window.displaySaved();
     else if (tab === 'my-novels') {
         loadMyNovels();
         analytics.classList.remove('hidden');
     }
 }
 
-// 4. FUNGSI PAPARAN KANDUNGAN
 function loadUserContent() {
     const grid = document.getElementById('readingList');
     grid.innerHTML = userReading.map(n => `
-        <div class="profile-novel-card group cursor-pointer">
-            <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4">
-                <img src="${n.cover}" class="w-full h-full object-cover">
-            </div>
+        <div class="profile-novel-card">
+            <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4"><img src="${n.cover}" class="w-full h-full object-cover"></div>
             <h4 class="text-sm font-bold truncate mb-2">${n.title}</h4>
             <div class="progress-container mb-2"><div class="progress-bar" style="width: ${n.progress}%"></div></div>
             <span class="text-[8px] font-black text-gray-500 uppercase">${n.progress}% Dibaca</span>
@@ -91,44 +160,11 @@ function loadUserContent() {
     `).join('');
 }
 
-// Didaftarkan ke window supaya ReferenceError hilang
-window.displaySaved = async function() {
-    const grid = document.getElementById('readingList');
-    grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50 text-[10px] uppercase tracking-widest">Memuatkan simpanan...</p>';
-    
-    try {
-        const user = firebase.auth().currentUser;
-        const db = firebase.firestore();
-        const snapshot = await db.collection('users').doc(user.uid).collection('bookmarks').get();
-        
-        if (snapshot.empty) {
-            grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50 text-[10px] uppercase tracking-widest">Tiada simpanan</p>';
-            return;
-        }
-
-        grid.innerHTML = '';
-        snapshot.forEach(doc => {
-            const n = doc.data();
-            grid.innerHTML += `
-                <div class="profile-novel-card group cursor-pointer">
-                    <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4">
-                        <img src="${n.image}" class="w-full h-full object-cover">
-                    </div>
-                    <h4 class="text-sm font-bold truncate mb-1">${n.title}</h4>
-                    <p class="text-[9px] text-purple-500 font-black uppercase tracking-widest">${n.genre || 'Novel'}</p>
-                </div>`;
-        });
-    } catch (e) {
-        grid.innerHTML = '<p class="text-red-500 text-center col-span-full text-[10px]">Tiada data Firestore ditemui.</p>';
-    }
-}
-
 function loadMyNovels() {
     const grid = document.getElementById('readingList');
     const tableBody = document.getElementById('trafficTableBody');
-
     grid.innerHTML = myNovels.map(n => `
-        <div class="profile-novel-card group">
+        <div class="profile-novel-card">
             <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4"><img src="${n.cover}" class="w-full h-full object-cover"></div>
             <h4 class="text-sm font-bold truncate">${n.title}</h4>
             <span class="text-[9px] text-purple-500 font-black uppercase">Karya Anda</span>
@@ -140,67 +176,21 @@ function loadMyNovels() {
             <td class="px-6 py-4">${n.views}</td>
             <td class="px-6 py-4">${n.clicks}</td>
             <td class="px-6 py-4 text-center">
-                <button onclick="openEditNovelModal(${index})" class="text-purple-500 hover:text-white">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                </button>
+                <button onclick="openEditNovelModal(${index})" class="text-purple-500 hover:text-white"><i class="fa-solid fa-pen-to-square"></i></button>
             </td>
         </tr>`).join('');
 }
 
-// 5. MODAL & ACTIONS
-window.toggleEditModal = function() {
-    const modal = document.getElementById('editModal');
-    modal.classList.toggle('hidden');
-    if (!modal.classList.contains('hidden')) {
-        document.getElementById('editName').value = document.getElementById('userName').innerText;
-    }
-}
+window.logout = () => firebase.auth().signOut().then(() => window.location.href = "index.html");
 
-window.saveProfile = async function() {
-    const newName = document.getElementById('editName').value.trim();
-    const user = firebase.auth().currentUser;
-
-    if (user && newName !== "") {
-        try {
-            await user.updateProfile({ displayName: newName });
-            document.getElementById('userName').innerText = newName;
-            window.toggleEditModal();
-            alert("Nama berjaya ditukar!");
-        } catch (error) {
-            alert("Ralat: " + error.message);
-        }
-    } else {
-        alert("Sila masukkan nama.");
-    }
-}
-
-window.openEditNovelModal = function(index) {
-    document.getElementById('editNovelId').value = index;
-    document.getElementById('editNovelTitle').value = myNovels[index].title;
-    document.getElementById('editNovelCover').value = myNovels[index].cover;
-    document.getElementById('editNovelModal').classList.remove('hidden');
-}
-
-window.closeEditNovelModal = function() {
-    document.getElementById('editNovelModal').classList.add('hidden');
-}
-
-window.logout = function() {
-    firebase.auth().signOut().then(() => { window.location.href = "index.html"; });
-}
-
-// 6. TEMA (DARK/LIGHT)
 function initTheme() {
     const themeBtn = document.getElementById('themeToggle');
     if (themeBtn) {
         themeBtn.onclick = () => {
             document.body.classList.toggle('light-mode');
             const icon = themeBtn.querySelector('i');
-            if (document.body.classList.contains('light-mode')) {
-                icon.classList.replace('fa-moon', 'fa-sun');
-            } else {
-                icon.classList.replace('fa-sun', 'fa-moon');
-            }
+            icon.classList.toggle('fa-moon');
+            icon.classList.toggle('fa-sun');
         };
     }
 }
