@@ -1,160 +1,31 @@
-* { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-    font-family: 'Plus Jakarta Sans', sans-serif; 
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+body { background: radial-gradient(circle at 50% -20%, #1a1a1a, #0a0a0a); color: white; }
 
-/* Background & Body */
-body {
-    background: radial-gradient(circle at 50% -20%, #1a1a1a, #0a0a0a);
-    color: white;
-}
-
-/* Tab Styles */
 .tab-btn {
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: #555;
-    padding: 12px 24px;
-    position: relative;
-    border-radius: 12px;
-    background: transparent;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    border: none;
+    font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
+    color: #555; padding: 12px 24px; transition: all 0.3s ease; cursor: pointer; border: none; background: transparent;
 }
+.tab-btn.active { color: #a855f7 !important; background: rgba(168, 85, 247, 0.1); border-radius: 12px; }
 
-.tab-btn.active { 
-    color: #a855f7 !important; 
-    background: rgba(168, 85, 247, 0.1);
-}
-
-/* Garisan Meluncur (Sliding Indicator) */
 #tabIndicator {
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    height: 2px;
-    background: #a855f7;
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Efek beralih yang lebih premium */
-    pointer-events: none;
-    width: 0; /* Lebar akan dikawal oleh JavaScript */
+    position: absolute; bottom: -1px; left: 0; height: 2px; background: #a855f7;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Novel Card in Profile */
 .profile-novel-card {
-    background: rgba(255,255,255,0.02);
-    border-radius: 24px;
-    border: 1px solid rgba(255,255,255,0.05);
-    padding: 12px;
-    transition: all 0.4s ease;
-    position: relative;
-    overflow: hidden;
+    background: rgba(255,255,255,0.02); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05);
+    padding: 12px; transition: all 0.4s ease; overflow: hidden;
 }
+.profile-novel-card:hover { transform: translateY(-5px); border-color: rgba(168, 85, 247, 0.3); background: rgba(255,255,255,0.05); }
 
-.profile-novel-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(168, 85, 247, 0.2), transparent);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    pointer-events: none;
+.progress-container { height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, #a855f7, #ec4899); }
+
+.admin-input {
+    width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 14px 20px; color: white; font-size: 14px;
 }
+.admin-input:focus { outline: none; border-color: #a855f7; background: rgba(168, 85, 247, 0.05); }
 
-.profile-novel-card:hover {
-    background: rgba(255,255,255,0.05);
-    transform: translateY(-5px);
-    border-color: rgba(168, 85, 247, 0.3);
-}
-
-.profile-novel-card:hover::before { opacity: 1; }
-
-/* Progress Bar */
-.progress-container {
-    height: 4px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #a855f7, #ec4899);
-    box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
-}
-
-/* Modal Edit Profil */
-#editModal { z-index: 9999; }
-
-.backdrop-blur-sm {
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-}
-
-#editModal > div:last-child {
-    animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-/* Animasi Avatar Glow */
-@keyframes pulse-slow {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4); }
-    50% { transform: scale(1.02); box-shadow: 0 0 30px 5px rgba(168, 85, 247, 0.2); }
-}
-
-.animate-pulse-slow {
-    animation: pulse-slow 4s infinite ease-in-out;
-}
-
-/* Table Styling */
-table {
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-th {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-td {
-    color: #9ca3af;
-    vertical-align: middle;
-}
-
-#analyticsSection {
-    animation: fadeIn 0.5s ease-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Untuk mencantikkan baris dalam table */
-#trafficTableBody tr {
-    transition: background 0.3s ease;
-}
-
-#trafficTableBody tr:last-child td {
-    border-bottom: none; /* Buang border pada baris terakhir */
-}
-
-/* Gaya teks khusus untuk angka di table agar nampak lebih teknikal */
-#trafficTableBody td {
-    font-family: 'Inter', sans-serif; /* Jika anda mahu angka nampak lebih clean */
-    letter-spacing: -0.02em;
-}
-
-/* Gaya tambahan untuk status Published agar lebih "glow" */
-.bg-green-500\/10 {
-    box-shadow: inset 0 0 12px rgba(34, 197, 94, 0.05);
-}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+#analyticsSection { animation: fadeIn 0.5s ease-out; }
