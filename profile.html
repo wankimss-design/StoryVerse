@@ -74,15 +74,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="p-6 rounded-3xl border border-white/5 bg-white/5">
-                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6 italic">Pencapaian</h3>
-                    <div class="grid grid-cols-4 gap-4">
-                        <div class="aspect-square rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center group cursor-help" title="Pembaca Terawal">
-                            <i class="fa-solid fa-crown text-purple-500 group-hover:scale-125 transition-transform"></i>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="md:col-span-8">
@@ -91,28 +82,26 @@
                         <button class="tab-btn active" data-tab="reading">Sedang Dibaca</button>
                         <button class="tab-btn" data-tab="saved">Simpanan</button>
                         <button class="tab-btn" data-tab="my-novels">Karya Saya</button> 
-                        <div id="tabIndicator" class="absolute bottom-[-1px] left-0 h-[2px] bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.5)] transition-all duration-300 ease-in-out"></div>
+                        <div id="tabIndicator" class="absolute bottom-[-1px] left-0 h-[2px] bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.5)] transition-all"></div>
                     </div>
                 </div>
 
                 <div id="novelContainer">
-                    <div id="readingList" class="grid grid-cols-2 gap-6">
-                        </div>
+                    <div id="readingList" class="grid grid-cols-2 gap-6"></div>
 
                     <div id="analyticsSection" class="hidden mt-12">
-                        <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6 italic text-center md:text-left">Analitik Trafik Penulis</h3>
+                        <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6 italic">Analitik Trafik Penulis</h3>
                         <div class="overflow-x-auto rounded-2xl border border-white/5 bg-white/5">
                             <table class="w-full text-left text-sm">
                                 <thead class="bg-white/5 text-[10px] uppercase tracking-widest text-gray-400">
                                     <tr>
                                         <th class="px-6 py-4 font-black">Tajuk Novel</th>
-                                        <th class="px-6 py-4 font-black">Pembaca Unik</th>
-                                        <th class="px-6 py-4 font-black">Jumlah Klik</th>
-                                        <th class="px-6 py-4 font-black">Status</th>
+                                        <th class="px-6 py-4 font-black">Views</th>
+                                        <th class="px-6 py-4 font-black">Clicks</th>
+                                        <th class="px-6 py-4 font-black text-center">Tindakan</th>
                                     </tr>
                                 </thead>
-                                <tbody id="trafficTableBody" class="divide-y divide-white/5 text-gray-300">
-                                    </tbody>
+                                <tbody id="trafficTableBody" class="divide-y divide-white/5"></tbody>
                             </table>
                         </div>
                     </div>
@@ -125,12 +114,34 @@
             <div class="relative bg-[#1a1a1a] border border-white/10 w-full max-w-md rounded-[32px] p-8 shadow-2xl">
                 <h2 class="text-xl font-black italic uppercase tracking-tighter mb-6">Edit <span class="text-purple-500">Profil</span></h2>
                 <div class="space-y-4">
-                    <input type="text" id="editName" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Masukkan nama...">
+                    <input type="text" id="editName" class="admin-input" placeholder="Masukkan nama...">
                     <div class="flex gap-3 mt-6">
                         <button onclick="toggleEditModal()" class="flex-1 bg-white/5 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest text-gray-400">Batal</button>
                         <button onclick="saveProfile()" class="flex-1 bg-purple-600 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest text-white">Simpan</button>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div id="editNovelModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-6">
+            <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="closeEditNovelModal()"></div>
+            <div class="relative bg-[#121212] border border-white/10 w-full max-w-lg rounded-[40px] p-10 shadow-2xl overflow-y-auto max-h-[90vh]">
+                <h2 class="text-2xl font-black italic uppercase tracking-tighter mb-8 text-purple-500">Kemas Kini Karya</h2>
+                <form id="editNovelForm" class="space-y-6">
+                    <input type="hidden" id="editNovelId">
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">Tajuk Novel</label>
+                        <input type="text" id="editNovelTitle" class="admin-input" required>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">URL Gambar Cover</label>
+                        <input type="url" id="editNovelCover" class="admin-input" required>
+                    </div>
+                    <div class="flex gap-4 pt-4">
+                        <button type="button" onclick="closeEditNovelModal()" class="flex-1 bg-white/5 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-400">Batal</button>
+                        <button type="submit" class="flex-1 bg-purple-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest text-white">Simpan</button>
+                    </div>
+                </form>
             </div>
         </div>
         
