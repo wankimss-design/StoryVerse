@@ -73,31 +73,38 @@ function displaySaved() {
         </div>
     `).join('');
 }
+// Fungsi untuk buka/tutup Modal
 function toggleEditModal() {
     const modal = document.getElementById('editModal');
     modal.classList.toggle('hidden');
     
-    // Masukkan nama sedia ada ke dalam input
+    // Masukkan nama asal ke dalam input bila modal dibuka
     if (!modal.classList.contains('hidden')) {
-        document.getElementById('editName').value = firebase.auth().currentUser.displayName || "";
-    }
-}
-
-async function saveProfile() {
-    const newName = document.getElementById('editName').value;
-    const user = firebase.auth().currentUser;
-
-    if (user) {
-        try {
-            await user.updateProfile({ displayName: newName });
-            document.getElementById('userName').innerText = newName;
-            toggleEditModal();
-            alert("Profil berjaya dikemaskini!");
-        } catch (error) {
-            alert("Ralat: " + error.message);
+        const user = firebase.auth().currentUser;
+        if (user) {
+            document.getElementById('editName').value = user.displayName || "";
         }
     }
 }
 
-// Pastikan butang Edit Profil asal memanggil fungsi ini
-document.querySelector('button[onclick="toggleEditModal()"]').onclick = toggleEditModal;
+// Fungsi untuk simpan nama ke Firebase
+async function saveProfile() {
+    const newName = document.getElementById('editName').value;
+    const user = firebase.auth().currentUser;
+
+    if (user && newName) {
+        try {
+            await user.updateProfile({ displayName: newName });
+            
+            // Update paparan nama di screen terus tanpa refresh
+            document.getElementById('userName').innerText = newName;
+            
+            toggleEditModal(); // Tutup modal
+            alert("Nama berjaya ditukar!");
+        } catch (error) {
+            alert("Ralat: " + error.message);
+        }
+    } else {
+        alert("Sila masukkan nama!");
+    }
+}
