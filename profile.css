@@ -11,7 +11,7 @@ body {
     color: white;
 }
 
-/* Tab Styles - Versi Kemas */
+/* Tab Styles */
 .tab-btn {
     font-size: 10px;
     font-weight: 800;
@@ -32,13 +32,17 @@ body {
     background: rgba(168, 85, 247, 0.1);
 }
 
-.tab-btn.active::after {
-    content: '';
+/* Garisan Meluncur (Sliding Indicator) */
+#tabIndicator {
     position: absolute;
-    bottom: -1px; left: 0;
-    width: 100%; height: 2px;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
     background: #a855f7;
     box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Efek beralih yang lebih premium */
+    pointer-events: none;
+    width: 0; /* Lebar akan dikawal oleh JavaScript */
 }
 
 /* Novel Card in Profile */
@@ -68,9 +72,7 @@ body {
     border-color: rgba(168, 85, 247, 0.3);
 }
 
-.profile-novel-card:hover::before {
-    opacity: 1;
-}
+.profile-novel-card:hover::before { opacity: 1; }
 
 /* Progress Bar */
 .progress-container {
@@ -87,9 +89,7 @@ body {
 }
 
 /* Modal Edit Profil */
-#editModal {
-    z-index: 9999;
-}
+#editModal { z-index: 9999; }
 
 .backdrop-blur-sm {
     backdrop-filter: blur(8px);
