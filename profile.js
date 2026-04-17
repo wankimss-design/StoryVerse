@@ -38,3 +38,38 @@ function logout() {
         window.location.href = "index.html";
     });
 }
+// Data simulasi untuk simpanan (Nanti boleh ambil dari Firestore)
+const userSaved = [
+    { title: "Cinta Di Balik Dimensi", genre: "Romantik", cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400" }
+];
+
+// Fungsi untuk tukar tab
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+        // Tukar rupa butang
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const tab = btn.getAttribute('data-tab');
+        const grid = document.getElementById('readingList');
+
+        if (tab === 'reading') {
+            loadUserContent(); // Panggil fungsi asal (Sedang Dibaca)
+        } else if (tab === 'saved') {
+            displaySaved(); // Panggil fungsi baru (Simpanan)
+        }
+    };
+});
+
+function displaySaved() {
+    const grid = document.getElementById('readingList');
+    grid.innerHTML = userSaved.map(n => `
+        <div class="profile-novel-card group cursor-pointer">
+            <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4">
+                <img src="${n.cover}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            </div>
+            <h4 class="text-sm font-bold truncate mb-1">${n.title}</h4>
+            <p class="text-[9px] text-purple-500 font-black uppercase tracking-widest">${n.genre}</p>
+        </div>
+    `).join('');
+}
