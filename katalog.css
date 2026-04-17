@@ -181,8 +181,34 @@ body.light-mode .logo-text, body.light-mode .title-main, body.light-mode .nav-na
 /* --- LOGO & TITLE --- */
 .logo-icon-anim { animation: logo-bounce 3s infinite ease-in-out; }
 
-.title-main { animation: reveal-text 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+/* --- ANIMATION UNTUK TULISAN KATALOG KARYA --- */
+.title-main {
+    display: inline-block;
+    cursor: default;
+    /* Animasi masuk asal yang kita buat tadi */
+    animation: reveal-text 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+    /* Transition untuk hover yang lancar */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
+}
 
+/* KESAN APABILA CURSOR DI ATAS (HOVER) */
+.title-main:hover {
+    /* Membesar sebanyak 10% (1.1) */
+    transform: scale(1.1);
+    /* Memberi sedikit kesan glow tambahan waktu hover */
+    filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6));
+}
+
+/* Pastikan span di dalam juga ikut serta */
+.title-main span {
+    display: inline-block;
+    transition: transform 0.4s ease;
+}
+
+.title-main:hover span {
+    /* Memberi sedikit kesan senget (skew) untuk nampak lebih dinamik */
+    transform: skewX(-5deg);
+}
 .text-glow { text-shadow: 0 0 30px rgba(168, 85, 247, 0.5); }
 
 /* --- DROPDOWN & INPUTS --- */
