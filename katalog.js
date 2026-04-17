@@ -4,7 +4,7 @@ firebase.auth().onAuthStateChanged((user) => {
         window.location.href = "auth.html";
     } else {
         const navAvatar = document.getElementById('navAvatar');
-        if (navAvatar) navAvatar.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}&background=a855f7&color=fff`;
+        if (navAvatar) navAvatar.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName || 'U'}&background=a855f7&color=fff`;
         loadKatalog();
     }
 });
@@ -14,7 +14,7 @@ function toggleDropdown(id) {
     const menus = ['genreMenu', 'statusMenu'];
     menus.forEach(m => {
         const el = document.getElementById(m);
-        m === id ? el.classList.toggle('hidden') : el.classList.add('hidden');
+        if (el) m === id ? el.classList.toggle('hidden') : el.classList.add('hidden');
     });
 }
 
@@ -24,12 +24,12 @@ window.onclick = (e) => {
     }
 };
 
-// --- 3. DATA & FILTER ---
+// --- 3. DATA & RENDER ---
 const novels = [
-    { id: 1, title: "Sumpahan Penulis Terakhir", genre: "Seram", status: "Complete", cover: "https://images.unsplash.com/photo-1543004629-142a76f50c8e?w=500" },
-    { id: 2, title: "Cinta Di Balik Dimensi", genre: "Romantik", status: "Ongoing", cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500" },
-    { id: 3, title: "Rahsia StoryVerse", genre: "Fantasi", status: "Ongoing", cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=500" },
-    { id: 4, title: "Malam Tanpa Bintang", genre: "Romantik", status: "Complete", cover: "https://images.unsplash.com/photo-1532012197367-6849412628ad?w=500" }
+    { title: "Sumpahan Penulis Terakhir", genre: "Seram", status: "Complete", cover: "https://images.unsplash.com/photo-1543004629-142a76f50c8e?w=500" },
+    { title: "Cinta Di Balik Dimensi", genre: "Romantik", status: "Ongoing", cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500" },
+    { title: "Rahsia StoryVerse", genre: "Fantasi", status: "Ongoing", cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=500" },
+    { title: "Malam Tanpa Bintang", genre: "Romantik", status: "Complete", cover: "https://images.unsplash.com/photo-1532012197367-6849412628ad?w=500" }
 ];
 
 function loadKatalog() {
@@ -49,8 +49,10 @@ function loadKatalog() {
 
 function renderGrid(data) {
     const grid = document.getElementById('katalogGrid');
+    if (!grid) return;
+    
     if (data.length === 0) {
-        grid.innerHTML = `<p class="col-span-full text-center py-24 opacity-30 text-xs uppercase tracking-[0.3em]">Tiada hasil ditemui...</p>`;
+        grid.innerHTML = `<p class="col-span-full text-center py-24 opacity-20 text-[10px] uppercase tracking-[0.5em]">Karya tidak ditemui</p>`;
         return;
     }
 
@@ -59,27 +61,27 @@ function renderGrid(data) {
             <div class="card-image-container">
                 <img src="${n.cover}" alt="${n.title}">
                 <div class="read-overlay">
-                    <span class="read-text">Mula Membaca</span>
+                    <div class="read-btn-ui">Mula Membaca</div>
                 </div>
             </div>
-            <h3 class="font-bold mt-5 text-sm truncate px-1">${n.title}</h3>
-            <div class="flex items-center gap-2 mt-2 px-1">
-                <span class="text-[9px] font-black text-purple-500 uppercase">${n.genre}</span>
-                <span class="text-[9px] text-gray-600">•</span>
-                <span class="text-[9px] font-bold text-gray-500 uppercase">${n.status}</span>
+            <h3 class="font-bold mt-5 text-sm tracking-tight truncate px-1 group-hover:text-purple-500 transition-colors">${n.title}</h3>
+            <div class="flex items-center gap-2 mt-1.5 px-1">
+                <span class="text-[9px] font-black text-purple-500 uppercase tracking-tighter">${n.genre}</span>
+                <span class="text-[9px] text-gray-700">•</span>
+                <span class="text-[9px] font-bold text-gray-500 uppercase tracking-tighter">${n.status}</span>
             </div>
         </div>
     `).join('');
 }
 
-// --- 4. THEME & UTILITY ---
+// --- 4. THEME & LOGOUT ---
 function toggleTheme() {
     document.body.classList.toggle('light-mode');
     const isLight = document.body.classList.contains('light-mode');
     document.getElementById('themeIcon').classList.replace(isLight ? 'fa-circle-half-stroke' : 'fa-sun', isLight ? 'fa-sun' : 'fa-circle-half-stroke');
 }
 
-document.getElementById('searchInput').addEventListener('input', loadKatalog);
+document.getElementById('searchInput')?.addEventListener('input', loadKatalog);
 document.querySelectorAll('input').forEach(i => i.addEventListener('change', loadKatalog));
 
 function logout() { firebase.auth().signOut().then(() => window.location.href = "auth.html"); }
