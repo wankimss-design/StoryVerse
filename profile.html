@@ -81,23 +81,18 @@
                         <div class="aspect-square rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center group cursor-help" title="Pembaca Terawal">
                             <i class="fa-solid fa-crown text-purple-500 group-hover:scale-125 transition-transform"></i>
                         </div>
-                        <div class="aspect-square rounded-xl bg-white/5 border border-white/10 flex items-center justify-center opacity-30 grayscale" title="Belum Dibuka">
-                            <i class="fa-solid fa-fire text-gray-500"></i>
                         </div>
-                        <div class="aspect-square rounded-xl bg-white/5 border border-white/10 flex items-center justify-center opacity-30 grayscale" title="Belum Dibuka">
-                            <i class="fa-solid fa-book-open text-gray-500"></i>
-                        </div>
-                        <div class="aspect-square rounded-xl bg-white/5 border border-white/10 flex items-center justify-center opacity-30 grayscale" title="Belum Dibuka">
-                            <i class="fa-solid fa-bolt text-gray-500"></i>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <div class="md:col-span-8">
-                <div class="flex gap-8 border-b border-white/5 mb-8 pb-1">
-                    <button class="tab-btn active" data-tab="reading">Sedang Dibaca</button>
-                    <button class="tab-btn" data-tab="saved">Simpanan</button>
+                <div class="relative border-b border-white/5 mb-8">
+                    <div class="flex gap-8 pb-1 relative">
+                        <button class="tab-btn active" data-tab="reading">Sedang Dibaca</button>
+                        <button class="tab-btn" data-tab="saved">Simpanan</button>
+                        
+                        <div id="tabIndicator" class="absolute bottom-[-1px] left-0 h-[2px] bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.5)] transition-all duration-300 ease-in-out"></div>
+                    </div>
                 </div>
 
                 <div id="readingList" class="grid grid-cols-2 gap-6">
@@ -111,13 +106,10 @@
             <div class="relative bg-[#1a1a1a] border border-white/10 w-full max-w-md rounded-[32px] p-8 shadow-2xl">
                 <h2 class="text-xl font-black italic uppercase tracking-tighter mb-6">Edit <span class="text-purple-500">Profil</span></h2>
                 <div class="space-y-4">
-                    <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">Nama Paparan Baru</label>
-                        <input type="text" id="editName" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Masukkan nama...">
-                    </div>
+                    <input type="text" id="editName" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Masukkan nama...">
                     <div class="flex gap-3 mt-6">
-                        <button onclick="toggleEditModal()" class="flex-1 bg-white/5 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-white/10 transition-all text-gray-400">Batal</button>
-                        <button onclick="saveProfile()" class="flex-1 bg-purple-600 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-purple-500 transition-all text-white shadow-lg shadow-purple-500/20">Simpan</button>
+                        <button onclick="toggleEditModal()" class="flex-1 bg-white/5 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest text-gray-400">Batal</button>
+                        <button onclick="saveProfile()" class="flex-1 bg-purple-600 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest text-white">Simpan</button>
                     </div>
                 </div>
             </div>
