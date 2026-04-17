@@ -1,168 +1,12 @@
 /* --- RESET & TYPOGRAPHY --- */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    margin: 0; padding: 0; box-sizing: border-box;
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-body {
-    transition: background-color 0.4s ease, color 0.4s ease;
-    overflow-x: hidden;
-}
+body { transition: background-color 0.4s ease, color 0.4s ease; overflow-x: hidden; }
 
-/* --- NAVIGASI & SEARCH --- */
-nav {
-    transition: all 0.3s ease;
-}
-
-.search-input {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.search-input:focus {
-    background: rgba(168, 85, 247, 0.05) !important;
-    border-color: #a855f7 !important;
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
-}
-
-/* --- DROPDOWN SYSTEM --- */
-.dropdown-group {
-    position: relative;
-}
-
-.dropdown-btn {
-    transition: all 0.3s ease;
-}
-
-.menu-box {
-    animation: fadeIn 0.2s ease-out;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Custom Checkbox dalam Dropdown */
-.dropdown-item {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    cursor: pointer;
-    border-radius: 12px;
-    transition: 0.2s;
-}
-
-.dropdown-item:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.dropdown-item input {
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-    margin-right: 12px;
-    cursor: pointer;
-    position: relative;
-}
-
-.dropdown-item input:checked {
-    background: #a855f7;
-    border-color: #a855f7;
-}
-
-.dropdown-item input:checked::after {
-    content: '✓';
-    position: absolute;
-    color: white;
-    font-size: 10px;
-    font-weight: bold;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.dropdown-item span {
-    font-size: 11px;
-    font-weight: 600;
-    color: #9ca3af;
-    text-transform: uppercase;
-}
-
-/* --- NOVEL GRID & CARD --- */
-#katalogGrid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-}
-
-@media (min-width: 768px) { #katalogGrid { grid-template-columns: repeat(4, 1fr); } }
-@media (min-width: 1024px) { #katalogGrid { grid-template-columns: repeat(5, 1fr); gap: 2rem; } }
-
-.novel-card {
-    animation: slideUp 0.6s ease forwards;
-}
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.novel-card img {
-    border-radius: 24px;
-    transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.novel-card:hover img {
-    transform: scale(1.03) translateY(-8px);
-}
-
-/* --- LIGHT MODE COMPATIBILITY --- */
-body.light-mode {
-    background-color: #f9fafb !important;
-    color: #111827 !important;
-}
-
-body.light-mode nav {
-    background: rgba(255, 255, 255, 0.8) !important;
-    border-color: rgba(0,0,0,0.05);
-}
-
-body.light-mode .search-input {
-    background: #ffffff !important;
-    color: #111827 !important;
-    border-color: #e5e7eb !important;
-}
-
-body.light-mode .dropdown-btn {
-    background: #ffffff !important;
-    color: #111827 !important;
-    border-color: #e5e7eb !important;
-}
-
-body.light-mode .menu-box {
-    background: #ffffff !important;
-    border-color: #e5e7eb !important;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-}
-
-body.light-mode .dropdown-item:hover {
-    background: #f3f4f6;
-}
-
-body.light-mode .dropdown-item span {
-    color: #4b5563;
-}
-
-body.light-mode .logo-text, body.light-mode .title-main, body.light-mode .nav-name {
-    color: #111827 !important;
-}
-
-/* --- ANIMASI KEYFRAMES --- */
+/* --- ANIMASI UTAMA --- */
 @keyframes logo-bounce {
     0%, 100% { transform: scale(1) rotate(0deg); }
     50% { transform: scale(1.1) rotate(8deg); }
@@ -173,45 +17,33 @@ body.light-mode .logo-text, body.light-mode .title-main, body.light-mode .nav-na
     100% { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
-@keyframes card-appear {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- LOGO & TITLE --- */
+/* Logo Animation */
 .logo-icon-anim { animation: logo-bounce 3s infinite ease-in-out; }
 
-/* --- ANIMATION UNTUK TULISAN KATALOG KARYA --- */
+/* --- KESAN MEMBESAR PADA TAJUK (HOVER) --- */
 .title-main {
-    display: inline-block;
+    display: inline-block; /* WAJIB: Supaya transform boleh berfungsi */
     cursor: default;
-    /* Animasi masuk asal yang kita buat tadi */
     animation: reveal-text 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-    /* Transition untuk hover yang lancar */
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
+    will-change: transform;
 }
 
-/* KESAN APABILA CURSOR DI ATAS (HOVER) */
 .title-main:hover {
-    /* Membesar sebanyak 10% (1.1) */
-    transform: scale(1.1);
-    /* Memberi sedikit kesan glow tambahan waktu hover */
-    filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.6));
+    transform: scale(1.08); /* Membesar sedikit apabila cursor di atas */
+    filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.4));
 }
 
-/* Pastikan span di dalam juga ikut serta */
 .title-main span {
     display: inline-block;
     transition: transform 0.4s ease;
 }
 
-.title-main:hover span {
-    /* Memberi sedikit kesan senget (skew) untuk nampak lebih dinamik */
-    transform: skewX(-5deg);
-}
+.title-main:hover span { transform: skewX(-5deg); }
+
 .text-glow { text-shadow: 0 0 30px rgba(168, 85, 247, 0.5); }
 
-/* --- DROPDOWN & INPUTS --- */
+/* --- DROPDOWN SYSTEM --- */
 .menu-box { animation: reveal-text 0.3s ease-out; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
 
 .dropdown-item {
@@ -232,16 +64,15 @@ body.light-mode .logo-text, body.light-mode .title-main, body.light-mode .nav-na
     left: 50%; top: 45%; transform: translate(-50%, -50%);
 }
 
-.dropdown-item span { font-[11px] font-bold text-gray-400 uppercase tracking-wider; }
+.dropdown-item span { font-size: 11px; font-weight: bold; text-gray-400 uppercase; tracking-wider; }
 
-/* --- GRID SYSTEM --- */
+/* --- GRID & CARD --- */
 #katalogGrid {
     display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;
 }
 @media (min-width: 768px) { #katalogGrid { grid-template-columns: repeat(4, 1fr); } }
 @media (min-width: 1024px) { #katalogGrid { grid-template-columns: repeat(5, 1fr); gap: 2.5rem; } }
 
-.novel-card { animation: card-appear 0.6s ease-out forwards; }
 .novel-card img { border-radius: 28px; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
 .novel-card:hover img { transform: scale(1.05) translateY(-10px); }
 
@@ -249,7 +80,7 @@ body.light-mode .logo-text, body.light-mode .title-main, body.light-mode .nav-na
 body.light-mode { background-color: #f9fafb !important; color: #111 !important; }
 body.light-mode nav { background: rgba(255, 255, 255, 0.8) !important; border-color: rgba(0,0,0,0.05); }
 body.light-mode .logo-text, body.light-mode .title-main { color: #111 !important; }
-body.light-mode .text-glow { text-shadow: none; }
+body.light-mode .text-glow { text-shadow: none; color: #a855f7 !important; }
 body.light-mode .search-input, body.light-mode .dropdown-btn, body.light-mode .menu-box {
     background: #ffffff !important; color: #111 !important; border-color: #eee !important;
 }
