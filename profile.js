@@ -12,6 +12,7 @@ const userReading = [
 document.addEventListener('DOMContentLoaded', () => {
     initFirebase();
     initTabs();
+    initTheme(); // Inisialisasi tema
 });
 
 function initFirebase() {
@@ -24,12 +25,13 @@ function initFirebase() {
             // Muat kandungan pertama secara automatik
             loadUserContent();
         } else {
-            window.location.href = "auth.html";
+            // Jika tidak login, hantar ke index (atau login page)
+            window.location.href = "index.html";
         }
     });
 }
 
-// 3. LOGIK TAB (ANTI-BUG)
+// 3. LOGIK TAB
 function initTabs() {
     const tabs = document.querySelectorAll('.tab-btn');
     const indicator = document.getElementById('tabIndicator');
@@ -67,7 +69,7 @@ function switchTabContent(tab) {
     grid.innerHTML = '';
 
     if (tab === 'reading') loadUserContent();
-    else if (tab === 'saved') displaySaved();
+    else if (tab === 'saved') window.displaySaved(); // Panggil secara global
     else if (tab === 'my-novels') {
         loadMyNovels();
         analytics.classList.remove('hidden');
@@ -89,7 +91,8 @@ function loadUserContent() {
     `).join('');
 }
 
-async function displaySaved() {
+// Didaftarkan ke window supaya ReferenceError hilang
+window.displaySaved = async function() {
     const grid = document.getElementById('readingList');
     grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50 text-[10px] uppercase tracking-widest">Memuatkan simpanan...</p>';
     
@@ -144,11 +147,10 @@ function loadMyNovels() {
         </tr>`).join('');
 }
 
-// 5. MODAL & ACTIONS (PENTING!)
+// 5. MODAL & ACTIONS
 window.toggleEditModal = function() {
     const modal = document.getElementById('editModal');
     modal.classList.toggle('hidden');
-    // Set nilai asal input kepada nama sekarang
     if (!modal.classList.contains('hidden')) {
         document.getElementById('editName').value = document.getElementById('userName').innerText;
     }
@@ -162,7 +164,7 @@ window.saveProfile = async function() {
         try {
             await user.updateProfile({ displayName: newName });
             document.getElementById('userName').innerText = newName;
-            toggleEditModal();
+            window.toggleEditModal();
             alert("Nama berjaya ditukar!");
         } catch (error) {
             alert("Ralat: " + error.message);
@@ -183,36 +185,22 @@ window.closeEditNovelModal = function() {
     document.getElementById('editNovelModal').classList.add('hidden');
 }
 
-// Logik submit form novel
-const editFormElement = document.getElementById('editNovelForm');
-if(editFormElement) {
-    editFormElement.onsubmit = function(e) {
-        e.preventDefault();
-        const index = document.getElementById('editNovelId').value;
-        myNovels[index].title = document.getElementById('editNovelTitle').value;
-        myNovels[index].cover = document.getElementById('editNovelCover').value;
-        
-        alert("Karya dikemaskini!");
-        closeEditNovelModal();
-        loadMyNovels();
-    };
-}
-
 window.logout = function() {
     firebase.auth().signOut().then(() => { window.location.href = "index.html"; });
 }
 
-// Logik ringkas tukar mode (Light/Dark)
-const themeBtn = document.getElementById('themeToggle');
-if (themeBtn) {
-    themeBtn.onclick = () => {
-        document.body.classList.toggle('light-mode');
-        const icon = themeBtn.querySelector('i');
-        if (document.body.classList.contains('light-mode')) {
-            icon.classList.replace('fa-moon', 'fa-sun');
-            // Tambah gaya light mode di CSS jika perlu
-        } else {
-            icon.classList.replace('fa-sun', 'fa-moon');
-        }
-    };
+// 6. TEMA (DARK/LIGHT)
+function initTheme() {
+    const themeBtn = document.getElementById('themeToggle');
+    if (themeBtn) {
+        themeBtn.onclick = () => {
+            document.body.classList.toggle('light-mode');
+            const icon = themeBtn.querySelector('i');
+            if (document.body.classList.contains('light-mode')) {
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        };
+    }
 }
