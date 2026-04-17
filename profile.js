@@ -1,19 +1,24 @@
+// 1. MONITOR STATUS LOGIN
 firebase.auth().onAuthStateChanged((user) => {
     if (user) {
         document.getElementById('userName').innerText = user.displayName || "Pembaca StoryVerse";
         document.getElementById('userEmail').innerText = user.email;
         if (user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
-        loadUserContent();
+        
+        // Muat kandungan tab pertama secara automatik
+        loadUserContent(); 
     } else {
         window.location.href = "auth.html";
     }
 });
 
+// 2. DATA SIMULASI UNTUK HISTORY (Akan datang dari Firestore kemudian)
 const userReading = [
     { title: "Shadow Bound: Verse 01", progress: 75, cover: "https://images.unsplash.com/photo-1543004218-ee141104975a?q=80&w=400" },
     { title: "Sumpahan Penulis Terakhir", progress: 30, cover: "https://images.unsplash.com/photo-1543004629-142a76f50c8e?w=400" }
 ];
 
+// 3. FUNGSI PAPARAN TAB "SEDANG DIBACA"
 function loadUserContent() {
     const grid = document.getElementById('readingList');
     grid.innerHTML = userReading.map(n => `
@@ -33,61 +38,65 @@ function loadUserContent() {
     `).join('');
 }
 
-function logout() {
-    firebase.auth().signOut().then(() => {
-        window.location.href = "index.html";
-    });
-}
-// Data simulasi untuk simpanan (Nanti boleh ambil dari Firestore)
-const userSaved = [
-    { title: "Cinta Di Balik Dimensi", genre: "Romantik", cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400" }
-];
+// 4. FUNGSI PAPARAN TAB "SIMPANAN" (AMBIL DARI FIRESTORE)
+async function displaySaved() {
+    const user = firebase.auth().currentUser;
+    const grid = document.getElementById('readingList');
+    
+    grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50 text-[10px] uppercase tracking-widest">Memuatkan simpanan...</p>';
 
-// Fungsi untuk tukar tab
+    try {
+        const snapshot = await db.collection('users').doc(user.uid).collection('bookmarks').orderBy('savedAt', 'desc').get();
+        
+        if (snapshot.empty) {
+            grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50 text-[10px] uppercase tracking-widest">Tiada novel disimpan</p>';
+            return;
+        }
+
+        grid.innerHTML = ''; 
+        snapshot.forEach(doc => {
+            const n = doc.data();
+            grid.innerHTML += `
+                <div class="profile-novel-card group cursor-pointer" onclick="window.location.href='detail.html?title=${encodeURIComponent(n.title)}'">
+                    <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4">
+                        <img src="${n.image}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <h4 class="text-sm font-bold truncate mb-1">${n.title}</h4>
+                    <p class="text-[9px] text-purple-500 font-black uppercase tracking-widest">${n.genre}</p>
+                </div>
+            `;
+        });
+    } catch (error) {
+        console.error("Error loading bookmarks:", error);
+        grid.innerHTML = '<p class="text-red-500 text-center col-span-full text-[10px]">Ralat memuatkan data.</p>';
+    }
+}
+
+// 5. LOGIK PENUKARAN TAB
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.onclick = () => {
-        // Tukar rupa butang
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
         const tab = btn.getAttribute('data-tab');
-        const grid = document.getElementById('readingList');
-
         if (tab === 'reading') {
-            loadUserContent(); // Panggil fungsi asal (Sedang Dibaca)
+            loadUserContent();
         } else if (tab === 'saved') {
-            displaySaved(); // Panggil fungsi baru (Simpanan)
+            displaySaved();
         }
     };
 });
 
-function displaySaved() {
-    const grid = document.getElementById('readingList');
-    grid.innerHTML = userSaved.map(n => `
-        <div class="profile-novel-card group cursor-pointer">
-            <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4">
-                <img src="${n.cover}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-            </div>
-            <h4 class="text-sm font-bold truncate mb-1">${n.title}</h4>
-            <p class="text-[9px] text-purple-500 font-black uppercase tracking-widest">${n.genre}</p>
-        </div>
-    `).join('');
-}
-// Fungsi untuk buka/tutup Modal
+// 6. LOGIK MODAL EDIT PROFIL
 function toggleEditModal() {
     const modal = document.getElementById('editModal');
     modal.classList.toggle('hidden');
-    
-    // Masukkan nama asal ke dalam input bila modal dibuka
     if (!modal.classList.contains('hidden')) {
         const user = firebase.auth().currentUser;
-        if (user) {
-            document.getElementById('editName').value = user.displayName || "";
-        }
+        if (user) document.getElementById('editName').value = user.displayName || "";
     }
 }
 
-// Fungsi untuk simpan nama ke Firebase
 async function saveProfile() {
     const newName = document.getElementById('editName').value;
     const user = firebase.auth().currentUser;
@@ -95,11 +104,8 @@ async function saveProfile() {
     if (user && newName) {
         try {
             await user.updateProfile({ displayName: newName });
-            
-            // Update paparan nama di screen terus tanpa refresh
             document.getElementById('userName').innerText = newName;
-            
-            toggleEditModal(); // Tutup modal
+            toggleEditModal();
             alert("Nama berjaya ditukar!");
         } catch (error) {
             alert("Ralat: " + error.message);
@@ -107,4 +113,11 @@ async function saveProfile() {
     } else {
         alert("Sila masukkan nama!");
     }
+}
+
+// 7. LOG KELUAR
+function logout() {
+    firebase.auth().signOut().then(() => {
+        window.location.href = "index.html";
+    });
 }
