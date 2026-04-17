@@ -1,4 +1,4 @@
-// --- 1. FIREBASE AUTH GUARD ---
+// --- 1. FIREBASE AUTH ---
 firebase.auth().onAuthStateChanged((user) => {
     if (!user) {
         window.location.href = "auth.html";
@@ -9,7 +9,7 @@ firebase.auth().onAuthStateChanged((user) => {
     }
 });
 
-// --- 2. DROPDOWN CONTROLLER ---
+// --- 2. DROPDOWN ---
 function toggleDropdown(id) {
     const menus = ['genreMenu', 'statusMenu'];
     menus.forEach(m => {
@@ -18,22 +18,20 @@ function toggleDropdown(id) {
     });
 }
 
-// Tutup dropdown jika klik di luar
 window.onclick = (e) => {
     if (!e.target.closest('.dropdown-group')) {
         document.querySelectorAll('.menu-box').forEach(m => m.classList.add('hidden'));
     }
 };
 
-// --- 3. DATA NOVEL (CONTOH) ---
+// --- 3. DATA & FILTER ---
 const novels = [
-    { title: "Sumpahan Penulis Terakhir", genre: "Seram", status: "Complete", cover: "https://images.unsplash.com/photo-1543004629-142a76f50c8e?w=500" },
-    { title: "Cinta Di Balik Dimensi", genre: "Romantik", status: "Ongoing", cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500" },
-    { title: "Rahsia StoryVerse", genre: "Fantasi", status: "Ongoing", cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=500" },
-    { title: "Malam Tanpa Bintang", genre: "Romantik", status: "Complete", cover: "https://images.unsplash.com/photo-1532012197367-6849412628ad?w=500" }
+    { id: 1, title: "Sumpahan Penulis Terakhir", genre: "Seram", status: "Complete", cover: "https://images.unsplash.com/photo-1543004629-142a76f50c8e?w=500" },
+    { id: 2, title: "Cinta Di Balik Dimensi", genre: "Romantik", status: "Ongoing", cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500" },
+    { id: 3, title: "Rahsia StoryVerse", genre: "Fantasi", status: "Ongoing", cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=500" },
+    { id: 4, title: "Malam Tanpa Bintang", genre: "Romantik", status: "Complete", cover: "https://images.unsplash.com/photo-1532012197367-6849412628ad?w=500" }
 ];
 
-// --- 4. FILTERING SYSTEM ---
 function loadKatalog() {
     const term = document.getElementById('searchInput').value.toLowerCase();
     const selectedGenres = Array.from(document.querySelectorAll('input[name="genre"]:checked')).map(i => i.value);
@@ -57,35 +55,30 @@ function renderGrid(data) {
     }
 
     grid.innerHTML = data.map(n => `
-        <div class="novel-card group cursor-pointer animate-reveal">
-            <div class="overflow-hidden rounded-[32px] bg-[#111] aspect-[3/4] shadow-xl">
-                <img src="${n.cover}" class="w-full h-full object-cover">
+        <div class="novel-card group cursor-pointer">
+            <div class="card-image-container">
+                <img src="${n.cover}" alt="${n.title}">
+                <div class="read-overlay">
+                    <span class="read-text">Mula Membaca</span>
+                </div>
             </div>
             <h3 class="font-bold mt-5 text-sm truncate px-1">${n.title}</h3>
             <div class="flex items-center gap-2 mt-2 px-1">
-                <span class="text-[9px] font-black text-purple-500 uppercase tracking-tighter">${n.genre}</span>
+                <span class="text-[9px] font-black text-purple-500 uppercase">${n.genre}</span>
                 <span class="text-[9px] text-gray-600">•</span>
-                <span class="text-[9px] font-bold text-gray-500 uppercase tracking-tighter">${n.status}</span>
+                <span class="text-[9px] font-bold text-gray-500 uppercase">${n.status}</span>
             </div>
         </div>
     `).join('');
 }
 
-// --- 5. THEME TOGGLE ---
+// --- 4. THEME & UTILITY ---
 function toggleTheme() {
     document.body.classList.toggle('light-mode');
     const isLight = document.body.classList.contains('light-mode');
     document.getElementById('themeIcon').classList.replace(isLight ? 'fa-circle-half-stroke' : 'fa-sun', isLight ? 'fa-sun' : 'fa-circle-half-stroke');
-    localStorage.setItem('theme-pref', isLight ? 'light' : 'dark');
 }
 
-// Auto-load saved theme
-if (localStorage.getItem('theme-pref') === 'light') {
-    document.body.classList.add('light-mode');
-    document.getElementById('themeIcon')?.classList.replace('fa-circle-half-stroke', 'fa-sun');
-}
-
-// Event Listeners
 document.getElementById('searchInput').addEventListener('input', loadKatalog);
 document.querySelectorAll('input').forEach(i => i.addEventListener('change', loadKatalog));
 
