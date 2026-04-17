@@ -9,10 +9,10 @@
 body { 
     background: radial-gradient(circle at 50% -20%, #1a1a1a, #0a0a0a); 
     color: white; 
-    min-height: screen;
+    min-height: 100vh; /* Pembetulan daripada 'screen' */
 }
 
-/* --- NAVIGASI (FIXED) --- */
+/* --- NAVIGASI (STYLE INDEX) --- */
 nav {
     position: fixed !important;
     top: 0;
@@ -27,26 +27,39 @@ nav {
     align-items: center;
 }
 
-/* Gaya Bar Ikon di Tengah Nav */
+/* Bekas Bar Ikon di Kanan */
 nav .flex.items-center.bg-white\/5 {
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px; /* rounded-2xl */
 }
 
+/* Gaya Ikon Umum */
 nav a i, nav button i {
-    transition: all 0.3s ease;
-    color: #9ca3af; /* Warna kelabu (text-gray-400) */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #9ca3af; 
 }
 
-/* Warna Ikon Aktif (Profile) & Hover */
-nav a.bg-white\/10 i {
-    color: #a855f7 !important; /* Ungu StoryVerse */
-    filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.6));
+/* Kesan Hover pada Butang */
+nav a:hover, nav button:hover {
+    transform: translateY(-1px);
 }
 
 nav a:hover i, nav button:hover i {
     color: white !important;
-    transform: scale(1.1);
+}
+
+/* Style Butang Profil AKTIF (Warna Ungu Glow) */
+nav a.bg-white\/10 {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+nav a.bg-white\/10 i {
+    color: #a855f7 !important;
+    filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.6));
 }
 
 /* --- TAB SYSTEM --- */
@@ -93,7 +106,6 @@ nav a:hover i, nav button:hover i {
     background: rgba(255,255,255,0.05); 
 }
 
-/* Progress Bar di Card */
 .progress-container { 
     height: 4px; 
     background: rgba(255,255,255,0.05); 
@@ -144,16 +156,6 @@ nav a:hover i, nav button:hover i {
     50% { opacity: .8; }
 }
 
-/* --- RESPONSIVE FIX --- */
-@media (max-width: 768px) {
-    /* Sembunyikan Nav Ikon pada Mobile (ikut style index.html anda) */
-    .hidden.md\:flex {
-        display: none !important;
-    }
-    
-    .text-4xl { font-size: 2.5rem; }
-}
-
 /* Tooltip Simple */
 [title]:hover::after {
     content: attr(title);
@@ -169,4 +171,11 @@ nav a:hover i, nav button:hover i {
     white-space: nowrap;
     border: 1px solid rgba(255,255,255,0.1);
     z-index: 10000;
+}
+
+/* Helper Class */
+.nav-btn-icon {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
 }
