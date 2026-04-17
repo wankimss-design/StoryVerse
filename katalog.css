@@ -161,3 +161,42 @@ body.light-mode .dropdown-item span {
 body.light-mode .logo-text, body.light-mode .title-main, body.light-mode .nav-name {
     color: #111827 !important;
 }
+
+/* --- ANIMATION UNTUK LOGO --- */
+@keyframes logo-bounce {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(5deg); }
+}
+
+.logo-icon-anim {
+    animation: logo-bounce 3s infinite ease-in-out;
+}
+
+/* --- ANIMATION UNTUK TULISAN KATALOG KARYA --- */
+@keyframes reveal-text {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) skewY(2deg);
+        filter: blur(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) skewY(0deg);
+        filter: blur(0);
+    }
+}
+
+.title-main {
+    display: inline-block;
+    animation: reveal-text 1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+/* Efek Glow pada Text */
+.text-glow {
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+}
+
+/* --- LIGHT MODE ADJUSTMENT --- */
+body.light-mode .text-glow {
+    text-shadow: none; /* Buang glow pada mod cerah supaya tak silau */
+}
