@@ -13,7 +13,6 @@
 
     <nav id="navbar" class="fixed top-0 left-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/5 h-20 flex items-center transition-all duration-500">
         <div class="max-w-7xl mx-auto px-6 w-full flex justify-between items-center gap-4">
-            
             <a href="index.html" class="flex items-center gap-3 shrink-0 group">
                 <div class="w-11 h-11 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center logo-icon-anim shadow-lg shadow-purple-500/20">
                     <i class="fa-solid fa-bolt text-white text-xl"></i>
@@ -27,11 +26,9 @@
                     <input type="text" id="searchInput" placeholder="CARI KARYA ANDA..." 
                            class="search-input w-full bg-white/5 border border-white/10 text-[10px] text-white rounded-full py-3 px-11 focus:outline-none focus:border-purple-500 transition-all outline-none uppercase tracking-widest">
                 </div>
-
                 <button onclick="toggleTheme()" class="text-gray-400 hover:text-purple-400 p-2 transition-transform active:scale-90">
                     <i class="fa-solid fa-circle-half-stroke text-lg" id="themeIcon"></i>
                 </button>
-                
                 <div class="w-11 h-11 rounded-full border-2 border-purple-500/30 overflow-hidden cursor-pointer hover:border-purple-500 transition-colors" onclick="logout()">
                     <img id="navAvatar" src="https://ui-avatars.com/api/?name=User&background=a855f7&color=fff" class="w-full h-full object-cover">
                 </div>
@@ -42,8 +39,13 @@
     <div class="h-32"></div>
 
     <header class="max-w-7xl mx-auto px-6 mb-12">
-        <h1 class="text-5xl md:text-7xl font-black italic tracking-tighter title-main mb-10 uppercase">
-            Katalog <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 text-glow">Karya</span>
+        <h1 class="text-5xl md:text-7xl font-black italic tracking-tighter uppercase mb-10 overflow-hidden">
+            <span class="title-main-container">
+                Katalog 
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 text-glow perkataan-karya">
+                    Karya
+                </span>
+            </span>
         </h1>
         
         <div class="flex flex-wrap gap-4">
