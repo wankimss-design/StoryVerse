@@ -25,27 +25,30 @@
 
     <main class="max-w-5xl mx-auto px-6 pt-32 pb-20">
         
-        <div class="relative overflow-hidden rounded-[40px] border border-white/5 bg-gradient-to-b from-white/5 to-transparent p-8 md:p-12 mb-12">
-            <div class="absolute -top-24 -right-24 w-64 h-64 bg-purple-600/20 blur-[100px]"></div>
+        <div class="relative overflow-hidden rounded-[40px] border border-white/5 bg-[#121212] mb-12 group">
+            <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-purple-900/40 to-pink-900/40 opacity-50 group-hover:opacity-70 transition-opacity"></div>
             
-            <div class="relative flex flex-col md:flex-row items-center gap-10">
-                <div class="relative">
-                    <div class="w-32 h-32 md:w-40 md:h-40 rounded-full p-1 bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-500 shadow-2xl">
-                        <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=000&color=fff" class="w-full h-full rounded-full object-cover border-4 border-[#0a0a0a]">
+            <div class="relative flex flex-col md:flex-row items-center gap-10 p-8 md:p-12 pt-16 md:pt-12">
+                <div class="relative z-10">
+                    <div class="w-32 h-32 md:w-40 md:h-40 rounded-full p-1 bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-500 shadow-2xl animate-pulse-slow">
+                        <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=000&color=fff" class="w-full h-full rounded-full object-cover border-4 border-[#121212]">
                     </div>
-                    <div class="absolute bottom-2 right-2 w-6 h-6 bg-green-500 border-4 border-[#0a0a0a] rounded-full" title="Online"></div>
+                    <div class="absolute bottom-2 right-2 w-7 h-7 bg-green-500 border-4 border-[#121212] rounded-full shadow-lg"></div>
                 </div>
 
-                <div class="text-center md:text-left flex-1">
-                    <span class="bg-purple-500/10 text-purple-400 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-purple-500/20 mb-4 inline-block">Pembaca Setia</span>
-                    <h1 id="userName" class="text-4xl md:text-6xl font-black italic tracking-tighter uppercase mb-2">Nama Pengguna</h1>
-                    <p id="userEmail" class="text-gray-500 text-sm mb-6 font-medium">emel@pengguna.com</p>
+                <div class="text-center md:text-left flex-1 relative z-10">
+                    <div class="flex flex-col md:flex-row md:items-center gap-3 mb-4">
+                        <span class="bg-purple-500/10 text-purple-400 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-purple-500/20 inline-block w-fit mx-auto md:mx-0">Pembaca Setia</span>
+                        <span class="bg-white/5 text-gray-400 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-white/10 inline-block w-fit mx-auto md:mx-0">Akaun Disahkan</span>
+                    </div>
+                    <h1 id="userName" class="text-4xl md:text-6xl font-black italic tracking-tighter uppercase mb-2 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">Nama Pengguna</h1>
+                    <p id="userEmail" class="text-gray-500 text-sm mb-6 font-medium flex items-center justify-center md:justify-start gap-2">
+                        <i class="fa-regular fa-envelope opacity-50"></i> emel@pengguna.com
+                    </p>
                     
                     <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-                        <button onclick="logout()" class="bg-white text-black px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-purple-500 hover:text-white transition-all">Log Keluar</button>
-                       <button onclick="toggleEditModal()" class="bg-white/5 border border-white/10 px-6 py-3 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-white/10 transition-all">
-                            Edit Profil
-                        </button>
+                        <button onclick="toggleEditModal()" class="bg-purple-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-purple-500 hover:scale-105 transition-all shadow-xl shadow-purple-500/20 active:scale-95">Edit Profil</button>
+                        <button onclick="logout()" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-400 transition-all">Log Keluar</button>
                     </div>
                 </div>
             </div>
@@ -55,7 +58,7 @@
             
             <div class="md:col-span-4 space-y-6">
                 <div class="p-6 rounded-3xl border border-white/5 bg-white/5">
-                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6">Statistik Bacaan</h3>
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6 italic">Statistik Bacaan</h3>
                     <div class="space-y-4">
                         <div class="flex justify-between items-center">
                             <span class="text-sm text-gray-400">Novel Dibaca</span>
@@ -68,6 +71,24 @@
                         <div class="flex justify-between items-center">
                             <span class="text-sm text-gray-400">Peringkat</span>
                             <span class="text-purple-500 font-bold uppercase text-xs">Elite</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 rounded-3xl border border-white/5 bg-white/5">
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6 italic">Pencapaian</h3>
+                    <div class="grid grid-cols-4 gap-4">
+                        <div class="aspect-square rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center group cursor-help" title="Pembaca Terawal">
+                            <i class="fa-solid fa-crown text-purple-500 group-hover:scale-125 transition-transform"></i>
+                        </div>
+                        <div class="aspect-square rounded-xl bg-white/5 border border-white/10 flex items-center justify-center opacity-30 grayscale" title="Belum Dibuka">
+                            <i class="fa-solid fa-fire text-gray-500"></i>
+                        </div>
+                        <div class="aspect-square rounded-xl bg-white/5 border border-white/10 flex items-center justify-center opacity-30 grayscale" title="Belum Dibuka">
+                            <i class="fa-solid fa-book-open text-gray-500"></i>
+                        </div>
+                        <div class="aspect-square rounded-xl bg-white/5 border border-white/10 flex items-center justify-center opacity-30 grayscale" title="Belum Dibuka">
+                            <i class="fa-solid fa-bolt text-gray-500"></i>
                         </div>
                     </div>
                 </div>
@@ -84,29 +105,29 @@
             </div>
 
         </div>
+
         <div id="editModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6">
-    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="toggleEditModal()"></div>
-    
-    <div class="relative bg-[#1a1a1a] border border-white/10 w-full max-w-md rounded-[32px] p-8 shadow-2xl">
-        <h2 class="text-xl font-black italic uppercase tracking-tighter mb-6">Edit <span class="text-purple-500">Profil</span></h2>
-        
-        <div class="space-y-4">
-            <div>
-                <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">Nama Paparan Baru</label>
-                <input type="text" id="editName" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Masukkan nama...">
-            </div>
-            
-            <div class="flex gap-3 mt-6">
-                <button onclick="toggleEditModal()" class="flex-1 bg-white/5 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-white/10 transition-all text-gray-400">Batal</button>
-                <button onclick="saveProfile()" class="flex-1 bg-purple-600 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-purple-500 transition-all text-white shadow-lg shadow-purple-500/20">Simpan</button>
+            <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="toggleEditModal()"></div>
+            <div class="relative bg-[#1a1a1a] border border-white/10 w-full max-w-md rounded-[32px] p-8 shadow-2xl">
+                <h2 class="text-xl font-black italic uppercase tracking-tighter mb-6">Edit <span class="text-purple-500">Profil</span></h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">Nama Paparan Baru</label>
+                        <input type="text" id="editName" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Masukkan nama...">
+                    </div>
+                    <div class="flex gap-3 mt-6">
+                        <button onclick="toggleEditModal()" class="flex-1 bg-white/5 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-white/10 transition-all text-gray-400">Batal</button>
+                        <button onclick="saveProfile()" class="flex-1 bg-purple-600 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-purple-500 transition-all text-white shadow-lg shadow-purple-500/20">Simpan</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+        
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script src="profile.js"></script>
 </body>
