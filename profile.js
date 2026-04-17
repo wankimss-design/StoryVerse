@@ -1,65 +1,98 @@
-// 1. DATA & INITIALIZATION
-const db = firebase.firestore();
+// Gunakan variable global untuk simpan data
+let myNovels = [
+    { title: "Cinta Di Verse 01", views: "1.2k", clicks: "4.5k", status: "Published", cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400" }
+];
 
 const userReading = [
     { title: "Shadow Bound: Verse 01", progress: 75, cover: "https://images.unsplash.com/photo-1543004218-ee141104975a?q=80&w=400" },
     { title: "Sumpahan Penulis Terakhir", progress: 30, cover: "https://images.unsplash.com/photo-1543004629-142a76f50c8e?w=400" }
 ];
 
-let myNovels = [
-    { title: "Cinta Di Verse 01", views: "1.2k", clicks: "4.5k", status: "Published", cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400" }
-];
-
-firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-        document.getElementById('userName').innerText = user.displayName || "Admin12";
-        document.getElementById('userEmail').innerText = user.email;
-        if (user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
-        loadUserContent(); 
-        const activeTab = document.querySelector('.tab-btn.active');
-        if (activeTab) setTimeout(() => moveIndicator(activeTab), 100);
-    } else {
-        window.location.href = "auth.html";
-    }
+// Pastikan skrip jalan hanya selepas DOM sedia
+document.addEventListener('DOMContentLoaded', () => {
+    initTabs();
+    initFirebase();
 });
 
-// 2. TAB NAVIGATION LOGIC
-function moveIndicator(element) {
+function initFirebase() {
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            document.getElementById('userName').innerText = user.displayName || "Admin12";
+            document.getElementById('userEmail').innerText = user.email;
+            if (user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
+            
+            // Muat kandungan tab pertama secara automatik
+            loadUserContent();
+        } else {
+            window.location.href = "auth.html";
+        }
+    });
+}
+
+// --- LOGIK TAB (ANTI-BUG) ---
+function initTabs() {
+    const tabs = document.querySelectorAll('.tab-btn');
     const indicator = document.getElementById('tabIndicator');
-    if (indicator) {
-        indicator.style.width = element.offsetWidth + "px";
-        indicator.style.left = element.offsetLeft + "px";
+
+    tabs.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // 1. Buang class active dari semua tab
+            tabs.forEach(t => t.classList.remove('active'));
+            
+            // 2. Tambah active pada tab yang diklik
+            this.classList.add('active');
+            
+            // 3. Gerakkan indicator
+            if (indicator) {
+                indicator.style.width = `${this.offsetWidth}px`;
+                indicator.style.left = `${this.offsetLeft}px`;
+            }
+
+            // 4. Tukar Kandungan
+            const tabType = this.getAttribute('data-tab');
+            switchTabContent(tabType);
+        });
+    });
+
+    // Set posisi awal indicator
+    const activeTab = document.querySelector('.tab-btn.active');
+    if (activeTab && indicator) {
+        setTimeout(() => {
+            indicator.style.width = `${activeTab.offsetWidth}px`;
+            indicator.style.left = `${activeTab.offsetLeft}px`;
+        }, 300);
     }
 }
 
-document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.onclick = () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        moveIndicator(btn);
+function switchTabContent(tab) {
+    const grid = document.getElementById('readingList');
+    const analytics = document.getElementById('analyticsSection');
 
-        const tab = btn.getAttribute('data-tab');
-        const grid = document.getElementById('readingList');
-        const analytics = document.getElementById('analyticsSection');
+    // Sembunyikan analitik secara default
+    analytics.classList.add('hidden');
+    grid.innerHTML = '<div class="col-span-2 text-center py-10 opacity-50 text-[10px] uppercase tracking-widest">Memuatkan...</div>';
 
-        analytics.classList.add('hidden');
+    setTimeout(() => {
         grid.innerHTML = '';
-
-        if (tab === 'reading') loadUserContent();
-        else if (tab === 'saved') displaySaved();
-        else if (tab === 'my-novels') {
+        if (tab === 'reading') {
+            loadUserContent();
+        } else if (tab === 'saved') {
+            displaySaved();
+        } else if (tab === 'my-novels') {
             loadMyNovels();
             analytics.classList.remove('hidden');
         }
-    };
-});
+    }, 200);
+}
 
-// 3. CONTENT LOADING FUNCTIONS
+// --- FUNGSI PAPARAN ---
 function loadUserContent() {
     const grid = document.getElementById('readingList');
     grid.innerHTML = userReading.map(n => `
         <div class="profile-novel-card group">
-            <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4"><img src="${n.cover}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"></div>
+            <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4">
+                <img src="${n.cover}" class="w-full h-full object-cover">
+            </div>
             <h4 class="text-sm font-bold truncate mb-2">${n.title}</h4>
             <div class="progress-container mb-2"><div class="progress-bar" style="width: ${n.progress}%"></div></div>
             <span class="text-[8px] font-black text-gray-500 uppercase">${n.progress}% Dibaca</span>
@@ -73,9 +106,11 @@ function loadMyNovels() {
 
     grid.innerHTML = myNovels.map(n => `
         <div class="profile-novel-card group">
-            <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4"><img src="${n.cover}" class="w-full h-full object-cover"></div>
+            <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4">
+                <img src="${n.cover}" class="w-full h-full object-cover">
+            </div>
             <h4 class="text-sm font-bold truncate">${n.title}</h4>
-            <span class="text-[9px] text-purple-500 font-black uppercase">Admin12</span>
+            <span class="text-[9px] text-purple-500 font-black uppercase">Karya Anda</span>
         </div>
     `).join('');
 
@@ -85,15 +120,20 @@ function loadMyNovels() {
             <td class="px-6 py-4 text-gray-400 text-xs">${n.views}</td>
             <td class="px-6 py-4 text-gray-400 text-xs">${n.clicks}</td>
             <td class="px-6 py-4 text-center">
-                <button onclick="openEditNovelModal(${index})" class="w-8 h-8 rounded-lg bg-purple-600/10 text-purple-500 hover:bg-purple-600 hover:text-white transition-all">
-                    <i class="fa-solid fa-pen-to-square text-[10px]"></i>
+                <button onclick="openEditNovelModal(${index})" class="w-8 h-8 rounded-lg bg-purple-600/20 text-purple-500 hover:bg-purple-600 hover:text-white transition-all">
+                    <i class="fa-solid fa-pen-to-square"></i>
                 </button>
             </td>
         </tr>
     `).join('');
 }
 
-// 4. EDIT NOVEL LOGIC
+// --- MODAL CONTROLS ---
+function toggleEditModal() {
+    const modal = document.getElementById('editModal');
+    modal.classList.toggle('hidden');
+}
+
 function openEditNovelModal(index) {
     const novel = myNovels[index];
     document.getElementById('editNovelId').value = index;
@@ -102,27 +142,25 @@ function openEditNovelModal(index) {
     document.getElementById('editNovelModal').classList.remove('hidden');
 }
 
-function closeEditNovelModal() { document.getElementById('editNovelModal').classList.add('hidden'); }
-
-document.getElementById('editNovelForm').onsubmit = (e) => {
-    e.preventDefault();
-    const index = document.getElementById('editNovelId').value;
-    myNovels[index].title = document.getElementById('editNovelTitle').value;
-    myNovels[index].cover = document.getElementById('editNovelCover').value;
-    alert("Karya dikemaskini!");
-    closeEditNovelModal();
-    loadMyNovels();
-};
-
-// 5. PROFILE & LOGOUT
-function toggleEditModal() { document.getElementById('editModal').classList.toggle('hidden'); }
-async function saveProfile() {
-    const newName = document.getElementById('editName').value;
-    const user = firebase.auth().currentUser;
-    if (user && newName) {
-        await user.updateProfile({ displayName: newName });
-        document.getElementById('userName').innerText = newName;
-        toggleEditModal();
-    }
+function closeEditNovelModal() {
+    document.getElementById('editNovelModal').classList.add('hidden');
 }
-function logout() { firebase.auth().signOut().then(() => window.location.href = "index.html"); }
+
+// Simpan Perubahan Novel
+const editForm = document.getElementById('editNovelForm');
+if(editForm) {
+    editForm.onsubmit = function(e) {
+        e.preventDefault();
+        const index = document.getElementById('editNovelId').value;
+        myNovels[index].title = document.getElementById('editNovelTitle').value;
+        myNovels[index].cover = document.getElementById('editNovelCover').value;
+        
+        alert("Karya Berjaya Dikemaskini!");
+        closeEditNovelModal();
+        loadMyNovels();
+    };
+}
+
+function logout() {
+    firebase.auth().signOut().then(() => { window.location.href = "index.html"; });
+}
