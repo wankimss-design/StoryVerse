@@ -3,83 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Story Verse | Admin Panel</title>
+    <title>Admin Panel | StoryVerse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
 </head>
-<body class="antialiased bg-[#0a0a0a] text-white p-6">
+<body class="bg-[#0a0a0a] text-white">
 
-    <div class="max-w-2xl mx-auto">
-        <a href="index.html" class="text-purple-500 hover:underline">← Kembali ke Utama</a>
-        
-        <h1 class="text-4xl font-black tracking-tighter mt-6 mb-8 text-gradient">TAMBAH NOVEL BARU</h1>
-
-        <div class="bg-[#1a1a1a] p-8 rounded-2xl border border-gray-800 shadow-2xl">
-            <form id="adminForm" class="space-y-6">
-                <div>
-                    <label class="block text-sm font-bold text-gray-400 mb-2">Tajuk Novel</label>
-                    <input type="text" id="title" class="w-full bg-[#0d0d0d] border border-gray-800 p-3 rounded-lg focus:outline-none focus:border-purple-500 transition" placeholder="Contoh: Shadow Bound" required>
+    <div class="flex min-h-screen">
+        <aside class="w-64 border-r border-white/5 bg-[#0f0f0f] p-6 hidden md:block">
+            <div class="mb-10 flex items-center gap-3">
+                <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-lock text-xs"></i>
                 </div>
+                <span class="font-black uppercase tracking-tighter italic">Admin<span class="text-purple-500">Panel</span></span>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="#" class="flex items-center gap-3 p-3 bg-purple-600/10 text-purple-400 rounded-xl border border-purple-500/20">
+                    <i class="fa-solid fa-plus-circle"></i> <span class="text-xs font-bold uppercase tracking-widest">Tambah Novel</span>
+                </a>
+                <a href="index.html" class="flex items-center gap-3 p-3 text-gray-500 hover:text-white transition-all">
+                    <i class="fa-solid fa-house"></i> <span class="text-xs font-bold uppercase tracking-widest">Laman Utama</span>
+                </a>
+            </nav>
+        </aside>
 
-                <div class="grid grid-cols-2 gap-4">
+        <main class="flex-1 p-8 md:p-12">
+            <header class="mb-12">
+                <h1 class="text-3xl font-black italic uppercase tracking-tighter">Muat Naik <span class="text-purple-500">Novel Baru</span></h1>
+                <p class="text-gray-500 text-sm">Isi borang di bawah untuk menambah koleksi ke StoryVerse.</p>
+            </header>
+
+            <section class="max-w-3xl bg-[#121212] border border-white/5 rounded-[32px] p-8">
+                <form id="novelForm" class="space-y-6">
                     <div>
-                        <label class="block text-sm font-bold text-gray-400 mb-2">Genre</label>
-                        <input type="text" id="genre" class="w-full bg-[#0d0d0d] border border-gray-800 p-3 rounded-lg focus:outline-none focus:border-purple-500" placeholder="E.g. Fantasy" required>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">Tajuk Novel</label>
+                        <input type="text" id="novelTitle" required class="admin-input" placeholder="Contoh: Cinta Di Verse 01">
                     </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">Genre</label>
+                            <select id="novelGenre" class="admin-input">
+                                <option value="Romance">Romance</option>
+                                <option value="Fantasy">Fantasy</option>
+                                <option value="Action">Action</option>
+                                <option value="Mystery">Mystery</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">URL Gambar Cover</label>
+                            <input type="url" id="novelCover" required class="admin-input" placeholder="https://image-link.com/photo.jpg">
+                        </div>
+                    </div>
+
                     <div>
-                        <label class="block text-sm font-bold text-gray-400 mb-2">Tag</label>
-                        <input type="text" id="tag" class="w-full bg-[#0d0d0d] border border-gray-800 p-3 rounded-lg focus:outline-none focus:border-purple-500" placeholder="E.g. Hot, New">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">Sinopsis Ringkas</label>
+                        <textarea id="novelSynopsis" rows="4" required class="admin-input" placeholder="Ceritakan sedikit tentang novel ini..."></textarea>
                     </div>
-                </div>
 
-                <div>
-                    <label class="block text-sm font-bold text-gray-400 mb-2">URL Gambar Cover</label>
-                    <input type="url" id="image" class="w-full bg-[#0d0d0d] border border-gray-800 p-3 rounded-lg focus:outline-none focus:border-purple-500" placeholder="https://imgur.com/link-gambar.jpg" required>
-                </div>
-
-                <button type="submit" class="btn-primary w-full text-white py-4 mt-4">HANTAR KE STORY VERSE</button>
-            </form>
-            <p id="statusMessage" class="mt-4 text-center text-sm font-medium"></p>
-        </div>
+                    <button type="submit" class="w-full bg-purple-600 py-4 rounded-2xl font-black uppercase text-xs tracking-[0.2em] hover:bg-purple-500 transition-all shadow-xl shadow-purple-500/20 active:scale-95">
+                        Publish Novel <i class="fa-solid fa-paper-plane ml-2"></i>
+                    </button>
+                </form>
+            </section>
+        </main>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    
     <script src="firebase-config.js"></script>
-
-    <script>
-        const form = document.getElementById('adminForm');
-        const status = document.getElementById('statusMessage');
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            status.innerText = "Sila tunggu...";
-            status.className = "mt-4 text-center text-gray-400";
-
-            // Ambil data dari input
-            const novelData = {
-                title: document.getElementById('title').value,
-                genre: document.getElementById('genre').value,
-                tag: document.getElementById('tag').value,
-                image: document.getElementById('image').value,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp() // Tambah timestamp
-            };
-
-            try {
-                // Masukkan ke koleksi 'novels'
-                await db.collection('novels').add(novelData);
-                
-                status.innerText = "Berjaya! Novel telah ditambah ke dalam Verse.";
-                status.className = "mt-4 text-center text-green-500";
-                form.reset(); // Kosongkan borang semula
-            } catch (error) {
-                console.error("Error:", error);
-                status.innerText = "Gagal: " + error.message;
-                status.className = "mt-4 text-center text-red-500";
-            }
-        });
-    </script>
+    <script src="admin.js"></script>
 </body>
 </html>
