@@ -1,23 +1,37 @@
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-
-/* Background Animation */
-body {
-    background: radial-gradient(circle at 50% -20%, #1a1a1a, #0a0a0a);
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
 }
 
-/* Tab Styles */
+/* Background & Body */
+body {
+    background: radial-gradient(circle at 50% -20%, #1a1a1a, #0a0a0a);
+    color: white;
+}
+
+/* Tab Styles - Versi Kemas */
 .tab-btn {
     font-size: 10px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.2em;
     color: #555;
-    padding-bottom: 12px;
+    padding: 12px 24px;
     position: relative;
+    border-radius: 12px;
+    background: transparent;
     transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
 }
 
-.tab-btn.active { color: #a855f7; }
+.tab-btn.active { 
+    color: #a855f7 !important; 
+    background: rgba(168, 85, 247, 0.1);
+}
+
 .tab-btn.active::after {
     content: '';
     position: absolute;
@@ -34,6 +48,18 @@ body {
     border: 1px solid rgba(255,255,255,0.05);
     padding: 12px;
     transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-novel-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(168, 85, 247, 0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
 }
 
 .profile-novel-card:hover {
@@ -42,6 +68,11 @@ body {
     border-color: rgba(168, 85, 247, 0.3);
 }
 
+.profile-novel-card:hover::before {
+    opacity: 1;
+}
+
+/* Progress Bar */
 .progress-container {
     height: 4px;
     background: rgba(255,255,255,0.05);
@@ -55,11 +86,16 @@ body {
     box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
 }
 
+/* Modal Edit Profil */
 #editModal {
-    z-index: 9999; /* Pastikan ia paling atas */
+    z-index: 9999;
 }
 
-/* Animasi masuk modal (Optional tapi cantik) */
+.backdrop-blur-sm {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
 #editModal > div:last-child {
     animation: slideUp 0.3s ease-out;
 }
@@ -67,4 +103,14 @@ body {
 @keyframes slideUp {
     from { transform: translateY(20px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+}
+
+/* Animasi Avatar Glow */
+@keyframes pulse-slow {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4); }
+    50% { transform: scale(1.02); box-shadow: 0 0 30px 5px rgba(168, 85, 247, 0.2); }
+}
+
+.animate-pulse-slow {
+    animation: pulse-slow 4s infinite ease-in-out;
 }
