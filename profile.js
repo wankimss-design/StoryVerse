@@ -5,22 +5,66 @@ firebase.auth().onAuthStateChanged((user) => {
         document.getElementById('userEmail').innerText = user.email;
         if (user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
         
-        // Muat kandungan awal & set posisi garisan indicator
+        // Muat kandungan awal
         loadUserContent(); 
+        
+        // Set posisi garisan indicator awal
         const activeTab = document.querySelector('.tab-btn.active');
-        if (activeTab) setTimeout(() => moveIndicator(activeTab), 100); // Delay sikit supaya CSS sedia
+        if (activeTab) setTimeout(() => moveIndicator(activeTab), 100);
     } else {
         window.location.href = "auth.html";
     }
 });
 
-// 2. DATA SIMULASI (Sedang Dibaca)
+// 2. DATA SIMULASI
 const userReading = [
     { title: "Shadow Bound: Verse 01", progress: 75, cover: "https://images.unsplash.com/photo-1543004218-ee141104975a?q=80&w=400" },
     { title: "Sumpahan Penulis Terakhir", progress: 30, cover: "https://images.unsplash.com/photo-1543004629-142a76f50c8e?w=400" }
 ];
 
-// 3. FUNGSI PAPARAN TAB "SEDANG DIBACA"
+const myNovels = [
+    { title: "Cinta Di Verse 01", views: "1.2k", clicks: "4.5k", status: "Published", cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400" }
+];
+
+// 3. FUNGSI NAVIGASI & INDICATOR
+function moveIndicator(element) {
+    const indicator = document.getElementById('tabIndicator');
+    if (indicator) {
+        indicator.style.width = element.offsetWidth + "px";
+        indicator.style.left = element.offsetLeft + "px";
+    }
+}
+
+// Logik Penukaran Tab (Disatukan)
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.onclick = () => {
+        // Tukar class aktif
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        moveIndicator(btn);
+
+        const tab = btn.getAttribute('data-tab');
+        const grid = document.getElementById('readingList');
+        const analytics = document.getElementById('analyticsSection');
+
+        // Reset paparan
+        analytics.classList.add('hidden');
+        grid.innerHTML = '';
+
+        if (tab === 'reading') {
+            loadUserContent();
+        } 
+        else if (tab === 'saved') {
+            displaySaved();
+        } 
+        else if (tab === 'my-novels') {
+            loadMyNovels();
+            analytics.classList.remove('hidden'); // Tunjuk jadual trafik
+        }
+    };
+});
+
+// 4. FUNGSI MEMUAT KANDUNGAN
 function loadUserContent() {
     const grid = document.getElementById('readingList');
     grid.innerHTML = userReading.map(n => `
@@ -40,7 +84,6 @@ function loadUserContent() {
     `).join('');
 }
 
-// 4. FUNGSI PAPARAN TAB "SIMPANAN" (FIRESTORE)
 async function displaySaved() {
     const user = firebase.auth().currentUser;
     const grid = document.getElementById('readingList');
@@ -70,32 +113,35 @@ async function displaySaved() {
     }
 }
 
-// 5. LOGIK INDICATOR & PENUKARAN TAB (SATU SAHAJA)
-function moveIndicator(element) {
-    const indicator = document.getElementById('tabIndicator');
-    if (indicator) {
-        indicator.style.width = element.offsetWidth + "px";
-        indicator.style.left = element.offsetLeft + "px";
-    }
+function loadMyNovels() {
+    const grid = document.getElementById('readingList');
+    const tableBody = document.getElementById('trafficTableBody');
+
+    grid.innerHTML = myNovels.map(n => `
+        <div class="profile-novel-card group">
+            <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4">
+                <img src="${n.cover}" class="w-full h-full object-cover">
+            </div>
+            <h4 class="text-sm font-bold truncate">${n.title}</h4>
+            <span class="text-[9px] text-purple-500 font-black uppercase tracking-widest">Penulis: Admin12</span>
+        </div>
+    `).join('');
+
+    tableBody.innerHTML = myNovels.map(n => `
+        <tr class="hover:bg-white/[0.02] transition-colors border-b border-white/5">
+            <td class="px-6 py-4 font-bold text-white text-xs">${n.title}</td>
+            <td class="px-6 py-4 text-gray-400 text-xs">${n.views}</td>
+            <td class="px-6 py-4 text-gray-400 text-xs">${n.clicks}</td>
+            <td class="px-6 py-4">
+                <span class="px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-[8px] font-black uppercase border border-green-500/20">
+                    ${n.status}
+                </span>
+            </td>
+        </tr>
+    `).join('');
 }
 
-document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.onclick = () => {
-        // Tukar class aktif
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        // Gerakkan garisan smooth
-        moveIndicator(btn);
-
-        // Tukar data
-        const tab = btn.getAttribute('data-tab');
-        if (tab === 'reading') loadUserContent();
-        else if (tab === 'saved') displaySaved();
-    };
-});
-
-// 6. EDIT PROFIL & LOGOUT
+// 5. PROFIL & LOGOUT
 function toggleEditModal() {
     const modal = document.getElementById('editModal');
     modal.classList.toggle('hidden');
