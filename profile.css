@@ -1,49 +1,172 @@
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-body { background: radial-gradient(circle at 50% -20%, #1a1a1a, #0a0a0a); color: white; }
-
-.tab-btn {
-    font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em;
-    color: #555; padding: 12px 24px; transition: all 0.3s ease; cursor: pointer; border: none; background: transparent;
-}
-.tab-btn.active { color: #a855f7 !important; background: rgba(168, 85, 247, 0.1); border-radius: 12px; }
-
-#tabIndicator {
-    position: absolute; bottom: -1px; left: 0; height: 2px; background: #a855f7;
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.5); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+/* --- ASAS & TIPOGRAFI --- */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
 }
 
-.profile-novel-card {
-    background: rgba(255,255,255,0.02); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05);
-    padding: 12px; transition: all 0.4s ease; overflow: hidden;
+body { 
+    background: radial-gradient(circle at 50% -20%, #1a1a1a, #0a0a0a); 
+    color: white; 
+    min-height: screen;
 }
-.profile-novel-card:hover { transform: translateY(-5px); border-color: rgba(168, 85, 247, 0.3); background: rgba(255,255,255,0.05); }
 
-.progress-container { height: 4px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
-.progress-bar { height: 100%; background: linear-gradient(90deg, #a855f7, #ec4899); }
-
-.admin-input {
-    width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px; padding: 14px 20px; color: white; font-size: 14px;
+/* --- NAVIGASI (FIXED) --- */
+nav {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999 !important;
+    background: rgba(10, 10, 10, 0.8) !important;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    height: 80px;
+    display: flex !important;
+    align-items: center;
 }
-.admin-input:focus { outline: none; border-color: #a855f7; background: rgba(168, 85, 247, 0.05); }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-#analyticsSection { animation: fadeIn 0.5s ease-out; }
-
-/* Gaya untuk bar ikon navigasi */
+/* Gaya Bar Ikon di Tengah Nav */
 nav .flex.items-center.bg-white\/5 {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 nav a i, nav button i {
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+    color: #9ca3af; /* Warna kelabu (text-gray-400) */
+}
+
+/* Warna Ikon Aktif (Profile) & Hover */
+nav a.bg-white\/10 i {
+    color: #a855f7 !important; /* Ungu StoryVerse */
+    filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.6));
 }
 
 nav a:hover i, nav button:hover i {
+    color: white !important;
     transform: scale(1.1);
 }
 
-/* Tooltip ringkas jika perlu */
-[title] {
-    position: relative;
+/* --- TAB SYSTEM --- */
+.tab-btn {
+    font-size: 10px; 
+    font-weight: 800; 
+    text-transform: uppercase; 
+    letter-spacing: 0.2em;
+    color: #555; 
+    padding: 12px 24px; 
+    transition: all 0.3s ease; 
+    cursor: pointer; 
+    border: none; 
+    background: transparent;
+}
+
+.tab-btn.active { 
+    color: #a855f7 !important; 
+}
+
+#tabIndicator {
+    position: absolute; 
+    bottom: -1px; 
+    left: 0; 
+    height: 2px; 
+    background: #a855f7;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.5); 
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- NOVEL CARDS --- */
+.profile-novel-card {
+    background: rgba(255,255,255,0.02); 
+    border-radius: 24px; 
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 12px; 
+    transition: all 0.4s ease; 
+    overflow: hidden;
+}
+
+.profile-novel-card:hover { 
+    transform: translateY(-5px); 
+    border-color: rgba(168, 85, 247, 0.3); 
+    background: rgba(255,255,255,0.05); 
+}
+
+/* Progress Bar di Card */
+.progress-container { 
+    height: 4px; 
+    background: rgba(255,255,255,0.05); 
+    border-radius: 10px; 
+    overflow: hidden; 
+}
+
+.progress-bar { 
+    height: 100%; 
+    background: linear-gradient(90deg, #a855f7, #ec4899); 
+}
+
+/* --- FORM & MODAL INPUTS --- */
+.admin-input {
+    width: 100%; 
+    background: rgba(255,255,255,0.03); 
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; 
+    padding: 14px 20px; 
+    color: white; 
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.admin-input:focus { 
+    outline: none; 
+    border-color: #a855f7; 
+    background: rgba(168, 85, 247, 0.05); 
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.1);
+}
+
+/* --- ANIMATIONS --- */
+@keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(10px); } 
+    to { opacity: 1; transform: translateY(0); } 
+}
+
+#analyticsSection, #readingList { 
+    animation: fadeIn 0.5s ease-out; 
+}
+
+.animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .8; }
+}
+
+/* --- RESPONSIVE FIX --- */
+@media (max-width: 768px) {
+    /* Sembunyikan Nav Ikon pada Mobile (ikut style index.html anda) */
+    .hidden.md\:flex {
+        display: none !important;
+    }
+    
+    .text-4xl { font-size: 2.5rem; }
+}
+
+/* Tooltip Simple */
+[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a1a;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    white-space: nowrap;
+    border: 1px solid rgba(255,255,255,0.1);
+    z-index: 10000;
 }
