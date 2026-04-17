@@ -4,30 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Katalog Eksklusif | StoryVerse</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="katalog.css">
 </head>
-<body class="bg-[#0a0a0a] text-white min-h-screen transition-colors duration-500">
+<body class="bg-[#0a0a0a] text-white min-h-screen transition-colors duration-500" id="mainBody">
 
     <nav id="navbar" class="fixed top-0 left-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/5 h-20 flex items-center transition-all duration-500">
         <div class="max-w-7xl mx-auto px-6 w-full flex justify-between items-center gap-4">
-            <a href="index.html" class="flex items-center gap-2 shrink-0">
-                <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                    <i class="fa-solid fa-bolt text-white"></i>
+            
+            <a href="index.html" class="flex items-center gap-3 shrink-0 group">
+                <div class="w-11 h-11 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center logo-icon-anim shadow-lg shadow-purple-500/20">
+                    <i class="fa-solid fa-bolt text-white text-xl"></i>
                 </div>
-                <span class="text-xl font-extrabold tracking-tighter logo-text uppercase italic">StoryVerse</span>
+                <span class="text-2xl font-black italic tracking-tighter logo-text">STORY<span class="text-purple-500">VERSE</span></span>
             </a>
 
             <div class="flex-1 flex justify-end items-center gap-4">
-                <div class="relative w-full max-w-[300px] group">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
-                    <input type="text" id="searchInput" placeholder="CARI CERITA..." class="search-input w-full bg-white/5 border border-white/10 text-xs rounded-full py-2.5 px-10 focus:outline-none focus:border-purple-500 transition-all outline-none uppercase">
+                <div class="relative w-full max-w-[350px] group">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs group-focus-within:text-purple-500 transition-colors"></i>
+                    <input type="text" id="searchInput" placeholder="CARI KARYA ANDA..." 
+                           class="search-input w-full bg-white/5 border border-white/10 text-[10px] text-white rounded-full py-3 px-11 focus:outline-none focus:border-purple-500 transition-all outline-none uppercase tracking-widest">
                 </div>
-                <button onclick="toggleTheme()" class="text-gray-400 hover:text-purple-400 p-2"><i class="fa-solid fa-circle-half-stroke text-lg" id="themeIcon"></i></button>
-                <div class="w-10 h-10 rounded-full border border-purple-500/30 overflow-hidden cursor-pointer" onclick="logout()">
-                    <img id="navAvatar" src="https://ui-avatars.com/api/?name=Admin&background=a855f7&color=fff" class="w-full h-full object-cover">
+
+                <button onclick="toggleTheme()" class="text-gray-400 hover:text-purple-400 p-2 transition-transform active:scale-90">
+                    <i class="fa-solid fa-circle-half-stroke text-lg" id="themeIcon"></i>
+                </button>
+                
+                <div class="w-11 h-11 rounded-full border-2 border-purple-500/30 overflow-hidden cursor-pointer hover:border-purple-500 transition-colors" onclick="logout()">
+                    <img id="navAvatar" src="https://ui-avatars.com/api/?name=User&background=a855f7&color=fff" class="w-full h-full object-cover">
                 </div>
             </div>
         </div>
@@ -35,30 +41,33 @@
 
     <div class="h-32"></div>
 
-    <header class="max-w-7xl mx-auto px-6 mb-10">
-        <h1 class="text-4xl font-extrabold tracking-tighter mb-8 title-main uppercase italic">Katalog <span class="text-purple-500">Karya</span></h1>
+    <header class="max-w-7xl mx-auto px-6 mb-12">
+        <h1 class="text-5xl md:text-7xl font-black italic tracking-tighter title-main mb-10 uppercase">
+            Katalog <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 text-glow">Karya</span>
+        </h1>
         
         <div class="flex flex-wrap gap-4">
             <div class="relative dropdown-group">
-                <button onclick="toggleDropdown('genreMenu')" class="bg-white/5 border border-white/10 px-5 py-2.5 rounded-2xl text-[11px] font-bold uppercase tracking-widest flex items-center gap-3 hover:bg-white/10 transition-all dropdown-btn">
+                <button onclick="toggleDropdown('genreMenu')" class="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl text-[11px] font-bold uppercase tracking-widest flex items-center gap-3 hover:bg-white/10 transition-all dropdown-btn">
                     Genre <i class="fa-solid fa-chevron-down text-[9px] opacity-50"></i>
                 </button>
-                <div id="genreMenu" class="absolute top-full left-0 mt-2 w-48 bg-[#111] border border-white/10 rounded-2xl p-2 hidden z-40 shadow-2xl menu-box">
+                <div id="genreMenu" class="absolute top-full left-0 mt-3 w-56 bg-[#0f0f0f] border border-white/10 rounded-2xl p-2 hidden z-40 shadow-2xl menu-box">
                     <label class="dropdown-item"><input type="checkbox" name="genre" value="Romantik"><span>Romantik</span></label>
                     <label class="dropdown-item"><input type="checkbox" name="genre" value="Fantasi"><span>Fantasi</span></label>
                     <label class="dropdown-item"><input type="checkbox" name="genre" value="Seram"><span>Seram</span></label>
                     <label class="dropdown-item"><input type="checkbox" name="genre" value="Aksi"><span>Aksi</span></label>
+                    <label class="dropdown-item"><input type="checkbox" name="genre" value="Misteri"><span>Misteri</span></label>
                 </div>
             </div>
 
             <div class="relative dropdown-group">
-                <button onclick="toggleDropdown('statusMenu')" class="bg-white/5 border border-white/10 px-5 py-2.5 rounded-2xl text-[11px] font-bold uppercase tracking-widest flex items-center gap-3 hover:bg-white/10 transition-all dropdown-btn">
+                <button onclick="toggleDropdown('statusMenu')" class="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl text-[11px] font-bold uppercase tracking-widest flex items-center gap-3 hover:bg-white/10 transition-all dropdown-btn">
                     Status <i class="fa-solid fa-chevron-down text-[9px] opacity-50"></i>
                 </button>
-                <div id="statusMenu" class="absolute top-full left-0 mt-2 w-48 bg-[#111] border border-white/10 rounded-2xl p-2 hidden z-40 shadow-2xl menu-box">
+                <div id="statusMenu" class="absolute top-full left-0 mt-3 w-56 bg-[#0f0f0f] border border-white/10 rounded-2xl p-2 hidden z-40 shadow-2xl menu-box">
                     <label class="dropdown-item"><input type="radio" name="status" value="Ongoing"><span>Ongoing</span></label>
                     <label class="dropdown-item"><input type="radio" name="status" value="Complete"><span>Complete</span></label>
-                    <hr class="my-1 border-white/5">
+                    <div class="my-2 border-t border-white/5"></div>
                     <label class="dropdown-item"><input type="radio" name="status" value="" checked><span>Semua Status</span></label>
                 </div>
             </div>
