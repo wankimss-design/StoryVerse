@@ -11,86 +11,53 @@
 </head>
 <body class="bg-[#0a0a0a] text-white min-h-screen">
 
-  <nav class="fixed top-0 left-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/5 h-20 flex items-center">
-    <div class="max-w-7xl mx-auto px-6 w-full flex justify-between items-center">
-        
-        <a href="index.html" class="flex items-center gap-3 group">
-            <div class="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:rotate-12 transition-transform">
-                <i class="fa-solid fa-bolt text-white text-sm"></i>
+    <nav class="fixed top-0 left-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/5 h-20 flex items-center">
+        <div class="max-w-7xl mx-auto px-6 w-full flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:rotate-12 transition-transform">
+                    <i class="fa-solid fa-bolt text-white text-sm"></i>
+                </div>
+                <span class="text-xl font-black italic tracking-tighter uppercase">Story<span class="text-purple-500">Verse</span></span>
+            </a>
+            <div class="flex items-center bg-white/5 border border-white/10 p-1.5 rounded-2xl gap-1">
+                <a href="index.html" class="w-10 h-10 flex items-center justify-center rounded-xl text-gray-400 hover:bg-white/10 hover:text-white transition-all" title="Laman Utama"><i class="fa-solid fa-house text-xs"></i></a>
+                <a href="katalog.html" class="w-10 h-10 flex items-center justify-center rounded-xl text-gray-400 hover:bg-white/10 hover:text-white transition-all" title="Archive"><i class="fa-solid fa-box-archive text-xs"></i></a>
+                <a href="profile.html" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 text-white transition-all shadow-lg shadow-purple-500/10" title="Profil"><i class="fa-solid fa-user text-xs"></i></a>
+                <button id="themeToggle" class="w-10 h-10 flex items-center justify-center rounded-xl text-gray-400 hover:bg-white/10 hover:text-white transition-all" title="Tukar Mode"><i class="fa-solid fa-moon text-xs"></i></button>
             </div>
-            <span class="text-xl font-black italic tracking-tighter uppercase">Story<span class="text-purple-500">Verse</span></span>
-        </a>
-
-        <div class="flex items-center bg-white/5 border border-white/10 p-1.5 rounded-2xl gap-1">
-            <a href="index.html" class="w-10 h-10 flex items-center justify-center rounded-xl text-gray-400 hover:bg-white/10 hover:text-white transition-all" title="Laman Utama">
-                <i class="fa-solid fa-house text-xs"></i>
-            </a>
-
-            <a href="katalog.html" class="w-10 h-10 flex items-center justify-center rounded-xl text-gray-400 hover:bg-white/10 hover:text-white transition-all" title="Archive">
-                <i class="fa-solid fa-box-archive text-xs"></i>
-            </a>
-
-            <a href="profile.html" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 text-white transition-all shadow-lg shadow-purple-500/10" title="Profil">
-                <i class="fa-solid fa-user text-xs"></i>
-            </a>
-
-            <button id="themeToggle" class="w-10 h-10 flex items-center justify-center rounded-xl text-gray-400 hover:bg-white/10 hover:text-white transition-all" title="Tukar Mode">
-                <i class="fa-solid fa-moon text-xs"></i>
-            </button>
         </div>
-
-    </div>
-</nav>
+    </nav>
 
     <main class="max-w-5xl mx-auto px-6 pt-32 pb-20">
-        
         <div class="relative overflow-hidden rounded-[40px] border border-white/5 bg-[#121212] mb-12 group">
-            <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-purple-900/40 to-pink-900/40 opacity-50 group-hover:opacity-70 transition-opacity"></div>
-            
+            <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-purple-900/40 to-pink-900/40 opacity-50"></div>
             <div class="relative flex flex-col md:flex-row items-center gap-10 p-8 md:p-12 pt-16 md:pt-12">
                 <div class="relative z-10">
                     <div class="w-32 h-32 md:w-40 md:h-40 rounded-full p-1 bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-500 shadow-2xl animate-pulse-slow">
                         <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=000&color=fff" class="w-full h-full rounded-full object-cover border-4 border-[#121212]">
                     </div>
-                    <div class="absolute bottom-2 right-2 w-7 h-7 bg-green-500 border-4 border-[#121212] rounded-full shadow-lg"></div>
                 </div>
-
                 <div class="text-center md:text-left flex-1 relative z-10">
-                    <div class="flex flex-col md:flex-row md:items-center gap-3 mb-4">
-                        <span class="bg-purple-500/10 text-purple-400 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-purple-500/20 inline-block w-fit mx-auto md:mx-0">Pembaca Setia</span>
-                        <span class="bg-white/5 text-gray-400 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-white/10 inline-block w-fit mx-auto md:mx-0">Akaun Disahkan</span>
-                    </div>
-                    <h1 id="userName" class="text-4xl md:text-6xl font-black italic tracking-tighter uppercase mb-2 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">ADMIN12</h1>
-                    <p id="userEmail" class="text-gray-500 text-sm mb-6 font-medium flex items-center justify-center md:justify-start gap-2">
-                        <i class="fa-regular fa-envelope opacity-50"></i> respectzero47@gmail.com
+                    <h1 id="userName" class="text-4xl md:text-6xl font-black italic tracking-tighter uppercase mb-2 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent italic">ADMIN12</h1>
+                    <p id="userBio" class="text-gray-400 text-sm mb-4 max-w-md">Tiada bio lagi.</p>
+                    <p id="userEmail" class="text-gray-500 text-xs mb-6 font-medium flex items-center justify-center md:justify-start gap-2 italic">
+                        <i class="fa-regular fa-envelope opacity-50"></i> email@example.com
                     </p>
-                    
                     <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-                        <button onclick="toggleEditModal()" class="bg-purple-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-purple-500 hover:scale-105 transition-all shadow-xl shadow-purple-500/20 active:scale-95">Edit Profil</button>
-                        <button onclick="logout()" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-500/20 hover:border-red-500/50 hover:text-red-400 transition-all">Log Keluar</button>
+                        <button onclick="toggleEditModal()" class="bg-purple-600 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-purple-500 transition-all shadow-xl shadow-purple-500/20">Edit Profil</button>
+                        <button onclick="logout()" class="bg-white/5 border border-white/10 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-red-500/20 hover:text-red-400 transition-all">Log Keluar</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
-            
-            <div class="md:col-span-4 space-y-6">
+            <div class="md:col-span-4">
                 <div class="p-6 rounded-3xl border border-white/5 bg-white/5">
-                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6 italic">Statistik Bacaan</h3>
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6 italic">Statistik</h3>
                     <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-400">Novel Dibaca</span>
-                            <span class="font-bold">24</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-400">Koleksi Simpanan</span>
-                            <span class="font-bold">12</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm text-gray-400">Peringkat</span>
-                            <span class="text-purple-500 font-bold uppercase text-xs">Elite</span>
-                        </div>
+                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400 italic">Novel Dibaca</span><span class="font-bold">24</span></div>
+                        <div class="flex justify-between items-center"><span class="text-sm text-gray-400 italic">Peringkat</span><span class="text-purple-500 font-bold uppercase text-xs">Elite</span></div>
                     </div>
                 </div>
             </div>
@@ -104,72 +71,52 @@
                         <div id="tabIndicator" class="absolute bottom-[-1px] left-0 h-[2px] bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.5)] transition-all"></div>
                     </div>
                 </div>
-
                 <div id="novelContainer">
                     <div id="readingList" class="grid grid-cols-2 gap-6"></div>
-
-                    <div id="analyticsSection" class="hidden mt-12">
-                        <h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-6 italic">Analitik Trafik Penulis</h3>
-                        <div class="overflow-x-auto rounded-2xl border border-white/5 bg-white/5">
-                            <table class="w-full text-left text-sm">
-                                <thead class="bg-white/5 text-[10px] uppercase tracking-widest text-gray-400">
-                                    <tr>
-                                        <th class="px-6 py-4 font-black">Tajuk Novel</th>
-                                        <th class="px-6 py-4 font-black">Views</th>
-                                        <th class="px-6 py-4 font-black">Clicks</th>
-                                        <th class="px-6 py-4 font-black text-center">Tindakan</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="trafficTableBody" class="divide-y divide-white/5"></tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
-
-        <div id="editModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6">
-            <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="toggleEditModal()"></div>
-            <div class="relative bg-[#1a1a1a] border border-white/10 w-full max-w-md rounded-[32px] p-8 shadow-2xl">
-                <h2 class="text-xl font-black italic uppercase tracking-tighter mb-6">Edit <span class="text-purple-500">Profil</span></h2>
-                <div class="space-y-4">
-                    <input type="text" id="editName" class="admin-input" placeholder="Masukkan nama...">
-                    <div class="flex gap-3 mt-6">
-                        <button onclick="toggleEditModal()" class="flex-1 bg-white/5 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest text-gray-400">Batal</button>
-                        <button onclick="saveProfile()" class="flex-1 bg-purple-600 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest text-white">Simpan</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="editNovelModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-6">
-            <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="closeEditNovelModal()"></div>
-            <div class="relative bg-[#121212] border border-white/10 w-full max-w-lg rounded-[40px] p-10 shadow-2xl overflow-y-auto max-h-[90vh]">
-                <h2 class="text-2xl font-black italic uppercase tracking-tighter mb-8 text-purple-500">Kemas Kini Karya</h2>
-                <form id="editNovelForm" class="space-y-6">
-                    <input type="hidden" id="editNovelId">
-                    <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">Tajuk Novel</label>
-                        <input type="text" id="editNovelTitle" class="admin-input" required>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">URL Gambar Cover</label>
-                        <input type="url" id="editNovelCover" class="admin-input" required>
-                    </div>
-                    <div class="flex gap-4 pt-4">
-                        <button type="button" onclick="closeEditNovelModal()" class="flex-1 bg-white/5 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest text-gray-400">Batal</button>
-                        <button type="submit" class="flex-1 bg-purple-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest text-white">Simpan</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        
     </main>
+
+    <div id="editModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="toggleEditModal()"></div>
+        <div class="relative bg-[#1a1a1a] border border-white/10 w-full max-w-md rounded-[32px] p-8 shadow-2xl">
+            <h2 class="text-xl font-black italic uppercase tracking-tighter mb-6">Kemas Kini <span class="text-purple-500">Profil</span></h2>
+            
+            <div class="space-y-5">
+                <div>
+                    <label class="text-[9px] font-black uppercase tracking-widest text-gray-500 block mb-2">Nama Pengguna</label>
+                    <input type="text" id="editName" class="admin-input" placeholder="Nama anda...">
+                </div>
+
+                <div>
+                    <label class="text-[9px] font-black uppercase tracking-widest text-gray-500 block mb-2">Bio Ringkas</label>
+                    <textarea id="editBio" class="admin-input h-24 resize-none" placeholder="Tulis sesuatu..."></textarea>
+                </div>
+
+                <div>
+                    <label class="text-[9px] font-black uppercase tracking-widest text-gray-500 block mb-2 italic">Tukar Gambar Profil</label>
+                    <div class="relative">
+                        <input type="file" id="editPhotoFile" accept="image/*" class="hidden" onchange="previewImage(this)">
+                        <label for="editPhotoFile" class="admin-input cursor-pointer flex items-center justify-between hover:border-purple-500 transition-all">
+                            <span id="fileNameDisplay" class="text-gray-500">Pilih fail...</span>
+                            <i class="fa-solid fa-camera text-purple-500"></i>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-6">
+                    <button onclick="toggleEditModal()" class="flex-1 bg-white/5 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest text-gray-400">Batal</button>
+                    <button onclick="saveProfile()" class="flex-1 bg-purple-600 py-4 rounded-xl font-black uppercase text-[10px] tracking-widest text-white shadow-lg shadow-purple-500/20">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="firebase-config.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script> <script src="firebase-config.js"></script>
     <script src="profile.js"></script>
 </body>
 </html>
