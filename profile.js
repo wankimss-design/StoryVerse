@@ -5,14 +5,16 @@ firebase.auth().onAuthStateChanged((user) => {
         document.getElementById('userEmail').innerText = user.email;
         if (user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
         
-        // Muat kandungan tab pertama secara automatik
+        // Muat kandungan awal & set posisi garisan indicator
         loadUserContent(); 
+        const activeTab = document.querySelector('.tab-btn.active');
+        if (activeTab) setTimeout(() => moveIndicator(activeTab), 100); // Delay sikit supaya CSS sedia
     } else {
         window.location.href = "auth.html";
     }
 });
 
-// 2. DATA SIMULASI UNTUK HISTORY (Akan datang dari Firestore kemudian)
+// 2. DATA SIMULASI (Sedang Dibaca)
 const userReading = [
     { title: "Shadow Bound: Verse 01", progress: 75, cover: "https://images.unsplash.com/photo-1543004218-ee141104975a?q=80&w=400" },
     { title: "Sumpahan Penulis Terakhir", progress: 30, cover: "https://images.unsplash.com/photo-1543004629-142a76f50c8e?w=400" }
@@ -38,21 +40,18 @@ function loadUserContent() {
     `).join('');
 }
 
-// 4. FUNGSI PAPARAN TAB "SIMPANAN" (AMBIL DARI FIRESTORE)
+// 4. FUNGSI PAPARAN TAB "SIMPANAN" (FIRESTORE)
 async function displaySaved() {
     const user = firebase.auth().currentUser;
     const grid = document.getElementById('readingList');
-    
     grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50 text-[10px] uppercase tracking-widest">Memuatkan simpanan...</p>';
 
     try {
         const snapshot = await db.collection('users').doc(user.uid).collection('bookmarks').orderBy('savedAt', 'desc').get();
-        
         if (snapshot.empty) {
             grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50 text-[10px] uppercase tracking-widest">Tiada novel disimpan</p>';
             return;
         }
-
         grid.innerHTML = ''; 
         snapshot.forEach(doc => {
             const n = doc.data();
@@ -67,27 +66,36 @@ async function displaySaved() {
             `;
         });
     } catch (error) {
-        console.error("Error loading bookmarks:", error);
         grid.innerHTML = '<p class="text-red-500 text-center col-span-full text-[10px]">Ralat memuatkan data.</p>';
     }
 }
 
-// 5. LOGIK PENUKARAN TAB
+// 5. LOGIK INDICATOR & PENUKARAN TAB (SATU SAHAJA)
+function moveIndicator(element) {
+    const indicator = document.getElementById('tabIndicator');
+    if (indicator) {
+        indicator.style.width = element.offsetWidth + "px";
+        indicator.style.left = element.offsetLeft + "px";
+    }
+}
+
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.onclick = () => {
+        // Tukar class aktif
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
+        // Gerakkan garisan smooth
+        moveIndicator(btn);
+
+        // Tukar data
         const tab = btn.getAttribute('data-tab');
-        if (tab === 'reading') {
-            loadUserContent();
-        } else if (tab === 'saved') {
-            displaySaved();
-        }
+        if (tab === 'reading') loadUserContent();
+        else if (tab === 'saved') displaySaved();
     };
 });
 
-// 6. LOGIK MODAL EDIT PROFIL
+// 6. EDIT PROFIL & LOGOUT
 function toggleEditModal() {
     const modal = document.getElementById('editModal');
     modal.classList.toggle('hidden');
@@ -100,7 +108,6 @@ function toggleEditModal() {
 async function saveProfile() {
     const newName = document.getElementById('editName').value;
     const user = firebase.auth().currentUser;
-
     if (user && newName) {
         try {
             await user.updateProfile({ displayName: newName });
@@ -110,12 +117,9 @@ async function saveProfile() {
         } catch (error) {
             alert("Ralat: " + error.message);
         }
-    } else {
-        alert("Sila masukkan nama!");
     }
 }
 
-// 7. LOG KELUAR
 function logout() {
     firebase.auth().signOut().then(() => {
         window.location.href = "index.html";
