@@ -25,7 +25,12 @@ const novels = [
 
 // --- 2. PAPAR DATA NOVEL ---
 function displayDetail() {
+    // Cari novel berdasarkan tajuk atau ID
     const novel = novels.find(n => n.title === novelTitleParam) || novels[0];
+
+    // Setkan ID unik sementara (Sangat penting untuk Firestore)
+    // Jika data anda dari Firestore nanti, guna n.id
+    novel.id = novel.title.replace(/\s+/g, '-').toLowerCase(); 
 
     document.getElementById('novelTitle').innerText = novel.title;
     document.getElementById('novelAuthor').innerText = novel.author;
@@ -36,18 +41,59 @@ function displayDetail() {
     document.getElementById('authorInitial').innerText = novel.author.charAt(0);
     
     document.title = `${novel.title} | StoryVerse`;
+
+    // Tambahan: Semak sama ada novel ini sudah disimpan atau belum bila page di-load
+    checkIfBookmarked(novel.id);
 }
 
-// --- 3. THEME TOGGLE ---
-function toggleTheme() {
-    document.body.classList.toggle('light-mode');
+// Fungsi untuk tukar ikon secara automatik bila page dibuka
+async function checkIfBookmarked(novelId) {
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+
+    const docRef = db.collection('users').doc(user.uid).collection('bookmarks').doc(novelId);
+    const doc = await docRef.get();
+    
+    const saveIcon = document.getElementById('saveIcon');
+    if (doc.exists()) {
+        saveIcon.className = "fa-solid fa-bookmark text-xl text-purple-500";
+    }
 }
 
-// Jalankan fungsi
-window.onload = displayDetail;
+// Kemas kini fungsi toggleBookmark anda sedikit
+async function toggleBookmark() {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        alert("Sila log masuk untuk menyimpan novel!");
+        return;
+    }
 
-// Action Mula Membaca
-document.getElementById('btnRead').onclick = () => {
-    alert("Menghantar anda ke Bab 1...");
-    // window.location.href = `read.html?title=${encodeURIComponent(novelTitleParam)}&chapter=1`;
-};
+    const saveIcon = document.getElementById('saveIcon');
+    // Kita guna tajuk sebagai ID jika param ID di URL tiada
+    const novelId = urlParams.get('id') || document.getElementById('novelTitle').innerText.replace(/\s+/g, '-').toLowerCase();
+    
+    const novelData = {
+        id: novelId,
+        title: document.getElementById('novelTitle').innerText,
+        image: document.getElementById('novelCover').src,
+        genre: document.getElementById('novelGenre').innerText,
+        savedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    const docRef = db.collection('users').doc(user.uid).collection('bookmarks').doc(novelId);
+
+    try {
+        const doc = await docRef.get();
+        if (doc.exists()) {
+            await docRef.delete();
+            saveIcon.className = "fa-regular fa-bookmark text-xl text-white";
+            alert("Dibuang dari simpanan.");
+        } else {
+            await docRef.set(novelData);
+            saveIcon.className = "fa-solid fa-bookmark text-xl text-purple-500";
+            alert("Disimpan ke profil!");
+        }
+    } catch (error) {
+        console.error("Error bookmarking:", error);
+    }
+}
