@@ -122,3 +122,31 @@ if (typeof firebase !== 'undefined') {
         }
     });
 }
+
+// Pantau status log masuk untuk butang nav
+firebase.auth().onAuthStateChanged((user) => {
+    const authBtn = document.getElementById('authBtn');
+    const profileLink = document.querySelector('a[title="Profile"]');
+
+    if (user) {
+        // Jika sudah login
+        if (authBtn) authBtn.innerText = "Keluar";
+        if (profileLink) profileLink.href = "profile.html";
+    } else {
+        // Jika belum login
+        if (authBtn) authBtn.innerText = "Log Masuk";
+        if (profileLink) profileLink.href = "auth.html";
+    }
+});
+
+// Fungsi untuk butang Log Masuk / Keluar
+function handleAuthAction() {
+    const user = firebase.auth().currentUser;
+    if (user) {
+        firebase.auth().signOut().then(() => {
+            window.location.reload();
+        });
+    } else {
+        window.location.href = "auth.html";
+    }
+}
