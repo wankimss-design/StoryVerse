@@ -35,14 +35,18 @@
         <div class="nav-container-floating flex items-center bg-[#151515] p-1.5 rounded-2xl border border-white/5 shadow-xl">
             <a href="index.html" class="nav-btn-icon" title="Home"><i class="fa-solid fa-house"></i></a>
             <a href="katalog.html" class="nav-btn-icon" title="Archive"><i class="fa-solid fa-box-archive"></i></a>
-            <a href="#" class="nav-btn-icon" title="Profile"><i class="fa-solid fa-user"></i></a>
+            
+            <a href="profile.html" class="nav-btn-icon" title="Profile">
+                <i class="fa-solid fa-user"></i>
+            </a>
+            
             <button id="themeToggle" class="nav-btn-icon">
                 <i class="fa-solid fa-moon" id="themeIconLucide"></i>
             </button>
         </div>
 
         <div class="nav-container-floating flex items-center bg-[#151515] p-1.5 rounded-2xl border border-white/5 shadow-xl">
-            <button id="authBtn" class="nav-btn-auth px-4 py-2 text-sm font-bold">Log Masuk</button>
+            <button id="authBtn" class="nav-btn-auth px-4 py-2 text-sm font-bold" onclick="handleAuthAction()">Log Masuk</button>
         </div>
         
     </div>
