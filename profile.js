@@ -73,3 +73,31 @@ function displaySaved() {
         </div>
     `).join('');
 }
+function toggleEditModal() {
+    const modal = document.getElementById('editModal');
+    modal.classList.toggle('hidden');
+    
+    // Masukkan nama sedia ada ke dalam input
+    if (!modal.classList.contains('hidden')) {
+        document.getElementById('editName').value = firebase.auth().currentUser.displayName || "";
+    }
+}
+
+async function saveProfile() {
+    const newName = document.getElementById('editName').value;
+    const user = firebase.auth().currentUser;
+
+    if (user) {
+        try {
+            await user.updateProfile({ displayName: newName });
+            document.getElementById('userName').innerText = newName;
+            toggleEditModal();
+            alert("Profil berjaya dikemaskini!");
+        } catch (error) {
+            alert("Ralat: " + error.message);
+        }
+    }
+}
+
+// Pastikan butang Edit Profil asal memanggil fungsi ini
+document.querySelector('button[onclick="toggleEditModal()"]').onclick = toggleEditModal;
