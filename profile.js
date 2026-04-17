@@ -1,4 +1,4 @@
-// Gunakan variable global untuk simpan data
+// 1. DATA SIMULASI & GLOBAL VARIABLES
 let myNovels = [
     { title: "Cinta Di Verse 01", views: "1.2k", clicks: "4.5k", status: "Published", cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400" }
 ];
@@ -8,10 +8,10 @@ const userReading = [
     { title: "Sumpahan Penulis Terakhir", progress: 30, cover: "https://images.unsplash.com/photo-1543004629-142a76f50c8e?w=400" }
 ];
 
-// Pastikan skrip jalan hanya selepas DOM sedia
+// 2. INITIALIZATION
 document.addEventListener('DOMContentLoaded', () => {
-    initTabs();
     initFirebase();
+    initTabs();
 });
 
 function initFirebase() {
@@ -21,7 +21,7 @@ function initFirebase() {
             document.getElementById('userEmail').innerText = user.email;
             if (user.photoURL) document.getElementById('userAvatar').src = user.photoURL;
             
-            // Muat kandungan tab pertama secara automatik
+            // Muat kandungan pertama secara automatik
             loadUserContent();
         } else {
             window.location.href = "auth.html";
@@ -29,29 +29,24 @@ function initFirebase() {
     });
 }
 
-// --- LOGIK TAB (ANTI-BUG) ---
+// 3. LOGIK TAB (ANTI-BUG)
 function initTabs() {
     const tabs = document.querySelectorAll('.tab-btn');
     const indicator = document.getElementById('tabIndicator');
 
     tabs.forEach(btn => {
-        btn.addEventListener('click', function() {
-            // 1. Buang class active dari semua tab
+        btn.onclick = () => {
             tabs.forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
             
-            // 2. Tambah active pada tab yang diklik
-            this.classList.add('active');
-            
-            // 3. Gerakkan indicator
             if (indicator) {
-                indicator.style.width = `${this.offsetWidth}px`;
-                indicator.style.left = `${this.offsetLeft}px`;
+                indicator.style.width = btn.offsetWidth + "px";
+                indicator.style.left = btn.offsetLeft + "px";
             }
 
-            // 4. Tukar Kandungan
-            const tabType = this.getAttribute('data-tab');
-            switchTabContent(tabType);
-        });
+            const tab = btn.getAttribute('data-tab');
+            switchTabContent(tab);
+        };
     });
 
     // Set posisi awal indicator
@@ -68,28 +63,22 @@ function switchTabContent(tab) {
     const grid = document.getElementById('readingList');
     const analytics = document.getElementById('analyticsSection');
 
-    // Sembunyikan analitik secara default
     analytics.classList.add('hidden');
-    grid.innerHTML = '<div class="col-span-2 text-center py-10 opacity-50 text-[10px] uppercase tracking-widest">Memuatkan...</div>';
+    grid.innerHTML = '';
 
-    setTimeout(() => {
-        grid.innerHTML = '';
-        if (tab === 'reading') {
-            loadUserContent();
-        } else if (tab === 'saved') {
-            displaySaved();
-        } else if (tab === 'my-novels') {
-            loadMyNovels();
-            analytics.classList.remove('hidden');
-        }
-    }, 200);
+    if (tab === 'reading') loadUserContent();
+    else if (tab === 'saved') displaySaved();
+    else if (tab === 'my-novels') {
+        loadMyNovels();
+        analytics.classList.remove('hidden');
+    }
 }
 
-// --- FUNGSI PAPARAN ---
+// 4. FUNGSI PAPARAN KANDUNGAN
 function loadUserContent() {
     const grid = document.getElementById('readingList');
     grid.innerHTML = userReading.map(n => `
-        <div class="profile-novel-card group">
+        <div class="profile-novel-card group cursor-pointer">
             <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4">
                 <img src="${n.cover}" class="w-full h-full object-cover">
             </div>
@@ -100,67 +89,115 @@ function loadUserContent() {
     `).join('');
 }
 
+async function displaySaved() {
+    const grid = document.getElementById('readingList');
+    grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50 text-[10px] uppercase tracking-widest">Memuatkan simpanan...</p>';
+    
+    try {
+        const user = firebase.auth().currentUser;
+        const db = firebase.firestore();
+        const snapshot = await db.collection('users').doc(user.uid).collection('bookmarks').get();
+        
+        if (snapshot.empty) {
+            grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50 text-[10px] uppercase tracking-widest">Tiada simpanan</p>';
+            return;
+        }
+
+        grid.innerHTML = '';
+        snapshot.forEach(doc => {
+            const n = doc.data();
+            grid.innerHTML += `
+                <div class="profile-novel-card group cursor-pointer">
+                    <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4">
+                        <img src="${n.image}" class="w-full h-full object-cover">
+                    </div>
+                    <h4 class="text-sm font-bold truncate mb-1">${n.title}</h4>
+                    <p class="text-[9px] text-purple-500 font-black uppercase tracking-widest">${n.genre || 'Novel'}</p>
+                </div>`;
+        });
+    } catch (e) {
+        grid.innerHTML = '<p class="text-red-500 text-center col-span-full text-[10px]">Tiada data Firestore ditemui.</p>';
+    }
+}
+
 function loadMyNovels() {
     const grid = document.getElementById('readingList');
     const tableBody = document.getElementById('trafficTableBody');
 
     grid.innerHTML = myNovels.map(n => `
         <div class="profile-novel-card group">
-            <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4">
-                <img src="${n.cover}" class="w-full h-full object-cover">
-            </div>
+            <div class="aspect-[3/4] rounded-xl overflow-hidden mb-4"><img src="${n.cover}" class="w-full h-full object-cover"></div>
             <h4 class="text-sm font-bold truncate">${n.title}</h4>
             <span class="text-[9px] text-purple-500 font-black uppercase">Karya Anda</span>
-        </div>
-    `).join('');
+        </div>`).join('');
 
     tableBody.innerHTML = myNovels.map((n, index) => `
-        <tr class="hover:bg-white/[0.02] border-b border-white/5">
-            <td class="px-6 py-4 font-bold text-white text-xs">${n.title}</td>
-            <td class="px-6 py-4 text-gray-400 text-xs">${n.views}</td>
-            <td class="px-6 py-4 text-gray-400 text-xs">${n.clicks}</td>
+        <tr class="hover:bg-white/[0.02] border-b border-white/5 text-xs text-gray-400">
+            <td class="px-6 py-4 font-bold text-white">${n.title}</td>
+            <td class="px-6 py-4">${n.views}</td>
+            <td class="px-6 py-4">${n.clicks}</td>
             <td class="px-6 py-4 text-center">
-                <button onclick="openEditNovelModal(${index})" class="w-8 h-8 rounded-lg bg-purple-600/20 text-purple-500 hover:bg-purple-600 hover:text-white transition-all">
+                <button onclick="openEditNovelModal(${index})" class="text-purple-500 hover:text-white">
                     <i class="fa-solid fa-pen-to-square"></i>
                 </button>
             </td>
-        </tr>
-    `).join('');
+        </tr>`).join('');
 }
 
-// --- MODAL CONTROLS ---
-function toggleEditModal() {
+// 5. MODAL & ACTIONS (PENTING!)
+window.toggleEditModal = function() {
     const modal = document.getElementById('editModal');
     modal.classList.toggle('hidden');
+    // Set nilai asal input kepada nama sekarang
+    if (!modal.classList.contains('hidden')) {
+        document.getElementById('editName').value = document.getElementById('userName').innerText;
+    }
 }
 
-function openEditNovelModal(index) {
-    const novel = myNovels[index];
+window.saveProfile = async function() {
+    const newName = document.getElementById('editName').value.trim();
+    const user = firebase.auth().currentUser;
+
+    if (user && newName !== "") {
+        try {
+            await user.updateProfile({ displayName: newName });
+            document.getElementById('userName').innerText = newName;
+            toggleEditModal();
+            alert("Nama berjaya ditukar!");
+        } catch (error) {
+            alert("Ralat: " + error.message);
+        }
+    } else {
+        alert("Sila masukkan nama.");
+    }
+}
+
+window.openEditNovelModal = function(index) {
     document.getElementById('editNovelId').value = index;
-    document.getElementById('editNovelTitle').value = novel.title;
-    document.getElementById('editNovelCover').value = novel.cover;
+    document.getElementById('editNovelTitle').value = myNovels[index].title;
+    document.getElementById('editNovelCover').value = myNovels[index].cover;
     document.getElementById('editNovelModal').classList.remove('hidden');
 }
 
-function closeEditNovelModal() {
+window.closeEditNovelModal = function() {
     document.getElementById('editNovelModal').classList.add('hidden');
 }
 
-// Simpan Perubahan Novel
-const editForm = document.getElementById('editNovelForm');
-if(editForm) {
-    editForm.onsubmit = function(e) {
+// Logik submit form novel
+const editFormElement = document.getElementById('editNovelForm');
+if(editFormElement) {
+    editFormElement.onsubmit = function(e) {
         e.preventDefault();
         const index = document.getElementById('editNovelId').value;
         myNovels[index].title = document.getElementById('editNovelTitle').value;
         myNovels[index].cover = document.getElementById('editNovelCover').value;
         
-        alert("Karya Berjaya Dikemaskini!");
+        alert("Karya dikemaskini!");
         closeEditNovelModal();
         loadMyNovels();
     };
 }
 
-function logout() {
+window.logout = function() {
     firebase.auth().signOut().then(() => { window.location.href = "index.html"; });
 }
