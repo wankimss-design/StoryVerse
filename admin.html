@@ -12,118 +12,138 @@
 <body class="bg-[#0a0a0a] text-white">
 
     <div class="flex min-h-screen">
-        <aside class="w-64 border-r border-white/5 bg-[#0f0f0f] p-6 hidden md:block">
+        <aside class="w-64 border-r border-white/5 bg-[#0f0f0f] p-6 hidden md:flex flex-col sticky top-0 h-screen">
             <div class="mb-10 flex items-center gap-3">
-                <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
-                    <i class="fa-solid fa-lock text-xs"></i>
+                <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center shadow-lg shadow-purple-600/20">
+                    <i class="fa-solid fa-bolt-lightning text-xs text-white"></i>
                 </div>
-                <span class="font-black uppercase tracking-tighter italic">Admin<span class="text-purple-500">Panel</span></span>
+                <span class="font-black uppercase tracking-tighter italic text-xl">Story<span class="text-purple-500">Verse</span></span>
             </div>
             
-            <nav class="space-y-2">
-                <a href="#" class="flex items-center gap-3 p-3 bg-purple-600/10 text-purple-400 rounded-xl border border-purple-500/20">
-                    <i class="fa-solid fa-plus-circle"></i> <span class="text-xs font-bold uppercase tracking-widest">Tambah Novel</span>
+            <nav class="space-y-2 flex-1">
+                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 ml-3 mb-4">Menu Utama</p>
+                <a href="index.html" class="flex items-center gap-3 p-4 text-gray-400 hover:text-white hover:bg-white/5 rounded-2xl transition-all group">
+                    <i class="fa-solid fa-house group-hover:text-purple-500 transition-colors"></i> 
+                    <span class="text-xs font-bold uppercase tracking-widest">Laman Utama</span>
                 </a>
-                <a href="index.html" class="flex items-center gap-3 p-3 text-gray-500 hover:text-white transition-all">
-                    <i class="fa-solid fa-house"></i> <span class="text-xs font-bold uppercase tracking-widest">Laman Utama</span>
+                <a href="#" class="flex items-center gap-3 p-4 bg-purple-600 text-white rounded-2xl shadow-lg shadow-purple-600/20">
+                    <i class="fa-solid fa-gauge-high"></i> 
+                    <span class="text-xs font-bold uppercase tracking-widest">Dashboard Admin</span>
+                </a>
+                <a href="library.html" class="flex items-center gap-3 p-4 text-gray-400 hover:text-white hover:bg-white/5 rounded-2xl transition-all group">
+                    <i class="fa-solid fa-book-open group-hover:text-purple-500 transition-colors"></i> 
+                    <span class="text-xs font-bold uppercase tracking-widest">Perpustakaan</span>
                 </a>
             </nav>
+
+            <div class="pt-6 border-t border-white/5">
+                <button onclick="firebase.auth().signOut()" class="flex items-center gap-3 p-4 text-red-500 hover:bg-red-500/10 w-full rounded-2xl transition-all">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span class="text-xs font-bold uppercase tracking-widest">Log Keluar</span>
+                </button>
+            </div>
         </aside>
 
-        <main class="pt-24 pb-20 px-6 max-w-6xl mx-auto">
-    <header class="mb-12">
-        <h1 class="text-4xl font-black text-white uppercase tracking-tighter">Admin <span class="text-purple-500">Panel</span></h1>
-        <p class="text-gray-500 text-sm">Uruskan koleksi karya anda di StoryVerse.</p>
-    </header>
+        <main class="flex-1 p-6 md:p-12 overflow-y-auto">
+            <header class="mb-12">
+                <h1 class="text-4xl font-black text-white uppercase tracking-tighter">Pengurusan <span class="text-purple-500">Karya</span></h1>
+                <p class="text-gray-500 text-sm mt-2">Cipta dunia baru atau kemaskini naratif anda.</p>
+            </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        
-        <section class="bg-[#121212] p-8 rounded-[2.5rem] border border-white/5 shadow-2xl">
-            <div class="flex items-center gap-4 mb-8">
-                <div class="w-12 h-12 bg-purple-600/20 rounded-2xl flex items-center justify-center text-purple-500">
-                    <i class="fa-solid fa-plus-circle text-xl"></i>
-                </div>
-                <h2 class="text-xl font-bold text-white">Muat Naik Novel Baru</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <section class="bg-[#121212] p-8 rounded-[2.5rem] border border-white/5 shadow-2xl">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-12 h-12 bg-purple-600/20 rounded-2xl flex items-center justify-center text-purple-500">
+                            <i class="fa-solid fa-feather-pointed text-xl"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-white">Info Utama Novel</h2>
+                    </div>
+
+                    <form id="newNovelForm" class="space-y-6">
+                        <div>
+                            <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Tajuk Novel</label>
+                            <input type="text" id="newTitle" placeholder="Masukkan tajuk..." class="admin-input">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Genre</label>
+                                <select id="newGenre" class="admin-input appearance-none">
+                                    <option value="Romance">Romance</option>
+                                    <option value="Fantasy">Fantasy</option>
+                                    <option value="Horror">Horror</option>
+                                    <option value="Action">Action</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Upload Cover</label>
+                                <input type="file" id="coverFile" accept="image/*" class="hidden">
+                                <label for="coverFile" class="w-full bg-white/5 border border-dashed border-white/10 rounded-2xl p-4 text-center cursor-pointer hover:border-purple-500 transition-all block">
+                                    <span id="fileNameDisplay" class="text-[10px] font-bold text-gray-400">PILIH GAMBAR</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="previewContainer" class="hidden flex justify-center py-4 bg-black/20 rounded-2xl border border-white/5">
+                            <img id="imagePreview" src="" class="w-24 h-32 object-cover rounded-lg shadow-xl">
+                        </div>
+
+                        <div>
+                            <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Sinopsis</label>
+                            <textarea id="newSinopsis" rows="4" class="admin-input resize-none"></textarea>
+                        </div>
+
+                        <button type="submit" id="mainSubmitBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-black uppercase tracking-widest py-5 rounded-2xl transition-all flex items-center justify-center gap-3">
+                            Publish Novel <i class="fa-solid fa-paper-plane text-xs"></i>
+                        </button>
+                    </form>
+                </section>
+
+                <section class="bg-[#121212] p-8 rounded-[2.5rem] border border-white/5 shadow-2xl">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-12 h-12 bg-blue-600/20 rounded-2xl flex items-center justify-center text-blue-500">
+                            <i class="fa-solid fa-pen-nib text-xl"></i>
+                        </div>
+                        <h2 class="text-xl font-bold text-white">Tambah & Edit Bab</h2>
+                    </div>
+
+                    <form id="updateChapterForm" class="space-y-6">
+                        <div>
+                            <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Pilih Novel</label>
+                            <select id="selectNovel" class="admin-input"></select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="number" id="chapterNum" placeholder="No. Bab" class="admin-input">
+                            <input type="text" id="chapterTitle" placeholder="Tajuk Bab" class="admin-input">
+                        </div>
+
+                        <textarea id="chapterContent" rows="8" placeholder="Tuliskan cerita anda..." class="admin-input font-serif"></textarea>
+
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest py-5 rounded-2xl transition-all flex items-center justify-center gap-3">
+                            Simpan Bab <i class="fa-solid fa-floppy-disk text-xs"></i>
+                        </button>
+                    </form>
+                </section>
             </div>
 
-            <form id="newNovelForm" class="space-y-6">
-                <div>
-                    <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Tajuk Novel</label>
-                    <input type="text" id="newTitle" placeholder="Contoh: Sumpahan Penulis Terakhir" 
-                        class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-purple-500 outline-none transition-all">
+            <section class="mt-12 bg-[#121212] p-8 rounded-[2.5rem] border border-white/5 shadow-2xl overflow-hidden">
+                <h2 class="text-xl font-bold text-white mb-8">Senarai Novel Saya</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b border-white/5">
+                                <th class="pb-4 text-[10px] uppercase text-gray-500 px-4">Novel</th>
+                                <th class="pb-4 text-[10px] uppercase text-gray-500 px-4">Genre</th>
+                                <th class="pb-4 text-[10px] uppercase text-gray-500 px-4 text-center">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="novelTableBody"></tbody>
+                    </table>
                 </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Genre</label>
-                        <select id="newGenre" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-purple-500 outline-none appearance-none">
-                            <option value="Romance">Romance</option>
-                            <option value="Fantasy">Fantasy</option>
-                            <option value="Horror">Horror</option>
-                            <option value="Action">Action</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">URL Cover</label>
-                        <input type="text" id="newCover" placeholder="https://..." class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-purple-500 outline-none">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Sinopsis Ringkas</label>
-                    <textarea id="newSinopsis" rows="4" placeholder="Ceritakan sedikit tentang novel ini..." 
-                        class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-purple-500 outline-none resize-none"></textarea>
-                </div>
-
-                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-black uppercase tracking-widest py-5 rounded-2xl transition-all shadow-lg shadow-purple-600/20 flex items-center justify-center gap-3">
-                    Publish Novel <i class="fa-solid fa-paper-plane text-xs"></i>
-                </button>
-            </form>
-        </section>
-
-        <section class="bg-[#121212] p-8 rounded-[2.5rem] border border-white/5 shadow-2xl">
-            <div class="flex items-center gap-4 mb-8">
-                <div class="w-12 h-12 bg-blue-600/20 rounded-2xl flex items-center justify-center text-blue-500">
-                    <i class="fa-solid fa-pen-nib text-xl"></i>
-                </div>
-                <h2 class="text-xl font-bold text-white">Tambah / Edit Bab</h2>
-            </div>
-
-            <form id="updateChapterForm" class="space-y-6">
-                <div>
-                    <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Pilih Novel</label>
-                    <select id="selectNovel" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-blue-500 outline-none">
-                        <option value="">Memuatkan senarai novel...</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">No. Bab</label>
-                        <input type="number" id="chapterNum" placeholder="Contoh: 1" 
-                            class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Tajuk Bab</label>
-                        <input type="text" id="chapterTitle" placeholder="Contoh: Pertemuan Pertama" 
-                            class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-blue-500 outline-none">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Isi Kandungan Bab</label>
-                    <textarea id="chapterContent" rows="8" placeholder="Tuliskan cerita anda di sini..." 
-                        class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-blue-500 outline-none resize-none font-serif"></textarea>
-                </div>
-
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest py-5 rounded-2xl transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-3">
-                    Simpan Bab <i class="fa-solid fa-floppy-disk text-xs"></i>
-                </button>
-            </form>
-        </section>
-
+            </section>
+        </main>
     </div>
-</main>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
