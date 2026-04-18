@@ -85,17 +85,32 @@
                             <div class="relative">
     <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Genre (Boleh Pilih Banyak)</label>
     
-    <div id="genreToggle" class="admin-input flex justify-between items-center cursor-pointer min-h-[50px]">
+    <button type="button" id="genreToggle" class="admin-input flex justify-between items-center cursor-pointer min-h-[50px] w-full">
         <span id="selectedGenresDisplay" class="text-xs font-bold text-gray-400">PILIH GENRE...</span>
         <i class="fa-solid fa-chevron-down text-[10px] transition-transform" id="genreChevron"></i>
-    </div>
+    </button>
 
-    <div id="genreDropdown" class="absolute left-0 right-0 mt-2 bg-[#151515] border border-white/5 rounded-2xl overflow-hidden opacity-0 scale-95 pointer-events-none z-[100] custom-scrollbar max-h-60 overflow-y-auto shadow-2xl">
-        <div class="genre-item chapter-item" data-value="Romance">Romance <i class="fa-solid fa-heart opacity-0"></i></div>
-        <div class="genre-item chapter-item" data-value="Fantasy">Fantasy <i class="fa-solid fa-wand-sparkles opacity-0"></i></div>
-        <div class="genre-item chapter-item" data-value="Horror">Horror <i class="fa-solid fa-ghost opacity-0"></i></div>
-        <div class="genre-item chapter-item" data-value="Action">Action <i class="fa-solid fa-gun opacity-0"></i></div>
-        <div class="genre-item chapter-item" data-value="Mystery">Mystery <i class="fa-solid fa-magnifying-glass opacity-0"></i></div>
+    <div id="genreDropdown" class="absolute left-0 right-0 mt-2 bg-[#151515] border border-white/10 rounded-2xl z-[9999] custom-scrollbar max-h-60 overflow-y-auto shadow-2xl transition-all duration-300">
+        <div class="genre-item p-4 hover:bg-white/5 cursor-pointer flex justify-between items-center" data-value="Romance">
+            <span class="text-[10px] font-bold uppercase tracking-widest">Romance</span>
+            <i class="fa-solid fa-heart text-purple-500 opacity-0 transition-opacity"></i>
+        </div>
+        <div class="genre-item p-4 hover:bg-white/5 cursor-pointer flex justify-between items-center" data-value="Fantasy">
+            <span class="text-[10px] font-bold uppercase tracking-widest">Fantasy</span>
+            <i class="fa-solid fa-wand-sparkles text-purple-500 opacity-0 transition-opacity"></i>
+        </div>
+        <div class="genre-item p-4 hover:bg-white/5 cursor-pointer flex justify-between items-center" data-value="Horror">
+            <span class="text-[10px] font-bold uppercase tracking-widest">Horror</span>
+            <i class="fa-solid fa-ghost text-purple-500 opacity-0 transition-opacity"></i>
+        </div>
+        <div class="genre-item p-4 hover:bg-white/5 cursor-pointer flex justify-between items-center" data-value="Action">
+            <span class="text-[10px] font-bold uppercase tracking-widest">Action</span>
+            <i class="fa-solid fa-gun text-purple-500 opacity-0 transition-opacity"></i>
+        </div>
+        <div class="genre-item p-4 hover:bg-white/5 cursor-pointer flex justify-between items-center" data-value="Mystery">
+            <span class="text-[10px] font-bold uppercase tracking-widest">Mystery</span>
+            <i class="fa-solid fa-magnifying-glass text-purple-500 opacity-0 transition-opacity"></i>
+        </div>
     </div>
 </div>
                             <div>
