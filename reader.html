@@ -22,9 +22,15 @@
             <button onclick="history.back()" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/5 transition-all text-white">
                 <i class="fa-solid fa-chevron-left"></i>
             </button>
-            <div class="overflow-hidden">
-                <h2 id="readerNovelTitle" class="text-sm font-black uppercase tracking-wider text-white truncate max-w-[150px] md:max-w-none italic">Tajuk Novel</h2>
-                <p id="readerChapterNum" class="text-[10px] text-purple-500 font-bold uppercase tracking-widest">Memuatkan Bab...</p>
+            <div>
+                <h2 id="readerNovelTitle" class="text-sm font-black uppercase tracking-wider text-white truncate max-w-[120px] md:max-w-none italic leading-tight">Tajuk Novel</h2>
+                
+                <div class="relative inline-block leading-none">
+                    <select id="chapterSelector" onchange="jumpToChapter(this.value)" class="bg-transparent text-[10px] text-purple-500 font-bold uppercase tracking-widest outline-none cursor-pointer hover:text-purple-400 transition-colors appearance-none pr-4">
+                        <option value="1">Bab 01</option>
+                        </select>
+                    <i class="fa-solid fa-chevron-down text-[7px] text-purple-500 absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                </div>
             </div>
         </div>
 
