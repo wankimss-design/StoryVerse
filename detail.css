@@ -28,3 +28,30 @@ body.light-mode { background: #fdfdfd !important; color: #111 !important; }
 body.light-mode #novelTitle { background: linear-gradient(to right, #111, #555); -webkit-background-clip: text; }
 body.light-mode nav { background: rgba(255, 255, 255, 0.8) !important; border-color: #eee !important; }
 body.light-mode .text-gray-400 { color: #555 !important; }
+/* Warna asal (Dark Mode) */
+.nav-pill {
+    background-color: rgba(26, 26, 26, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Warna bila Light Mode aktif */
+body.light-mode .nav-pill {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    backdrop-blur: 20px;
+}
+
+body.light-mode .nav-pill button {
+    color: #475569; /* Warna ikon kelabu gelap */
+}
+
+body.light-mode .nav-pill button:hover {
+    color: #1a1a1a;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Butang Home yang aktif dalam Light Mode */
+body.light-mode .nav-pill .bg-white\/10 {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #000;
+}
