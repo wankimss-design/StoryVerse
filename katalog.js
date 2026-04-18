@@ -51,13 +51,17 @@ async function loadKatalog() {
             allNovels.push({ id: doc.id, ...doc.data() });
         });
 
-        // Tapis data
-        const filtered = allNovels.filter(n => {
-            const matchSearch = n.title.toLowerCase().includes(term);
-            const matchGenre = selectedGenres.length === 0 || selectedGenres.includes(n.genre);
-            const matchStatus = selectedStatus === "" || n.status === selectedStatus;
-            return matchSearch && matchGenre && matchStatus;
-        });
+       // Dalam loadKatalog(), cari bahagian const filtered = allNovels.filter...
+const filtered = allNovels.filter(n => {
+    const matchSearch = n.title.toLowerCase().includes(term);
+    
+    // Cara tapis Array Genre yang betul:
+    const matchGenre = selectedGenres.length === 0 || 
+                      (n.genres && n.genres.some(g => selectedGenres.includes(g)));
+                      
+    const matchStatus = selectedStatus === "" || n.status === selectedStatus;
+    return matchSearch && matchGenre && matchStatus;
+});
 
         renderGrid(filtered);
     } catch (error) {
@@ -75,22 +79,26 @@ function renderGrid(data) {
         return;
     }
 
-    grid.innerHTML = data.map(n => `
+    grid.innerHTML = data.map(n => {
+        // --- TAMBAH BARIS INI UNTUK PREVENT GAMBAR HILANG ---
+        const finalCover = n.coverImage || n.cover || 'https://via.placeholder.com/150';
+        
+        return `
         <div class="novel-card group cursor-pointer" onclick="location.href='detail.html?id=${n.id}'">
             <div class="card-image-container">
-                <img src="${n.cover}" alt="${n.title}">
+                <img src="${finalCover}" alt="${n.title}">
                 <div class="read-overlay">
                     <div class="read-btn-ui">Lihat Detail</div>
                 </div>
             </div>
-            <h3 class="font-bold mt-5 text-sm tracking-tight truncate px-1 group-hover:text-purple-500 transition-colors">${n.title}</h3>
+            <h3 class="font-bold mt-5 text-sm tracking-tight truncate px-1 group-hover:text-purple-500 transition-colors uppercase italic">${n.title}</h3>
             <div class="flex items-center gap-2 mt-1.5 px-1">
-                <span class="text-[9px] font-black text-purple-500 uppercase tracking-tighter">${n.genre || 'Umum'}</span>
+                <span class="text-[9px] font-black text-purple-500 uppercase tracking-tighter">${n.genres ? n.genres[0] : 'Umum'}</span>
                 <span class="text-[9px] text-gray-700">•</span>
                 <span class="text-[9px] font-bold text-gray-500 uppercase tracking-tighter">${n.status || 'Ongoing'}</span>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 
 // --- 4. THEME & UTILITY ---
