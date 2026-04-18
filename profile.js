@@ -21,27 +21,34 @@ function initFirebase() {
             const db = firebase.firestore();
             document.getElementById('userEmail').innerText = user.email;
 
+            // Pastikan kita ada elemen imej profil di halaman ini
+            const userAvatar = document.getElementById('userAvatar');
+
             try {
                 const doc = await db.collection('users').doc(user.uid).get();
                 if (doc.exists) {
                     const data = doc.data();
                     document.getElementById('userName').innerText = data.name || user.displayName || "Admin12";
                     document.getElementById('userBio').innerText = data.bio || "Tiada bio lagi.";
-                    if (data.photoURL) document.getElementById('userAvatar').src = data.photoURL;
+                    
+                    // AMBIL GAMBAR TERBARU:
+                    // Jika ada di Firestore, guna Firestore. Jika tidak, guna Firebase Auth.
+                    if (userAvatar) {
+                        userAvatar.src = data.photoURL || user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=a855f7&color=fff`;
+                    }
                 } else {
                     document.getElementById('userName').innerText = user.displayName || "Admin12";
                 }
             } catch (e) {
-                console.log("Tiada data tambahan di Firestore");
+                console.log("Ralat mengambil data Firestore");
             }
             
-            loadUserContent(); // Default tab: Sedang Dibaca
+            loadUserContent(); 
         } else {
             window.location.href = "index.html";
         }
     });
 }
-
 // 3. LOGIK TABS & SCROLL
 function initTabs() {
     const tabs = document.querySelectorAll('.tab-btn');
