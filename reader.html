@@ -22,13 +22,23 @@
             <button onclick="history.back()" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/5 transition-all text-white">
                 <i class="fa-solid fa-chevron-left"></i>
             </button>
-            <div>
-                <h2 id="readerNovelTitle" class="text-sm font-black uppercase tracking-wider text-white truncate max-w-[120px] md:max-w-none italic leading-tight">Tajuk Novel</h2>
+
+            <div class="flex flex-col">
+                <h2 id="readerNovelTitle" class="text-[10px] font-black uppercase tracking-wider text-white/40 italic leading-tight mb-0.5">Tajuk Novel</h2>
                 
-                <div class="relative flex items-center">
-                    <select id="chapterSelector" onchange="jumpToChapter(this.value)" class="appearance-none pr-4">
-                        </select>
-                    <i class="fa-solid fa-chevron-down text-[7px] text-purple-500 absolute right-0 pointer-events-none"></i>
+                <div class="relative group">
+                    <button onclick="toggleChapterList()" id="chapterBtn" class="flex items-center gap-2 text-[11px] text-purple-500 font-extrabold uppercase tracking-[0.2em] hover:text-purple-400 transition-all outline-none">
+                        <span id="currentChapterText">Bab 01</span>
+                        <i class="fa-solid fa-chevron-down text-[8px] transition-transform duration-300" id="chapterChevron"></i>
+                    </button>
+
+                    <div id="chapterDropdown" class="absolute left-0 mt-4 w-64 bg-[#121212]/95 backdrop-blur-xl border border-purple-500/30 rounded-2xl overflow-hidden opacity-0 scale-95 pointer-events-none transition-all duration-300 z-[100] shadow-[0_10px_40px_rgba(168,85,247,0.2)]">
+                        <div class="p-4 border-b border-white/5 bg-white/[0.02]">
+                            <p class="text-[9px] font-black uppercase tracking-widest text-white/30">Pilih Bab</p>
+                        </div>
+                        <ul id="chapterList" class="max-h-60 overflow-y-auto py-2 custom-scrollbar">
+                            </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -55,7 +65,7 @@
 
         <div class="mt-24 flex flex-col items-center gap-10 pt-12 border-t border-white/5">
             <div class="flex items-center gap-4 w-full">
-                <button id="prevBtn" onclick="changeChapter(-1)" class="flex-1 py-5 bg-white/5 border border-white/10 rounded-[1.5rem] font-bold hover:bg-white/10 transition-all disabled:opacity-20 text-sm uppercase tracking-widest">
+                <button id="prevBtn" onclick="changeChapter(-1)" class="flex-1 py-5 bg-white/5 border border-white/10 rounded-[1.5rem] font-bold hover:bg-white/10 transition-all disabled:opacity-20 text-sm uppercase tracking-widest text-white">
                     <i class="fa-solid fa-chevron-left mr-2"></i> Sebelum
                 </button>
                 <button id="nextBtn" onclick="changeChapter(1)" class="flex-1 py-5 bg-purple-600 text-white rounded-[1.5rem] font-bold hover:bg-purple-500 transition-all shadow-xl shadow-purple-600/20 text-sm uppercase tracking-widest">
