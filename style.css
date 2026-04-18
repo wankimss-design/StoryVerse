@@ -12,6 +12,12 @@ body {
     margin: 0;
     font-family: 'Inter', sans-serif;
     transition: background-color 0.3s, color 0.3s;
+    overflow-x: hidden; /* Elakkan scroll melintang */
+}
+
+/* Kunci scroll jika preloader ada dan belum tamat */
+body:has(#preloader:not(.lift-up)) {
+    overflow: hidden;
 }
 
 .text-gradient {
@@ -104,7 +110,6 @@ body {
     box-shadow: 0 15px 40px rgba(112, 0, 255, 0.5);
 }
 
-/* Featured Large Card */
 .novel-card-large {
     width: 100%;
     max-width: 450px;
@@ -127,8 +132,7 @@ body {
 }
 
 .cover-img {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: cover;
     opacity: 0.8;
     transition: opacity 0.3s ease;
@@ -136,7 +140,7 @@ body {
 
 .novel-card-large:hover .cover-img { opacity: 1; }
 
-/* --- 4. NOVEL GRID & CARD SYSTEM --- */
+/* --- 4. NOVEL GRID SYSTEM --- */
 #novelGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -158,8 +162,7 @@ body {
 }
 
 .card-img {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
     object-fit: cover;
     transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     display: block;
@@ -173,7 +176,7 @@ body {
 
 .novel-card:hover .card-img { transform: scale(1.1); }
 
-/* --- 5. PRELOADER (FIX CENTER & SCROLL) --- */
+/* --- 5. PRELOADER (PENYELESAIAN PENUH) --- */
 #preloader {
     position: fixed;
     inset: 0;
@@ -185,43 +188,35 @@ body {
     align-items: center;
     z-index: 99999;
     transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
-    pointer-events: none; /* Benarkan klik tembus selepas lift-up */
 }
 
-/* Kunci scroll semasa loading aktif */
-body:has(#preloader:not(.lift-up)) {
-    overflow: hidden;
-}
-
-#preloader.lift-up { 
-    transform: translateY(-100%); 
-}
+#preloader.lift-up { transform: translateY(-100%); pointer-events: none; }
 
 .loader-wrapper {
     position: relative;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     width: 100%;
-    height: 300px; /* Hadkan tinggi wrapper supaya tidak melimpah */
+    height: 300px;
 }
 
 .loader-circle {
-    position: absolute; /* Supaya tidak menolak elemen lain */
-    top: -50px; /* Letakkan di atas teks */
-    width: 80px;
-    height: 80px;
+    position: absolute; /* Tak menolak teks */
+    width: 100px;
+    height: 100px;
     border: 3px solid rgba(168, 85, 247, 0.1);
     border-top: 3px solid var(--accent-purple);
     border-radius: 50%;
     animation: spin 0.8s linear infinite, unravel 0.6s ease-in forwards 1.5s;
+    z-index: 2;
 }
 
 .snake-svg {
     width: 90%;
     max-width: 500px;
     overflow: visible;
+    z-index: 1;
 }
 
 .snake-text {
@@ -230,24 +225,22 @@ body:has(#preloader:not(.lift-up)) {
     fill: transparent;
     stroke: var(--accent-purple);
     stroke-width: 1.5;
+    /* Mulakan dengan teks kosong sepenuhnya */
     stroke-dasharray: 1200;
     stroke-dashoffset: 1200;
     text-anchor: middle;
-    dominant-baseline: middle; /* Center tepat pada paksi Y */
-    animation: drawCursive 3.5s ease-in-out forwards 0.5s;
+    dominant-baseline: middle;
+    /* DELAY 2s: Mula menulis selepas circle berpusing */
+    animation: drawCursive 3.5s ease-in-out forwards 2s;
 }
 
-@media (max-width: 768px) {
-    .snake-text { font-size: 50px; }
-    .loader-circle { width: 60px; height: 60px; top: -30px; }
-}
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes unravel {
     0% { transform: rotate(360deg) scale(1); opacity: 1; }
     100% { transform: rotate(1080deg) scale(0); opacity: 0; }
 }
 @keyframes drawCursive {
-    0% { stroke-dashoffset: 1200; }
+    0% { stroke-dashoffset: 1200; fill: transparent; }
     70% { stroke-dashoffset: 0; fill: transparent; }
     100% { stroke-dashoffset: 0; fill: var(--accent-purple); }
 }
@@ -259,26 +252,11 @@ body.light-mode .hero-title { color: #1a1a1a !important; }
 body.light-mode .hero-description { color: #4b5563 !important; }
 body.light-mode .nav-container-floating { background: rgba(255, 255, 255, 0.6); border-color: rgba(0, 0, 0, 0.05); }
 body.light-mode .nav-btn-icon, body.light-mode .nav-btn-auth { background: #ffffff; border-color: #eee; color: #777; }
-body.light-mode .nav-btn-icon:hover, body.light-mode .nav-btn-auth:hover { color: #7000ff; }
-body.light-mode .card-image-wrapper { background: #eee; border-color: rgba(0, 0, 0, 0.05); }
 
-/* --- 7. FOOTER & RESPONSIVE --- */
-.footer-icon-link {
-    display: flex; align-items: center; justify-content: center;
-    width: 35px; height: 35px;
-    color: #666; border-radius: 50%;
-    transition: all 0.3s ease;
-}
-
-.footer-icon-link:hover {
-    color: var(--accent-purple);
-    background: rgba(168, 85, 247, 0.1);
-    transform: translateY(-3px);
-}
-
+/* --- 7. RESPONSIVE --- */
 @media (max-width: 768px) {
     .hero-title { font-size: 3.5rem !important; }
-    .novel-card-large { height: 350px; transform: none !important; margin: 0 auto; }
-    .snake-svg { width: 320px; }
-    .snake-text { font-size: 55px; }
+    .snake-text { font-size: 50px; }
+    .loader-circle { width: 80px; height: 80px; }
+    .novel-card-large { transform: none !important; margin: 0 auto; height: 350px; }
 }
