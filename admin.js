@@ -144,3 +144,25 @@ async function editNovel(id) {
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+// TAMBAHAN LOGIK THEME TOGGLE
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+    
+    // Tukar ikon berdasarkan mode
+    if (document.body.classList.contains('light-mode')) {
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+        localStorage.setItem('theme', 'light');
+    } else {
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+        localStorage.setItem('theme', 'dark');
+    }
+});
+
+// Semak pilihan tema yang disimpan semasa page dimuatkan
+if (localStorage.getItem('theme') === 'light') {
+    document.body.classList.add('light-mode');
+    themeIcon.classList.replace('fa-moon', 'fa-sun');
+}
