@@ -56,6 +56,10 @@ themeBtn?.addEventListener('click', () => {
 
 async function fetchNovels() {
     const grid = document.getElementById('novelGrid');
+    const fImg = document.getElementById('featuredImg');
+    const fTitle = document.getElementById('featuredTitle');
+    const fCard = document.getElementById('featuredCard');
+
     if (!grid) return;
 
     try {
@@ -66,30 +70,33 @@ async function fetchNovels() {
             return;
         }
 
-        grid.innerHTML = ''; 
+        grid.innerHTML = '';
+        
+        // Ambil data pertama untuk FEATURED
+        const firstDoc = snapshot.docs[0];
+        const firstData = firstDoc.data();
+        const firstCover = firstData.coverImage || firstData.cover || firstData.image || '';
+
+        if (fImg && fTitle) {
+            fImg.src = firstCover || 'https://via.placeholder.com/600x800?text=StoryVerse';
+            fTitle.innerText = firstData.title;
+            // Jadikan card hero boleh diklik terus ke novel tersebut
+            fCard.onclick = () => checkAccess(firstDoc.id);
+        }
+
+        // Paparkan semua novel dalam grid (Siri Popular)
         snapshot.forEach(doc => {
             const data = doc.data();
-            
-            // --- DEBUG: Lihat apa sebenarnya nama field dalam database anda ---
-            console.log("Data Novel ID:", doc.id, data);
-
-            // Kita cuba tangkap semua kemungkinan nama field imej
-            const finalCover = data.coverImage || data.cover || data.image || data.coverURL || '';
-
-            // Jika finalCover kosong, kita guna placeholder supaya nampak kotak
-            const displayImage = finalCover ? finalCover : 'https://via.placeholder.com/300x450?text=Tiada+Gambar';
+            const currentCover = data.coverImage || data.cover || data.image || 'https://via.placeholder.com/300x450?text=No+Cover';
 
             grid.innerHTML += `
                 <div class="novel-card group cursor-pointer" onclick="checkAccess('${doc.id}')">
                     <div class="card-image-wrapper shadow-xl mb-4">
-                        <img src="${displayImage}" 
-                             class="card-img w-full h-full object-cover" 
-                             alt="${data.title}" 
-                             onerror="this.src='https://via.placeholder.com/300x450?text=Error+Load'">
+                        <img src="${currentCover}" class="card-img" alt="${data.title}" onerror="this.src='https://via.placeholder.com/300x450?text=Error'">
                     </div>
                     <div>
-                        <h3 class="font-bold text-sm md:text-base group-hover:text-purple-500 transition uppercase italic tracking-tighter">${data.title}</h3>
-                        <p class="text-[10px] text-gray-500 italic uppercase tracking-widest">${data.genre || 'Romance'}</p>
+                        <h3 class="font-bold text-sm group-hover:text-purple-500 transition uppercase italic tracking-tighter">${data.title}</h3>
+                        <p class="text-[10px] text-gray-500 italic uppercase tracking-widest">${data.genre || 'Novel'}</p>
                     </div>
                 </div>
             `;
