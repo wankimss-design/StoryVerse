@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadChapterContent(chapter);
     applyStoredSettings();
     
-    // 2. Muat Dropdown Bab (Contoh: 10 bab)
+    // 2. Muat Custom Dropdown Bab (Set kepada 10 bab)
     populateChapterDropdown(10); 
 
     // 3. Semak tema asal dari localStorage
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 4. Firebase Sync (Sejarah Pembacaan)
-    if (typeof firebase !== 'undefined') {
+    if (typeof firebase !== 'undefined' && typeof db !== 'undefined') {
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 saveHistoryToFirebase(user.uid, title, chapter);
@@ -32,7 +32,59 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// --- PENGURUSAN ANTARA MUKA (UI) ---
+// --- PENGURUSAN CUSTOM DROPDOWN ---
+
+function toggleChapterList() {
+    const dropdown = document.getElementById('chapterDropdown');
+    const chevron = document.getElementById('chapterChevron');
+    if (dropdown) dropdown.classList.toggle('active');
+    if (chevron) chevron.classList.toggle('rotate');
+}
+
+// Tutup dropdown jika klik di luar kawasan menu
+document.addEventListener('click', (e) => {
+    const dropdown = document.getElementById('chapterDropdown');
+    const btn = document.getElementById('chapterBtn');
+    if (dropdown && btn && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove('active');
+        document.getElementById('chapterChevron').classList.remove('rotate');
+    }
+});
+
+function populateChapterDropdown(totalChapters) {
+    const list = document.getElementById('chapterList');
+    const currentChapterText = document.getElementById('currentChapterText');
+    if (!list) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const currentChapter = parseInt(params.get('chapter')) || 1;
+
+    list.innerHTML = ''; 
+    for (let i = 1; i <= totalChapters; i++) {
+        const li = document.createElement('li');
+        li.className = `chapter-item ${i === currentChapter ? 'active' : ''}`;
+        
+        li.innerHTML = `
+            <span>Bab ${i.toString().padStart(2, '0')}</span>
+            ${i === currentChapter ? '<i class="fa-solid fa-check text-[8px]"></i>' : ''}
+        `;
+        
+        li.onclick = () => {
+            const newParams = new URLSearchParams(window.location.search);
+            newParams.set('chapter', i);
+            window.location.href = `reader.html?${newParams.toString()}`;
+        };
+        
+        list.appendChild(li);
+    }
+    
+    // Update teks pada butang navigasi utama
+    if (currentChapterText) {
+        currentChapterText.innerText = `Bab ${currentChapter.toString().padStart(2, '0')}`;
+    }
+}
+
+// --- PENGURUSAN UI & KANDUNGAN ---
 
 function updateHeaderUI(title, chapter) {
     const titleEl = document.getElementById('readerNovelTitle');
@@ -46,40 +98,15 @@ function updateHeaderUI(title, chapter) {
     if (prevBtn) prevBtn.disabled = (chapter <= 1);
 }
 
-function populateChapterDropdown(totalChapters) {
-    const selector = document.getElementById('chapterSelector');
-    if (!selector) return;
-
-    const params = new URLSearchParams(window.location.search);
-    const currentChapter = parseInt(params.get('chapter')) || 1;
-
-    selector.innerHTML = ''; 
-    for (let i = 1; i <= totalChapters; i++) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = `Bab ${i.toString().padStart(2, '0')}`;
-        if (i === currentChapter) option.selected = true;
-        selector.appendChild(option);
-    }
-}
-
-function jumpToChapter(chapterNum) {
-    const params = new URLSearchParams(window.location.search);
-    params.set('chapter', chapterNum);
-    window.location.href = `reader.html?${params.toString()}`;
-}
-
-// --- PENGURUSAN KANDUNGAN ---
-
 function loadChapterContent(chapter) {
     const content = document.getElementById('novelContent');
     if (!content) return;
 
-    // Di sini anda boleh gantikan dengan fetch dari Firebase Firestore
+    // Placeholder content - Gantikan dengan fetch data dari database nanti
     content.innerHTML = `
         <p>Dia berdiri di sana, di bawah rintik hujan yang kian lebat, memerhatikan bayang-bayang yang semakin menjauh. Aliff tahu, setiap langkah yang diambilnya malam ini adalah satu pengkhianatan kepada hatinya sendiri.</p>
         <p>"Kenapa sekarang?" bisiknya perlahan. Suaranya hilang ditelan deru angin. Di tangannya, sehelai nota lama yang kian luntur tulisannya digenggam erat. Rahsia yang disimpan selama sepuluh tahun akhirnya terbongkar di hadapan matanya.</p>
-        <p>Tiba-tiba, satu cahaya lembut muncul dari hujung jalan. Bukan cahaya lampu jalan, tetapi sesuatu yang lebih murni. Sesuatu yang mengingatkannya kepada janji yang pernah dibuatnya di dimensi yang lain. Cinta ini mungkin mustahil, tetapi Aliff tidak akan sesekali berpaling lagi.</p>
+        <p>Tiba-tiba, satu cahaya lembut muncul dari hujung jalan. Bukan cahaya lampu jalan, tetapi sesuatu yang lebih murni. Cinta ini mungkin mustahil, tetapi Aliff tidak akan sesekali berpaling lagi.</p>
     `;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -153,14 +180,12 @@ function changeChapter(direction) {
 async function saveHistoryToFirebase(uid, title, chapter) {
     const novelId = title.replace(/\s+/g, '-').toLowerCase();
     try {
-        if (typeof db !== 'undefined') {
-            await db.collection('users').doc(uid).collection('history').doc(novelId).set({
-                title: title,
-                lastChapter: chapter,
-                lastRead: firebase.firestore.FieldValue.serverTimestamp(),
-                novelId: novelId
-            }, { merge: true });
-        }
+        await db.collection('users').doc(uid).collection('history').doc(novelId).set({
+            title: title,
+            lastChapter: chapter,
+            lastRead: firebase.firestore.FieldValue.serverTimestamp(),
+            novelId: novelId
+        }, { merge: true });
     } catch (e) {
         console.error("Sejarah tidak dapat disimpan:", e);
     }
