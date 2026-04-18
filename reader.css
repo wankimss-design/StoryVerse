@@ -1,16 +1,14 @@
-/* --- 1. ASAS READER --- */
+/* --- 1. ASAS READER & TYPOGRAPHY --- */
 body {
     scroll-behavior: smooth;
     transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-/* Typography untuk pembacaan novel */
 article {
     text-align: justify;
     hyphens: auto;
 }
 
-/* Efek Huruf Pertama (Drop Cap) */
 #novelContent::first-letter {
     font-size: 4rem;
     font-weight: 900;
@@ -25,8 +23,6 @@ main {
 }
 
 /* --- 2. CUSTOM DROPDOWN (MODERN LOOK) --- */
-
-/* Animasi untuk Dropdown */
 #chapterDropdown {
     transform: translateY(-10px);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -47,7 +43,6 @@ main {
     transform: rotate(180deg);
 }
 
-/* Gaya Senarai Bab */
 .chapter-item {
     padding: 14px 20px;
     font-size: 11px;
@@ -66,136 +61,83 @@ main {
 .chapter-item:hover {
     background: rgba(168, 85, 247, 0.08);
     color: #a855f7;
-    padding-left: 25px; /* Efek anjakan sedikit bila hover */
+    padding-left: 25px;
 }
 
 .chapter-item.active {
     background: rgba(168, 85, 247, 0.12);
-    color: #a855f7;
-    border-left: 3px solid #a855f7;
     color: white;
+    border-left: 3px solid #a855f7;
 }
 
-/* Scrollbar halus untuk senarai bab */
-.custom-scrollbar::-webkit-scrollbar {
-    width: 4px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-}
+/* Scrollbar */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
 .custom-scrollbar::-webkit-scrollbar-thumb {
     background: rgba(168, 85, 247, 0.3);
     border-radius: 10px;
 }
 
-/* --- 3. LIGHT MODE STYLES --- */
+/* --- 3. GLOBAL LIGHT MODE OVERRIDES (FULL FIX) --- */
 
 body.light-mode {
     background-color: #fcf8f2 !important;
     color: #2d3436 !important;
 }
 
+/* Navigasi & Ikon */
 body.light-mode nav {
     background-color: rgba(252, 248, 242, 0.85) !important;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-body.light-mode #readerNovelTitle {
-    color: rgba(0, 0, 0, 0.3) !important;
+body.light-mode nav button i,
+body.light-mode #prevBtn i {
+    color: #2d3436 !important;
 }
-
-body.light-mode #chapterDropdown {
-    background: rgba(255, 255, 255, 0.95) !important;
-    backdrop-blur: 20px;
-    border: 1px solid rgba(168, 85, 247, 0.2);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-}
-
-body.light-mode .chapter-item {
-    color: rgba(0, 0, 0, 0.5);
-}
-
-body.light-mode .chapter-item:hover {
-    background: rgba(168, 85, 247, 0.05);
-}
-
-body.light-mode .chapter-item.active {
-    background: rgba(168, 85, 247, 0.1);
-    color: #a855f7;
-}
-
-body.light-mode #settingsPanel {
-    background-color: rgba(252, 248, 242, 0.98) !important;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-/* --- 4. LAIN-LAIN --- */
-
-/* Membuang gaya chapterSelector lama (kerana kita sudah guna custom dropdown) */
-#chapterSelector {
-    display: none;
-}
-
-/* --- PEMBETULAN VISIBILITI LIGHT MODE (FULL FIX) --- */
 
 body.light-mode #readerNovelTitle {
     color: rgba(0, 0, 0, 0.5) !important;
 }
 
-/* Memastikan butang bab dan chevron jelas */
 body.light-mode #chapterBtn, 
 body.light-mode #chapterBtn span,
 body.light-mode #chapterChevron {
     color: #a855f7 !important;
 }
 
-/* Memastikan semua ikon navigasi (Back, Moon, Font) jadi gelap */
-body.light-mode nav button i {
-    color: #2d3436 !important;
+/* Kandungan Utama (PENTING UNTUK PEMBACAAN) */
+body.light-mode #chapterTitleDisplay {
+    color: #1a1a1a !important; /* Tajuk Bab Hitam Tajam */
+    text-shadow: none !important;
 }
 
-/* Membaiki Dropdown Menu */
+body.light-mode #novelContent {
+    color: #2d3436 !important; /* Teks Novel Gelap Jelas */
+}
+
+body.light-mode #novelContent::first-letter {
+    color: #9333ea !important;
+}
+
+/* Dropdown Menu Light Mode */
 body.light-mode #chapterDropdown {
     background: #ffffff !important;
     border: 1px solid rgba(168, 85, 247, 0.3) !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
 }
 
-body.light-mode #chapterDropdown .p-4 {
-    background: rgba(0, 0, 0, 0.02) !important; /* Header dropdown */
-}
-
-body.light-mode #chapterDropdown p {
-    color: rgba(0, 0, 0, 0.4) !important;
-}
-
 body.light-mode .chapter-item {
-    color: #2d3436 !important; /* Teks Bab 01, dll */
+    color: #2d3436 !important;
 }
 
 body.light-mode .chapter-item:hover {
     background: rgba(168, 85, 247, 0.1) !important;
 }
 
-body.light-mode .chapter-item.active {
-    background: rgba(168, 85, 247, 0.05) !important;
-    color: #a855f7 !important;
-}
-
-/* Butang Navigasi Bawah */
-body.light-mode #prevBtn {
-    color: #2d3436 !important;
-    background-color: rgba(0, 0, 0, 0.05) !important;
-    border-color: rgba(0, 0, 0, 0.1) !important;
-}
-
-body.light-mode #prevBtn i {
-    color: #2d3436 !important;
-}
-
 /* Panel Tetapan Font */
 body.light-mode #settingsPanel {
     background-color: #fcf8f2 !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 body.light-mode #settingsPanel h3,
@@ -206,6 +148,18 @@ body.light-mode #fontSizeDisplay {
 
 body.light-mode #settingsPanel button {
     background-color: #ffffff !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
     color: #2d3436 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Butang Navigasi Bawah */
+body.light-mode #prevBtn {
+    color: #2d3436 !important;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* --- 4. UTILITY --- */
+#chapterSelector {
+    display: none;
 }
