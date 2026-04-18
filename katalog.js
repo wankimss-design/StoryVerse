@@ -1,5 +1,4 @@
-// --- Dalam katalog.js ---
-
+// --- 1. FIREBASE AUTH & PROFILE IMAGE ---
 firebase.auth().onAuthStateChanged(async (user) => {
     if (!user) {
         window.location.href = "auth.html";
@@ -7,19 +6,16 @@ firebase.auth().onAuthStateChanged(async (user) => {
         const navProfileImg = document.getElementById('navProfileImg');
         
         try {
-            // Ambil data user dari Firestore untuk dapatkan gambar terbaru
+            // Ambil data user dari Firestore untuk dapatkan gambar terbaru (lebih tepat dari Auth)
             const userDoc = await db.collection('users').doc(user.uid).get();
             
             if (userDoc.exists && userDoc.data().photoURL) {
-                // Gunakan gambar dari Firestore jika ada
                 navProfileImg.src = userDoc.data().photoURL;
             } else {
-                // Jika tiada di Firestore, guna photoURL dari Auth atau avatar huruf
                 navProfileImg.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=a855f7&color=fff`;
             }
         } catch (error) {
             console.error("Gagal mengambil data profil:", error);
-            // Fallback jika berlaku ralat
             navProfileImg.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}`;
         }
 
@@ -36,7 +32,6 @@ function toggleDropdown(id) {
     });
 }
 
-// Tutup dropdown jika klik di luar
 window.onclick = function(event) {
     if (!event.target.matches('.dropdown-btn') && !event.target.closest('.menu-box')) {
         document.getElementById('genreMenu')?.classList.add('hidden');
@@ -47,17 +42,17 @@ window.onclick = function(event) {
 // --- 3. DATA & RENDER ---
 async function loadKatalog() {
     const grid = document.getElementById('katalogGrid');
-    if (!grid || typeof db === 'undefined') return; // Pastikan 'db' dari config sedia
+    if (!grid || typeof db === 'undefined') return;
 
     const searchInput = document.getElementById('searchInput');
     const term = searchInput?.value.toLowerCase() || "";
     
-    // --- PENYELESAIAN STATUS DI SINI ---
-    // Gunakan querySelector untuk ambil radio yang 'checked' sahaja
+    // AMBIL INPUT FILTER (Genre & Status)
+    const selectedGenres = Array.from(document.querySelectorAll('input[name="genre"]:checked')).map(i => i.value);
     const statusRadio = document.querySelector('input[name="status"]:checked');
     const selectedStatus = statusRadio ? statusRadio.value : "";
+
     try {
-        // Gunakan 'db' terus dari firebase-config.js
         const snapshot = await db.collection('novels').orderBy('createdAt', 'desc').get();
         
         let allNovels = [];
@@ -67,8 +62,12 @@ async function loadKatalog() {
 
         const filtered = allNovels.filter(n => {
             const matchSearch = (n.title || "").toLowerCase().includes(term);
+            
+            // Logik Genre (Sokong ejaan Database Admin)
             const novelGenres = Array.isArray(n.genres) ? n.genres : (n.genre ? [n.genre] : []);
             const matchGenre = selectedGenres.length === 0 || novelGenres.some(g => selectedGenres.includes(g));
+            
+            // Logik Status
             const matchStatus = selectedStatus === "" || n.status === selectedStatus;
             
             return matchSearch && matchGenre && matchStatus;
