@@ -1,111 +1,48 @@
-/* --- RESET & TYPOGRAPHY --- */
+/* --- 1. RESET & DASAR --- */
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-body { transition: background-color 0.4s ease; overflow-x: hidden; }
+body { transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease; overflow-x: hidden; }
 
-/* --- LOGO ANIMATION --- */
+/* --- 2. ANIMASI & TAJUK --- */
 @keyframes logo-bounce {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.1) rotate(5deg); }
 }
 .logo-icon-anim { animation: logo-bounce 3s infinite ease-in-out; }
 
-/* --- TAJUK: MEMBESAR HANYA PADA CURSOR --- */
 .title-main-container {
     display: inline-block;
-    cursor: default;
     transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), filter 0.3s ease;
     transform-origin: left center;
-    will-change: transform;
 }
+.title-main-container:hover { transform: scale(1.1); filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.5)); }
+.title-main-container:hover .perkataan-karya { transform: skewX(-5deg); }
 
-.title-main-container:hover {
-    transform: scale(1.1); /* Membesar apabila ada cursor sahaja */
-    filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.5));
-}
-
-.perkataan-karya {
-    display: inline-block;
-    transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-}
-/* --- GAYA IKON PROFIL NAVIGASI --- */
-
-/* Bekas bulatan imej profil */
-nav a .rounded-full {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #1a1a1a;
-    transition: all 0.3s ease;
-}
-
-/* Gaya imej di dalam navigasi */
-#navProfileImg, #navAvatar {
+/* --- 3. RESPONSIVE GRID (PENTING) --- */
+#katalogGrid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important; /* Mobile */
+    gap: 1.5rem !important;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
+    align-items: start;
 }
 
-/* Kesan apabila tetikus lalu (Hover) */
-nav a.group:hover .rounded-full {
-    border-color: #a855f7 !important; /* Glow Ungu */
-    transform: translateY(-2px);
+@media (min-width: 768px) {
+    #katalogGrid { grid-template-columns: repeat(4, 1fr) !important; }
 }
 
-nav a.group:hover #navProfileImg {
-    transform: scale(1.1);
+@media (min-width: 1024px) {
+    #katalogGrid { 
+        grid-template-columns: repeat(5, 1fr) !important; /* Desktop: 5 Imej Sebaris */
+        gap: 2.5rem !important; 
+    }
 }
 
-/* --- PENYELARASAN LIGHT MODE (MOD CERAH) --- */
+/* --- 4. NOVEL CARD UI --- */
+.novel-card { display: flex; flex-direction: column; width: 100%; transition: transform 0.4s ease; }
 
-body.light-mode nav {
-    background-color: rgba(255, 255, 255, 0.8) !important;
-    border-color: rgba(0, 0, 0, 0.05) !important;
-}
-
-/* Pastikan imej profil dalam Light Mode nampak bersih */
-body.light-mode nav a .rounded-full {
-    background: #f0f0f0;
-    border-color: rgba(168, 85, 247, 0.2) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-/* Search Input dalam Light Mode */
-body.light-mode .search-input {
-    background: rgba(0, 0, 0, 0.04) !important;
-    border-color: rgba(0, 0, 0, 0.08) !important;
-    color: #1a1a1a !important;
-}
-
-/* Pastikan logo teks kekal gelap dalam Light Mode */
-body.light-mode .logo-text {
-    color: #1a1a1a !important;
-}
-.title-main-container:hover .perkataan-karya {
-    transform: skewX(-5deg); /* Sedikit senget untuk gaya index */
-}
-
-.text-glow { text-shadow: 0 0 30px rgba(168, 85, 247, 0.3); }
-
-/* --- DROPDOWN SYSTEM --- */
-.menu-box { background: #0f0f0f; border-color: rgba(255,255,255,0.05); border-radius: 20px; }
-.dropdown-item { display: flex; align-items: center; padding: 12px 16px; cursor: pointer; transition: 0.2s; }
-.dropdown-item:hover { background: rgba(255, 255, 255, 0.03); }
-.dropdown-item input { appearance: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.1); margin-right: 12px; transition: 0.3s; position: relative; }
-.dropdown-item input[type="checkbox"] { border-radius: 4px; }
-.dropdown-item input[type="radio"] { border-radius: 50%; }
-.dropdown-item input:checked { background: #a855f7; border-color: #a855f7; }
-.dropdown-item input:checked::after { content: '✓'; position: absolute; color: white; font-size: 10px; left: 50%; top: 45%; transform: translate(-50%, -50%); }
-.dropdown-item span { font-size: 10px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.1em; }
-
-/* --- KEMASKINI MULA MEMBACA (CLEAN UI) --- */
-#katalogGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-@media (min-width: 768px) { #katalogGrid { grid-template-columns: repeat(4, 1fr); } }
-@media (min-width: 1024px) { #katalogGrid { grid-template-columns: repeat(5, 1fr); gap: 2.5rem; } }
-
-.novel-card { position: relative; transition: transform 0.4s ease; }
 .card-image-container { 
-    position: relative; overflow: hidden; border-radius: 28px; background: #111; aspect-ratio: 3/4; 
+    position: relative; overflow: hidden; border-radius: 28px; background: #111; 
+    aspect-ratio: 3/4; width: 100%;
 }
 
 .card-image-container img { 
@@ -113,111 +50,26 @@ body.light-mode .logo-text {
     transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-/* Overlay Butang Mula Membaca */
 .read-overlay {
     position: absolute; inset: 0; background: rgba(0,0,0,0.5);
     display: flex; align-items: center; justify-content: center;
-    opacity: 0; transition: all 0.4s ease;
-    backdrop-filter: blur(8px);
+    opacity: 0; transition: all 0.4s ease; backdrop-filter: blur(8px);
 }
 
-.read-btn-ui {
-    background: white; color: black; font-size: 10px; font-weight: 900; 
-    text-transform: uppercase; letter-spacing: 0.15em;
-    padding: 12px 24px; border-radius: 14px;
-    transform: translateY(20px) scale(0.9);
-    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.novel-card:hover .card-image-container img { transform: scale(1.1); }
 .novel-card:hover .read-overlay { opacity: 1; }
-.novel-card:hover .read-btn-ui { transform: translateY(0) scale(1); }
+.novel-card:hover .card-image-container img { transform: scale(1.1); }
 
-/* --- LIGHT MODE --- */
+.novel-card h3 {
+    display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;
+    overflow: hidden; margin-top: 12px; font-weight: bold; font-size: 14px;
+    text-transform: uppercase; font-style: italic; line-height: 1.4;
+}
+
+/* --- 5. DROPDOWN & LIGHT MODE --- */
+.menu-box { background: #0f0f0f; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+.dropdown-item { display: flex; align-items: center; padding: 12px 16px; cursor: pointer; }
+
 body.light-mode { background: #fdfdfd !important; color: #111 !important; }
-body.light-mode .title-main-container { color: #111 !important; }
-body.light-mode .menu-box, body.light-mode .dropdown-btn { background: white !important; color: #111 !important; border-color: #eee !important; }
-/* --- PENAMBAHBAIKAN NAV UNTUK LIGHT MODE --- */
-body.light-mode nav {
-    background-color: rgba(255, 255, 255, 0.8) !important; /* Putih Transparen */
-    border-color: rgba(0, 0, 0, 0.05) !important; /* Border sangat nipis */
-    backdrop-filter: blur(12px); /* Blur yang lebih halus */
-}
-
-/* Ubah warna teks Search Bar dalam Light Mode supaya nampak */
-body.light-mode .search-input {
-    background: rgba(0, 0, 0, 0.03) !important;
-    border-color: rgba(0, 0, 0, 0.1) !important;
-    color: #111 !important;
-}
-
-/* Ubah warna ikon dalam nav */
-body.light-mode nav i {
-    color: #444 !important;
-}
-/* Pastikan grid konsisten */
-#katalogGrid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    align-items: start; /* Pastikan semua card bermula dari atas yang sama */
-}
-
-.novel-card {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
-.card-image-container { 
-    position: relative; 
-    overflow: hidden; 
-    border-radius: 28px; 
-    background: #111; 
-    aspect-ratio: 3/4; /* Paksa nisbah 3:4 walaupun gambar asal berbeza saiz */
-    width: 100%;
-}
-
-.card-image-container img { 
-    width: 100%; 
-    height: 100%; 
-    object-fit: cover; /* Gambar akan dipotong (crop) supaya penuh, bukan dipenyek */
-}
-
-/* Elakkan tajuk panjang merosakkan grid */
-.novel-card h3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 1; /* Hadkan tajuk kepada 1 baris sahaja */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    min-height: 1.25em; /* Kekalkan ruang walaupun tajuk pendek */
-}
-
-/* Menghalang teks tajuk daripada terpotong dengan buruk */
-.novel-card h3 {
-    line-height: 1.4;
-    margin-top: 12px;
-    word-break: break-word;
-}
-
-/* Memperkemaskan rupa Dropdown Item dalam Light Mode */
-body.light-mode .dropdown-item span {
-    color: #444 !important;
-}
-
-body.light-mode .dropdown-item:hover {
-    background: rgba(168, 85, 247, 0.05) !important;
-}
-
-/* Animasi semasa menukar tema supaya lebih lembut */
-body {
-    transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
-}
-
-/* Memastikan butang 'Detail' sentiasa di tengah */
-.read-overlay {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+body.light-mode .menu-box { background: white !important; border-color: #eee !important; }
+body.light-mode .dropdown-item span { color: #444 !important; }
+body.light-mode .search-input { background: rgba(0,0,0,0.04) !important; color: #111 !important; }
