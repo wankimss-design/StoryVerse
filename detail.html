@@ -8,101 +8,164 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="katalog.css">
+    <style>
+        .text-glow { text-shadow: 0 0 20px rgba(168,85,247,0.3); }
+        #bgGlow { pointer-events: none; transition: background 1s ease; }
+        
+        /* Light Mode Overrides */
+        body.light-mode { background-color: #f8fafc; color: #0f172a; }
+        body.light-mode #bgGlow { opacity: 0.1; }
+        body.light-mode nav { background-color: rgba(255, 255, 255, 0.8); border-color: rgba(0,0,0,0.05); }
+        body.light-mode .bg-white\/5 { background-color: rgba(0,0,0,0.05); }
+        body.light-mode .bg-white\/\[0\.02\] { background-color: white; border-color: rgba(0,0,0,0.05); }
+    </style>
 </head>
-<body class="bg-[#0a0a0a] text-white min-h-screen">
+<body class="bg-[#0a0a0a] text-white min-h-screen transition-colors duration-500">
+
+    <div id="bgGlow" class="fixed inset-0 -z-10 opacity-30 blur-[120px]"></div>
 
     <nav class="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md px-6 h-20 flex items-center justify-between border-b border-white/5">
-        <button onclick="history.back()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-purple-500 transition-all">
-            <i class="fa-solid fa-arrow-left"></i>
-        </button>
-        <button class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:text-pink-500">
-            <i class="fa-solid fa-heart"></i>
-        </button>
+        <div class="flex items-center">
+            <button onclick="history.back()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-purple-500 transition-all">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </div>
+
+        <div class="flex items-center gap-2 bg-white/5 p-1.5 rounded-full border border-white/5 backdrop-blur-xl">
+            <button onclick="location.href='katalog.html'" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-all text-gray-400 hover:text-white" title="Utama">
+                <i class="fa-solid fa-house-chimney text-sm"></i>
+            </button>
+            <button onclick="toggleTheme()" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-all text-gray-400 hover:text-white" title="Tukar Tema">
+                <i id="themeIcon" class="fa-solid fa-circle-half-stroke text-sm"></i>
+            </button>
+            <button onclick="location.href='profile.html'" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-all text-gray-400 hover:text-white" title="Profil">
+                <i class="fa-solid fa-user text-sm"></i>
+            </button>
+        </div>
+
+        <div class="flex items-center">
+            <button class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:text-pink-500 transition-all group">
+                <i class="fa-solid fa-heart group-active:scale-125 transition-transform"></i>
+            </button>
+        </div>
     </nav>
 
-    <main class="pt-32 max-w-5xl mx-auto px-6 pb-20">
-        <div class="flex flex-col md:flex-row gap-10 mb-16">
-            <div class="w-full md:w-72 shrink-0">
-                <div class="aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl shadow-purple-500/20 border border-white/10">
+    <main class="pt-32 max-w-6xl mx-auto px-6 pb-20">
+        <div class="flex flex-col lg:flex-row gap-12 items-start mb-20">
+            <div class="w-full lg:w-80 shrink-0 group">
+                <div class="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-[0_0_60px_rgba(168,85,247,0.2)] border border-white/10 transition-transform duration-500 group-hover:scale-[1.02]">
                     <img id="detailCover" src="" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-60"></div>
                 </div>
             </div>
 
-            <div class="flex-1">
-                <span id="detailGenre" class="text-purple-500 font-black uppercase text-[10px] tracking-[0.3em] mb-4 block">Genre</span>
-                <h1 id="detailTitle" class="text-4xl md:text-6xl font-black tracking-tighter mb-6 italic uppercase">Memuatkan...</h1>
-                
-                <div class="flex gap-8 mb-8 opacity-60 text-xs font-bold uppercase tracking-widest">
-                    <span><i class="fa-solid fa-eye mr-2 text-purple-500"></i> 1.2k Views</span>
-                    <span><i class="fa-solid fa-star mr-2 text-yellow-500"></i> 4.8 Rating</span>
-                    <span><i class="fa-solid fa-list mr-2 text-blue-500"></i> 10 Bab</span>
+            <div class="flex-1 lg:pt-4">
+                <div class="flex items-center gap-3 mb-6">
+                    <span id="detailGenre" class="bg-purple-500/10 text-purple-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-purple-500/20">Genre</span>
+                    <span id="detailStatus" class="bg-white/5 text-gray-400 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/5 italic text-xs">Status</span>
                 </div>
 
-                <p id="detailSinopsis" class="text-gray-400 leading-relaxed mb-10 text-sm md:text-base italic">
-                    Memuatkan sinopsis...
-                </p>
+                <h1 id="detailTitle" class="text-5xl md:text-7xl font-black tracking-tighter mb-8 italic uppercase leading-[0.9] text-glow">Tajuk Novel</h1>
+                
+                <div class="grid grid-cols-3 gap-4 mb-10 max-w-md">
+                    <div class="bg-white/5 border border-white/5 p-4 rounded-2xl text-center backdrop-blur-md hover:bg-purple-500/10 transition-colors">
+                        <p class="text-[10px] uppercase opacity-40 font-bold mb-1">Views</p>
+                        <p class="font-black text-purple-500 italic">1.2K</p>
+                    </div>
+                    <div class="bg-white/5 border border-white/5 p-4 rounded-2xl text-center backdrop-blur-md hover:bg-yellow-500/10 transition-colors">
+                        <p class="text-[10px] uppercase opacity-40 font-bold mb-1">Rating</p>
+                        <p class="font-black text-yellow-500 italic">4.9</p>
+                    </div>
+                    <div class="bg-white/5 border border-white/5 p-4 rounded-2xl text-center backdrop-blur-md hover:bg-blue-500/10 transition-colors">
+                        <p class="text-[10px] uppercase opacity-40 font-bold mb-1">Bab</p>
+                        <p class="font-black text-blue-500 italic">10</p>
+                    </div>
+                </div>
 
-                <button onclick="startReading()" class="bg-purple-600 hover:bg-purple-700 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all transform active:scale-95 shadow-lg shadow-purple-500/20">
-                    Mula Membaca
-                </button>
+                <p id="detailSinopsis" class="text-gray-400 leading-relaxed mb-10 text-lg max-w-2xl font-medium opacity-80">Memuatkan sinopsis...</p>
+
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="startReading()" class="flex-1 md:flex-none bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all transform active:scale-95 shadow-lg">
+                        Mula Membaca
+                    </button>
+                    <button class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all">
+                        <i class="fa-solid fa-share-nodes text-xl"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="border-t border-white/5 pt-10">
-            <h3 class="text-xl font-black uppercase italic tracking-tighter mb-8">Senarai <span class="text-purple-500">Bab</span></h3>
-            <div id="chapterList" class="grid gap-3">
+        <div class="bg-white/[0.02] border border-white/5 rounded-[3rem] p-8 md:p-12 backdrop-blur-xl">
+            <div class="flex justify-between items-end mb-12 px-2">
+                <div>
+                    <h3 class="text-3xl font-black uppercase italic tracking-tighter">Senarai <span class="text-purple-500">Bab</span></h3>
+                    <p class="text-[10px] uppercase opacity-30 tracking-[0.3em] mt-2">Dikuasakan oleh StoryVerse</p>
+                </div>
+                <button class="text-[10px] font-black uppercase tracking-widest text-purple-500 hover:text-white transition-colors">Bab Terbaru</button>
+            </div>
+
+            <div id="chapterList" class="grid md:grid-cols-2 gap-4">
                 </div>
         </div>
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. Tangkap data dari URL (Query Parameters)
-            const params = new URLSearchParams(window.location.search);
-            
-            const title = params.get('title') || "Tajuk Tidak Ditemui";
-            const genre = params.get('genre') || "Umum";
-            const status = params.get('status') || "Unknown";
-            const cover = params.get('cover') || "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400";
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const themeIcon = document.getElementById('themeIcon');
+            const isLight = document.body.classList.contains('light-mode');
+            if (themeIcon) {
+                themeIcon.classList.toggle('fa-circle-half-stroke', !isLight);
+                themeIcon.classList.toggle('fa-sun', isLight);
+            }
+        }
 
-            // 2. Masukkan data ke dalam UI
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const title = params.get('title') || "Karya StoryVerse";
+            const genre = params.get('genre') || "Romantik";
+            const status = params.get('status') || "Ongoing";
+            const cover = params.get('cover') || "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800";
+
             document.getElementById('detailTitle').innerText = title;
             document.getElementById('detailGenre').innerText = genre;
+            document.getElementById('detailStatus').innerText = status;
             document.getElementById('detailCover').src = cover;
+            
+            const glow = document.getElementById('bgGlow');
+            glow.style.background = `radial-gradient(circle at center, rgba(168,85,247,0.4) 0%, rgba(10,10,10,1) 80%), url('${cover}')`;
+            glow.style.backgroundSize = "cover";
+            glow.style.backgroundPosition = "center";
+            
             document.title = `${title} | StoryVerse`;
+            document.getElementById('detailSinopsis').innerText = `Masuki dunia "${title}", sebuah karya agung bergenre ${genre}. Setiap helaian bab menjanjikan misteri yang mendalam.`;
 
-            // 3. Set Sinopsis (Simulasi berasaskan tajuk & genre)
-            document.getElementById('detailSinopsis').innerText = 
-                `Terokai kisah menakjubkan dalam "${title}". Sebuah naskhah bergenre ${genre} yang membawakan emosi mendalam. Berstatus ${status}, karya ini menjanjikan plot yang tidak dijangka bagi setiap pembaca StoryVerse.`;
-
-            // 4. Jana Senarai Bab
+            const chapterTitles = ["Permulaan Takdir", "Bayangan Silam", "Pertemuan Di Hujan", "Langkah Pertama", "Rahsia Terbongkar", "Di Persimpangan", "Mencari Jawapan", "Hati Yang Keliru", "Harapan Terakhir", "Pengakhiran Abadi"];
             const list = document.getElementById('chapterList');
-            list.innerHTML = ""; // Kosongkan placeholder
             
             for(let i = 1; i <= 10; i++) {
                 list.innerHTML += `
-                    <div class="group flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-2xl hover:border-purple-500/50 transition-all cursor-pointer" 
-                         onclick="goToReader(${i})">
-                        <div class="flex items-center gap-4">
-                            <span class="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center text-[10px] font-black text-purple-500">${i}</span>
-                            <span class="text-sm font-bold opacity-80 group-hover:opacity-100 group-hover:text-purple-400">Bab ${i}: Rahsia Bermula</span>
+                    <div class="group flex items-center justify-between p-6 bg-white/[0.03] border border-white/5 rounded-[2rem] hover:bg-purple-600/10 hover:border-purple-500/50 transition-all duration-300 cursor-pointer" onclick="goToReader(${i})">
+                        <div class="flex items-center gap-6">
+                            <span class="text-2xl font-black italic opacity-10 group-hover:opacity-100 group-hover:text-purple-500 transition-all">${i.toString().padStart(2, '0')}</span>
+                            <div>
+                                <p class="text-sm font-bold opacity-80 group-hover:opacity-100 transition-colors">${chapterTitles[i-1]}</p>
+                                <p class="text-[9px] uppercase tracking-widest opacity-30 mt-1">400 - 500 Patah Perkataan</p>
+                            </div>
                         </div>
-                        <i class="fa-solid fa-chevron-right text-[10px] opacity-20 group-hover:text-purple-500 group-hover:opacity-100 transition-all"></i>
-                    </div>
-                `;
+                        <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-purple-500 group-hover:border-purple-500 transition-all">
+                            <i class="fa-solid fa-play text-[10px] ml-1"></i>
+                        </div>
+                    </div>`;
             }
         });
 
-        // Fungsi ke halaman pembaca
         function goToReader(chapterNum) {
             const title = document.getElementById('detailTitle').innerText;
             window.location.href = `reader.html?title=${encodeURIComponent(title)}&chapter=${chapterNum}`;
         }
 
-        // Fungsi butang utama
-        function startReading() {
-            goToReader(1);
-        }
+        function startReading() { goToReader(1); }
     </script>
 </body>
 </html>
