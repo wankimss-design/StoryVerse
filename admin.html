@@ -41,12 +41,11 @@
         </aside>
 
 <div class="fixed top-5 right-5 z-[9999] hidden md:flex gap-3">
-    <a href="index.html" class="nav-btn-icon"><i class="fa-solid fa-house"></i></a>
-    <a href="katalog.html" class="nav-btn-icon"><i class="fa-solid fa-box-archive"></i></a>
-    <a href="profile.html" class="nav-btn-icon"><i class="fa-solid fa-user"></i></a>
-
-    <button class="theme-toggle-btn nav-btn-icon">
-        <i class="fa-solid fa-moon theme-icon"></i>
+    <a href="index.html" class="nav-btn-icon text-white"><i class="fa-solid fa-house"></i></a>
+    <a href="katalog.html" class="nav-btn-icon text-white"><i class="fa-solid fa-box-archive"></i></a>
+    <a href="profile.html" class="nav-btn-icon text-white"><i class="fa-solid fa-user"></i></a>
+    <button class="themeToggle nav-btn-icon text-white">
+        <i class="fa-solid fa-moon" id="themeIcon"></i>
     </button>
 </div>
 
@@ -139,6 +138,31 @@
                         </button>
                     </form>
                 </section>
+                <section class="mt-12 bg-[#121212] p-8 rounded-[2.5rem] border border-white/5 shadow-2xl col-span-1 lg:col-span-2">
+    <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-green-600/20 rounded-2xl flex items-center justify-center text-green-500">
+                <i class="fa-solid fa-list-ul text-xl"></i>
+            </div>
+            <h2 class="text-xl font-bold text-white">Senarai Karya Anda</h2>
+        </div>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-separate border-spacing-y-3">
+            <thead>
+                <tr class="text-[10px] uppercase tracking-[0.2em] text-gray-500">
+                    <th class="px-6 py-2">Cover</th>
+                    <th class="px-6 py-2">Info Novel</th>
+                    <th class="px-6 py-2">Genre</th>
+                    <th class="px-6 py-2">Tindakan</th>
+                </tr>
+            </thead>
+            <tbody id="novelTableBody">
+                </tbody>
+        </table>
+    </div>
+</section>
             </div>
         </main>
     </div>
