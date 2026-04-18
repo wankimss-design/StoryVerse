@@ -101,13 +101,12 @@ async function fetchNovels() {
 
 // --- 4. FIREBASE AUTH & ACCESS ---
 function checkAccess(id) {
-    // Logik akses novel
-    const user = firebase.auth()?.currentUser;
+    const user = firebase.auth().currentUser;
     if (user) {
-        alert("Menuju ke dimensi novel...");
-        // window.location.href = `read.html?id=${id}`;
+        // Hantar ke halaman detail novel tersebut
+        window.location.href = `detail.html?id=${id}`;
     } else {
-        alert("Sila Log Masuk untuk membaca!");
+        alert("Sila Log Masuk untuk mula membaca!");
         window.location.href = 'auth.html';
     }
 }
