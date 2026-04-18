@@ -112,9 +112,15 @@
         </div>
     </main>
 
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script src="firebase-config.js"></script>
+
     <script src="detail.js"></script>
+
     <script>
-        // Logik UI Ringkas (Theme & Sinopsis)
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
             const themeIcon = document.getElementById('themeIcon');
@@ -138,8 +144,10 @@
         }
 
         function startReading() {
-            const title = document.getElementById('detailTitle').innerText;
-            window.location.href = `reader.html?title=${encodeURIComponent(title)}&chapter=1`;
+            // Gunakan novelId yang diambil dari detail.js
+            if (typeof novelId !== 'undefined' && novelId) {
+                window.location.href = `reader.html?id=${novelId}&chapter=1`;
+            }
         }
     </script>
 </body>
