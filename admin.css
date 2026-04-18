@@ -23,3 +23,33 @@ main::-webkit-scrollbar { width: 6px; }
 main::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
 table tr:last-child { border-bottom: none; }
+/* FLOATING NAV STYLE */
+.nav-container-floating {
+    gap: 8px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-btn-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    color: #9ca3af; /* Warna kelabu lembut */
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.nav-btn-icon:hover {
+    background: rgba(168, 85, 247, 0.1); /* Ungu cair */
+    color: #a855f7; /* Ungu */
+    transform: translateY(-3px);
+}
+
+/* Aktifkan efek glow pada border semasa hover */
+.nav-container-floating:hover {
+    border-color: rgba(168, 85, 247, 0.3);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(168, 85, 247, 0.1);
+}
