@@ -173,19 +173,28 @@ body {
 
 .novel-card:hover .card-img { transform: scale(1.1); }
 
-/* --- 5. PRELOADER (VERSI FIX CENTER) --- */
+/* --- 5. PRELOADER (FIX CENTER & SCROLL) --- */
 #preloader {
     position: fixed;
-    inset: 0; /* Menutup keseluruhan skrin (top, left, bottom, right: 0) */
+    inset: 0;
     width: 100vw;
     height: 100vh;
     background: #050505;
     display: flex;
-    justify-content: center; /* Center melintang */
-    align-items: center;     /* Center menegak */
+    justify-content: center;
+    align-items: center;
     z-index: 99999;
-    transition: transform 1.5s cubic-bezier(1, 0, 0, 1);
-    pointer-events: none;
+    transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
+    pointer-events: none; /* Benarkan klik tembus selepas lift-up */
+}
+
+/* Kunci scroll semasa loading aktif */
+body:has(#preloader:not(.lift-up)) {
+    overflow: hidden;
+}
+
+#preloader.lift-up { 
+    transform: translateY(-100%); 
 }
 
 .loader-wrapper {
@@ -195,44 +204,42 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 600px; /* Memberi ruang yang cukup untuk teks */
+    height: 300px; /* Hadkan tinggi wrapper supaya tidak melimpah */
 }
 
 .loader-circle {
-    width: 100px;
-    height: 100px;
-    border: 3px solid transparent;
+    position: absolute; /* Supaya tidak menolak elemen lain */
+    top: -50px; /* Letakkan di atas teks */
+    width: 80px;
+    height: 80px;
+    border: 3px solid rgba(168, 85, 247, 0.1);
     border-top: 3px solid var(--accent-purple);
     border-radius: 50%;
     animation: spin 0.8s linear infinite, unravel 0.6s ease-in forwards 1.5s;
-    margin-bottom: 20px; /* Jarak antara bulatan dan teks */
 }
 
 .snake-svg {
-    width: 90%; /* Supaya tidak terkeluar skrin pada mobile */
+    width: 90%;
     max-width: 500px;
-    height: auto;
     overflow: visible;
 }
 
 .snake-text {
     font-family: 'Dancing Script', cursive;
-    font-size: 80px; /* Saiz asal anda */
+    font-size: 80px;
     fill: transparent;
     stroke: var(--accent-purple);
     stroke-width: 1.5;
     stroke-dasharray: 1200;
     stroke-dashoffset: 1200;
-    /* Teknik rahsia untuk centering teks dalam SVG */
     text-anchor: middle;
-    dominant-baseline: central; 
-    animation: drawCursive 3.5s ease-in-out forwards 1.8s;
+    dominant-baseline: middle; /* Center tepat pada paksi Y */
+    animation: drawCursive 3.5s ease-in-out forwards 0.5s;
 }
 
-/* Penyelarasan untuk Mobile */
 @media (max-width: 768px) {
-    .snake-text { font-size: 60px; }
-    .loader-circle { width: 80px; height: 80px; }
+    .snake-text { font-size: 50px; }
+    .loader-circle { width: 60px; height: 60px; top: -30px; }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes unravel {
