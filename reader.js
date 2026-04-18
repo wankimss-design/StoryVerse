@@ -1,5 +1,7 @@
 /* --- 1. GLOBAL STATE & CONFIG --- */
-const db = firebase.firestore();
+// JANGAN isytihar 'const db' di sini jika ia sudah ada dalam firebase-config.js
+// Jika ralat "db is not defined" muncul, barulah letak: var db = firebase.firestore();
+
 let currentNovelData = null;
 let currentChapterIndex = 0;
 let chaptersList = [];
@@ -37,12 +39,13 @@ function initFirebase() {
 
 async function loadNovelDetails() {
     try {
+        // Guna global db dari firebase-config.js
         const doc = await db.collection('novels').doc(novelId).get();
         if (doc.exists) {
             currentNovelData = doc.data();
             document.getElementById('readerNovelTitle').innerText = currentNovelData.title;
             
-            // GUNAKAN 'chapterNumber' bukannya 'order'
+            // MUATKAN BAB: Gunakan 'chapterNumber'
             const chaptersSnap = await db.collection('novels').doc(novelId)
                                      .collection('chapters')
                                      .orderBy('chapterNumber', 'asc') 
@@ -54,17 +57,26 @@ async function loadNovelDetails() {
             });
 
             if (chaptersList.length > 0) {
-                // Ambil bab dari URL atau default ke bab pertama
+                // Ambil bab dari URL (?chapter=1) atau default ke bab pertama
                 const urlChapter = parseInt(urlParams.get('chapter')) || 1;
-                const targetIndex = chaptersList.findIndex(c => c.chapterNumber === urlChapter);
-                renderChapter(targetIndex !== -1 ? targetIndex : 0);
+                
+                // Cari index dalam array yang mempunyai chapterNumber tersebut
+                let targetIndex = chaptersList.findIndex(c => c.chapterNumber === urlChapter);
+                
+                // Jika tidak jumpa (cth: user letak bab 999), ambil bab pertama
+                if (targetIndex === -1) targetIndex = 0;
+
+                renderChapter(targetIndex);
                 renderChapterDropdown();
+            } else {
+                document.getElementById('novelContent').innerHTML = `<p class="text-center opacity-50 italic">Kandungan belum tersedia.</p>`;
             }
         }
     } catch (e) {
         console.error("Ralat muat novel:", e);
     }
 }
+
 /* --- 3. RENDERING & NAVIGATION --- */
 
 function renderChapter(index) {
@@ -76,7 +88,7 @@ function renderChapter(index) {
     document.getElementById('chapterTitleDisplay').innerText = chapter.title;
     document.title = `${chapter.title} - ${currentNovelData.title}`;
     
-    // Format Kandungan
+    // Format Kandungan (Tukar newline jadi perenggan)
     if (chapter.content) {
         const formattedContent = chapter.content.split('\n').map(p => 
             p.trim() !== "" ? `<p class="mb-8">${p}</p>` : ""
@@ -102,6 +114,8 @@ function renderChapter(index) {
 
 function renderChapterDropdown() {
     const list = document.getElementById('chapterList');
+    if (!list) return;
+
     list.innerHTML = chaptersList.map((ch, i) => `
         <li onclick="renderChapter(${i}); toggleChapterList()" class="px-6 py-4 hover:bg-purple-500/10 cursor-pointer transition-all border-b border-white/5 flex justify-between items-center ${i === currentChapterIndex ? 'bg-purple-500/5' : ''}">
             <div class="flex flex-col">
@@ -128,7 +142,7 @@ window.changeChapter = function(direction) {
 
 async function loadComments() {
     const list = document.getElementById('commentsList');
-    if (chaptersList.length === 0) return;
+    if (!list || chaptersList.length === 0) return;
     
     const chapterId = chaptersList[currentChapterIndex].id;
 
@@ -164,6 +178,7 @@ async function loadComments() {
 window.postComment = async function() {
     const input = document.getElementById('commentInput');
     const user = firebase.auth().currentUser;
+    if (chaptersList.length === 0) return;
     const chapterId = chaptersList[currentChapterIndex].id;
 
     if (!user) return alert("Sila log masuk untuk memberi komen.");
@@ -191,17 +206,16 @@ async function saveHistory(chapter) {
     try {
         await db.collection('users').doc(user.uid).collection('history').doc(novelId).set({
             title: currentNovelData.title,
-            image: currentNovelData.image || currentNovelData.coverImage || "", // Sesuaikan field gambar
+            image: currentNovelData.image || currentNovelData.coverImage || "",
             lastChapter: chapter.title,
             chapterNumber: chapter.chapterNumber,
             progress: progress,
             lastRead: firebase.firestore.FieldValue.serverTimestamp(),
             novelId: novelId
         }, { merge: true });
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error("Ralat simpan sejarah:", e); }
 }
 
-// Fungsi UI
 window.toggleSettings = () => document.getElementById('settingsPanel').classList.toggle('translate-y-full');
 
 window.toggleChapterList = () => {
@@ -240,5 +254,5 @@ window.toggleTheme = () => {
     const isLight = document.body.classList.toggle('light-mode');
     localStorage.setItem('readerTheme', isLight ? 'light' : 'dark');
     const icon = document.getElementById('themeIcon');
-    icon.classList.replace(isLight ? 'fa-moon' : 'fa-sun', isLight ? 'fa-sun' : 'fa-moon');
+    if (icon) icon.classList.replace(isLight ? 'fa-moon' : 'fa-sun', isLight ? 'fa-sun' : 'fa-moon');
 };
