@@ -1,12 +1,28 @@
-// --- 1. FIREBASE AUTH ---
+// --- Dalam katalog.js ---
+
 firebase.auth().onAuthStateChanged(async (user) => {
     if (!user) {
         window.location.href = "auth.html";
     } else {
         const navProfileImg = document.getElementById('navProfileImg');
-        if (navProfileImg) {
-            navProfileImg.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=a855f7&color=fff`;
+        
+        try {
+            // Ambil data user dari Firestore untuk dapatkan gambar terbaru
+            const userDoc = await db.collection('users').doc(user.uid).get();
+            
+            if (userDoc.exists && userDoc.data().photoURL) {
+                // Gunakan gambar dari Firestore jika ada
+                navProfileImg.src = userDoc.data().photoURL;
+            } else {
+                // Jika tiada di Firestore, guna photoURL dari Auth atau avatar huruf
+                navProfileImg.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=a855f7&color=fff`;
+            }
+        } catch (error) {
+            console.error("Gagal mengambil data profil:", error);
+            // Fallback jika berlaku ralat
+            navProfileImg.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}`;
         }
+
         loadKatalog(); 
     }
 });
