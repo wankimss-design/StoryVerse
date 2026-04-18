@@ -1,13 +1,29 @@
 const db = firebase.firestore();
 let base64Image = "";
 
-// --- 1. INISIALISASI ---
+// --- 1. KESELAMATAN & LOGIN CHECK ---
+firebase.auth().onAuthStateChanged(async (user) => {
+    if (user) {
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        // Diselaraskan dengan Firebase anda: "Admin / Author"
+        if (userDoc.exists && userDoc.data().role === 'Admin / Author') {
+            console.log("Akses Admin Diterima");
+        } else {
+            alert("Anda tiada akses Admin!");
+            window.location.href = "index.html";
+        }
+    } else {
+        window.location.href = "login.html";
+    }
+});
+
+// --- 2. INISIALISASI DATA ---
 document.addEventListener('DOMContentLoaded', () => {
     loadNovelList();
     loadNovelTable();
 });
 
-// --- 2. UPLOAD GAMBAR KE BASE64 ---
+// --- 3. UPLOAD GAMBAR KE BASE64 ---
 document.getElementById('coverFile').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -22,10 +38,44 @@ document.getElementById('coverFile').addEventListener('change', function(e) {
     }
 });
 
-// --- 3. MUAT SENARAI NOVEL (DROPDOWN & TABLE) ---
+// --- 4. PENYIMPANAN DATA NOVEL (KEMASKINI) ---
+document.getElementById('newNovelForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const user = firebase.auth().currentUser;
+    if (!user) return alert("Sila login!");
+
+    const title = document.getElementById('newTitle').value;
+    const novelId = title.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+    
+    // Ambil data user dari Firestore untuk dapatkan nama yang betul
+    const userDoc = await db.collection('users').doc(user.uid).get();
+    const userData = userDoc.data();
+
+    const novelData = {
+        title: title,
+        genre: document.getElementById('newGenre').value,
+        description: document.getElementById('newSinopsis').value,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        authorId: user.uid, 
+        authorName: userData.name || "Penulis StoryVerse",
+        status: "Publish"
+    };
+
+    if (base64Image) novelData.image = base64Image;
+
+    try {
+        await db.collection('novels').doc(novelId).set(novelData, { merge: true });
+        alert("Novel Berjaya Disimpan!");
+        location.reload();
+    } catch (e) { alert("Ralat: " + e.message); }
+});
+
+// --- 5. MUAT SENARAI NOVEL (DROPDOWN & TABLE) ---
 async function loadNovelList() {
     const select = document.getElementById('selectNovel');
     const snapshot = await db.collection('novels').orderBy('title').get();
+    if(!select) return;
     select.innerHTML = '<option value="">Pilih Novel...</option>';
     snapshot.forEach(doc => {
         select.innerHTML += `<option value="${doc.id}">${doc.data().title}</option>`;
@@ -34,6 +84,7 @@ async function loadNovelList() {
 
 async function loadNovelTable() {
     const tbody = document.getElementById('novelTableBody');
+    if(!tbody) return;
     const snapshot = await db.collection('novels').orderBy('createdAt', 'desc').get();
     tbody.innerHTML = '';
     snapshot.forEach(doc => {
@@ -54,31 +105,7 @@ async function loadNovelTable() {
     });
 }
 
-// --- 4. PENYIMPANAN DATA NOVEL ---
-document.getElementById('newNovelForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const title = document.getElementById('newTitle').value;
-    const novelId = title.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
-    
-    const novelData = {
-        title: title,
-        genre: document.getElementById('newGenre').value,
-        description: document.getElementById('newSinopsis').value,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        author: "Admin StoryVerse",
-        status: "Publish"
-    };
-
-    if (base64Image) novelData.image = base64Image;
-
-    try {
-        await db.collection('novels').doc(novelId).set(novelData, { merge: true });
-        alert("Novel Berjaya Disimpan!");
-        location.reload();
-    } catch (e) { alert("Ralat: " + e.message); }
-});
-
-// --- 5. PENYIMPANAN DATA BAB ---
+// --- 6. PENYIMPANAN DATA BAB ---
 document.getElementById('updateChapterForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const novelId = document.getElementById('selectNovel').value;
@@ -96,7 +123,7 @@ document.getElementById('updateChapterForm').addEventListener('submit', async (e
     } catch (e) { alert("Gagal Simpan Bab"); }
 });
 
-// --- 6. FUNGSI EDIT NOVEL ---
+// --- 7. FUNGSI EDIT NOVEL ---
 async function editNovel(id) {
     const doc = await db.collection('novels').doc(id).get();
     const data = doc.data();
@@ -111,7 +138,9 @@ async function editNovel(id) {
     }
     
     const btn = document.getElementById('mainSubmitBtn');
-    btn.innerHTML = `Kemaskini Novel <i class="fa-solid fa-arrows-rotate ml-2 text-[10px]"></i>`;
-    btn.classList.replace('bg-purple-600', 'bg-emerald-600');
+    if(btn) {
+        btn.innerHTML = `Kemaskini Novel <i class="fa-solid fa-arrows-rotate ml-2 text-[10px]"></i>`;
+        btn.classList.replace('bg-purple-600', 'bg-emerald-600');
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
