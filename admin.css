@@ -24,12 +24,12 @@ body {
 
 /* --- 3. GENRE DROPDOWN (FLOATING) --- */
 #genreDropdown {
-    display: none;
+    display: none; /* Sembunyi asal */
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    z-index: 9999 !important;
+    z-index: 9999 !important; /* Kekal tinggi */
     background: #151515 !important;
     border: 1px solid rgba(168, 85, 247, 0.3) !important;
     border-radius: 1rem;
@@ -38,6 +38,7 @@ body {
     overflow: hidden;
 }
 
+/* Paksa papar bila ada class .active */
 #genreDropdown.active {
     display: block !important;
 }
