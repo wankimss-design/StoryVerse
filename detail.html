@@ -12,12 +12,12 @@
         .text-glow { text-shadow: 0 0 20px rgba(168,85,247,0.3); }
         #bgGlow { pointer-events: none; transition: background 1s ease; }
         
-        /* Light Mode Overrides */
+        /* Light Mode Styling */
         body.light-mode { background-color: #f8fafc; color: #0f172a; }
         body.light-mode #bgGlow { opacity: 0.1; }
-        body.light-mode nav { background-color: rgba(255, 255, 255, 0.8); border-color: rgba(0,0,0,0.05); }
-        body.light-mode .bg-white\/5 { background-color: rgba(0,0,0,0.05); }
-        body.light-mode .bg-white\/\[0\.02\] { background-color: white; border-color: rgba(0,0,0,0.05); }
+        body.light-mode nav { background-color: rgba(255, 255, 255, 0.85); border-color: rgba(0,0,0,0.05); }
+        body.light-mode .bg-white\/5 { background-color: rgba(0, 0, 0, 0.05); border-color: rgba(0,0,0,0.05); }
+        body.light-mode .text-gray-400 { color: #64748b; }
     </style>
 </head>
 <body class="bg-[#0a0a0a] text-white min-h-screen transition-colors duration-500">
@@ -25,27 +25,19 @@
     <div id="bgGlow" class="fixed inset-0 -z-10 opacity-30 blur-[120px]"></div>
 
     <nav class="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md px-6 h-20 flex items-center justify-between border-b border-white/5">
-        <div class="flex items-center">
-            <button onclick="history.back()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-purple-500 transition-all">
-                <i class="fa-solid fa-arrow-left"></i>
-            </button>
-        </div>
+        <button onclick="history.back()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-purple-500 hover:text-white transition-all">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
 
-        <div class="flex items-center gap-2 bg-white/5 p-1.5 rounded-full border border-white/5 backdrop-blur-xl">
-            <button onclick="location.href='katalog.html'" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-all text-gray-400 hover:text-white" title="Utama">
-                <i class="fa-solid fa-house-chimney text-sm"></i>
+        <div class="flex items-center gap-1 bg-white/5 p-1.5 rounded-full border border-white/5 backdrop-blur-xl">
+            <button onclick="location.href='katalog.html'" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-gray-400 hover:text-white transition-all">
+                <i class="fa-solid fa-house-chimney text-xs"></i>
             </button>
-            <button onclick="toggleTheme()" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-all text-gray-400 hover:text-white" title="Tukar Tema">
-                <i id="themeIcon" class="fa-solid fa-circle-half-stroke text-sm"></i>
+            <button onclick="toggleTheme()" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-gray-400 hover:text-white transition-all">
+                <i id="themeIcon" class="fa-solid fa-circle-half-stroke text-xs"></i>
             </button>
-            <button onclick="location.href='profile.html'" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-all text-gray-400 hover:text-white" title="Profil">
-                <i class="fa-solid fa-user text-sm"></i>
-            </button>
-        </div>
-
-        <div class="flex items-center">
-            <button class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:text-pink-500 transition-all group">
-                <i class="fa-solid fa-heart group-active:scale-125 transition-transform"></i>
+            <button onclick="location.href='profile.html'" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 text-gray-400 hover:text-white transition-all">
+                <i class="fa-solid fa-user text-xs"></i>
             </button>
         </div>
     </nav>
@@ -68,28 +60,31 @@
                 <h1 id="detailTitle" class="text-5xl md:text-7xl font-black tracking-tighter mb-8 italic uppercase leading-[0.9] text-glow">Tajuk Novel</h1>
                 
                 <div class="grid grid-cols-3 gap-4 mb-10 max-w-md">
-                    <div class="bg-white/5 border border-white/5 p-4 rounded-2xl text-center backdrop-blur-md hover:bg-purple-500/10 transition-colors">
+                    <div class="bg-white/5 border border-white/5 p-4 rounded-2xl text-center backdrop-blur-md">
                         <p class="text-[10px] uppercase opacity-40 font-bold mb-1">Views</p>
-                        <p class="font-black text-purple-500 italic">1.2K</p>
+                        <p class="font-black text-purple-500 italic text-lg">1.2K</p>
                     </div>
-                    <div class="bg-white/5 border border-white/5 p-4 rounded-2xl text-center backdrop-blur-md hover:bg-yellow-500/10 transition-colors">
+                    <div class="bg-white/5 border border-white/5 p-4 rounded-2xl text-center backdrop-blur-md">
                         <p class="text-[10px] uppercase opacity-40 font-bold mb-1">Rating</p>
-                        <p class="font-black text-yellow-500 italic">4.9</p>
+                        <p class="font-black text-yellow-500 italic text-lg">4.9</p>
                     </div>
-                    <div class="bg-white/5 border border-white/5 p-4 rounded-2xl text-center backdrop-blur-md hover:bg-blue-500/10 transition-colors">
+                    <div class="bg-white/5 border border-white/5 p-4 rounded-2xl text-center backdrop-blur-md">
                         <p class="text-[10px] uppercase opacity-40 font-bold mb-1">Bab</p>
-                        <p class="font-black text-blue-500 italic">10</p>
+                        <p class="font-black text-blue-500 italic text-lg">10</p>
                     </div>
                 </div>
 
                 <p id="detailSinopsis" class="text-gray-400 leading-relaxed mb-10 text-lg max-w-2xl font-medium opacity-80">Memuatkan sinopsis...</p>
 
-                <div class="flex flex-wrap gap-4">
+                <div class="flex items-center gap-4">
                     <button onclick="startReading()" class="flex-1 md:flex-none bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all transform active:scale-95 shadow-lg">
                         Mula Membaca
                     </button>
-                    <button class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all">
-                        <i class="fa-solid fa-share-nodes text-xl"></i>
+                    <button class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:text-pink-500 hover:bg-white/10 transition-all group">
+                        <i class="fa-solid fa-heart text-xl group-active:scale-125 transition-transform"></i>
+                    </button>
+                    <button class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all">
+                        <i class="fa-solid fa-share-nodes"></i>
                     </button>
                 </div>
             </div>
@@ -101,11 +96,10 @@
                     <h3 class="text-3xl font-black uppercase italic tracking-tighter">Senarai <span class="text-purple-500">Bab</span></h3>
                     <p class="text-[10px] uppercase opacity-30 tracking-[0.3em] mt-2">Dikuasakan oleh StoryVerse</p>
                 </div>
-                <button class="text-[10px] font-black uppercase tracking-widest text-purple-500 hover:text-white transition-colors">Bab Terbaru</button>
+                <button class="text-[10px] font-black uppercase tracking-widest text-purple-500 hover:text-white transition-colors text-xs">Lihat Semua</button>
             </div>
 
-            <div id="chapterList" class="grid md:grid-cols-2 gap-4">
-                </div>
+            <div id="chapterList" class="grid md:grid-cols-2 gap-4"></div>
         </div>
     </main>
 
@@ -135,10 +129,9 @@
             const glow = document.getElementById('bgGlow');
             glow.style.background = `radial-gradient(circle at center, rgba(168,85,247,0.4) 0%, rgba(10,10,10,1) 80%), url('${cover}')`;
             glow.style.backgroundSize = "cover";
-            glow.style.backgroundPosition = "center";
             
             document.title = `${title} | StoryVerse`;
-            document.getElementById('detailSinopsis').innerText = `Masuki dunia "${title}", sebuah karya agung bergenre ${genre}. Setiap helaian bab menjanjikan misteri yang mendalam.`;
+            document.getElementById('detailSinopsis').innerText = `Masuki dunia "${title}", sebuah karya agung bergenre ${genre}. Setiap helaian bab menjanjikan emosi yang mendalam.`;
 
             const chapterTitles = ["Permulaan Takdir", "Bayangan Silam", "Pertemuan Di Hujan", "Langkah Pertama", "Rahsia Terbongkar", "Di Persimpangan", "Mencari Jawapan", "Hati Yang Keliru", "Harapan Terakhir", "Pengakhiran Abadi"];
             const list = document.getElementById('chapterList');
@@ -149,11 +142,11 @@
                         <div class="flex items-center gap-6">
                             <span class="text-2xl font-black italic opacity-10 group-hover:opacity-100 group-hover:text-purple-500 transition-all">${i.toString().padStart(2, '0')}</span>
                             <div>
-                                <p class="text-sm font-bold opacity-80 group-hover:opacity-100 transition-colors">${chapterTitles[i-1]}</p>
+                                <p class="text-sm font-bold opacity-80 group-hover:opacity-100">${chapterTitles[i-1]}</p>
                                 <p class="text-[9px] uppercase tracking-widest opacity-30 mt-1">400 - 500 Patah Perkataan</p>
                             </div>
                         </div>
-                        <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-purple-500 group-hover:border-purple-500 transition-all">
+                        <div class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-purple-500 group-hover:border-purple-500 transition-all shadow-lg">
                             <i class="fa-solid fa-play text-[10px] ml-1"></i>
                         </div>
                     </div>`;
@@ -164,7 +157,6 @@
             const title = document.getElementById('detailTitle').innerText;
             window.location.href = `reader.html?title=${encodeURIComponent(title)}&chapter=${chapterNum}`;
         }
-
         function startReading() { goToReader(1); }
     </script>
 </body>
