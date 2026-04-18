@@ -54,37 +54,48 @@ themeBtn?.addEventListener('click', () => {
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
 });
 
-// --- 3. FETCH NOVELS FROM FIRESTORE ---
 async function fetchNovels() {
     const grid = document.getElementById('novelGrid');
     if (!grid) return;
 
     try {
-        // Pastikan 'db' (Firestore) sudah di-init dalam firebase-config.js
+        // Ambil 10 novel terbaru
         const snapshot = await db.collection('novels').orderBy('createdAt', 'desc').limit(10).get();
         
         if (snapshot.empty) {
-            grid.innerHTML = '<p class="col-span-full text-center opacity-50 uppercase tracking-widest text-xs">Tiada Novel Dijumpai</p>';
+            grid.innerHTML = '<p class="col-span-full text-center opacity-50 uppercase tracking-widest text-xs py-20">Tiada Novel Dijumpai</p>';
             return;
         }
 
         grid.innerHTML = ''; 
         snapshot.forEach(doc => {
             const data = doc.data();
+            
+            // --- LOGIK PEMILIHAN GAMBAR (PENTING) ---
+            // Kita semak semua kemungkinan nama field yang mungkin anda guna di database
+            const finalCover = data.coverImage || data.cover || data.image || 'https://via.placeholder.com/300x450?text=No+Cover';
+
             grid.innerHTML += `
                 <div class="novel-card group cursor-pointer" onclick="checkAccess('${doc.id}')">
-                    <div class="card-image-wrapper shadow-xl">
-                        <img src="${data.image || ''}" class="card-img" alt="${data.title}" onerror="this.src='https://via.placeholder.com/300x450?text=StoryVerse'">
+                    <div class="card-image-wrapper shadow-xl relative overflow-hidden rounded-2xl aspect-[3/4] bg-[#1a1a1a]">
+                        <img src="${finalCover}" 
+                             class="card-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                             alt="${data.title}" 
+                             onerror="this.src='https://via.placeholder.com/300x450?text=StoryVerse'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                             <span class="text-[10px] font-bold uppercase tracking-widest text-white bg-purple-600 px-2 py-1 rounded">Baca Sekarang</span>
+                        </div>
                     </div>
                     <div class="mt-4">
-                        <h3 class="font-bold text-lg group-hover:text-purple-500 transition">${data.title}</h3>
-                        <p class="text-xs text-gray-500 italic font-medium">${data.genre || 'Novel'}</p>
+                        <h3 class="font-bold text-sm md:text-base group-hover:text-purple-500 transition truncate uppercase italic tracking-tighter">${data.title}</h3>
+                        <p class="text-[10px] text-gray-500 italic font-medium uppercase tracking-widest">${data.genre || 'Novel'}</p>
                     </div>
                 </div>
             `;
         });
     } catch (error) {
         console.error("Firestore Error:", error);
+        grid.innerHTML = '<p class="text-center text-red-500 text-xs">Ralat memuatkan data. Sila refresh.</p>';
     }
 }
 
