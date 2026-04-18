@@ -1,11 +1,11 @@
 const db = firebase.firestore();
 let base64Image = "";
+let selectedGenres = [];
 
 // --- 1. KESELAMATAN & LOGIN CHECK ---
 firebase.auth().onAuthStateChanged(async (user) => {
     if (user) {
         const userDoc = await db.collection('users').doc(user.uid).get();
-        // Diselaraskan dengan Firebase anda: "Admin / Author"
         if (userDoc.exists && userDoc.data().role === 'Admin / Author') {
             console.log("Akses Admin Diterima");
         } else {
@@ -21,9 +21,55 @@ firebase.auth().onAuthStateChanged(async (user) => {
 document.addEventListener('DOMContentLoaded', () => {
     loadNovelList();
     loadNovelTable();
+    initTheme();
 });
 
-// --- 3. UPLOAD GAMBAR KE BASE64 ---
+// --- 3. LOGIK MULTI-SELECT GENRE ---
+const genreToggle = document.getElementById('genreToggle');
+const genreDropdown = document.getElementById('genreDropdown');
+const genreChevron = document.getElementById('genreChevron');
+const genreDisplay = document.getElementById('selectedGenresDisplay');
+
+genreToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    genreDropdown.classList.toggle('active');
+    genreChevron.classList.toggle('rotate');
+});
+
+document.querySelectorAll('.genre-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const value = item.getAttribute('data-value');
+        
+        if (selectedGenres.includes(value)) {
+            selectedGenres = selectedGenres.filter(g => g !== value);
+            item.classList.remove('selected');
+        } else {
+            selectedGenres.push(value);
+            item.classList.add('selected');
+        }
+        
+        updateGenreDisplay();
+    });
+});
+
+function updateGenreDisplay() {
+    if (selectedGenres.length > 0) {
+        genreDisplay.innerText = selectedGenres.join(', ').toUpperCase();
+        genreDisplay.classList.add('text-white');
+    } else {
+        genreDisplay.innerText = "PILIH GENRE...";
+        genreDisplay.classList.remove('text-white');
+    }
+}
+
+// Tutup dropdown jika klik di luar
+window.addEventListener('click', () => {
+    genreDropdown.classList.remove('active');
+    genreChevron.classList.remove('rotate');
+});
+
+// --- 4. UPLOAD GAMBAR KE BASE64 ---
 document.getElementById('coverFile').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -38,23 +84,23 @@ document.getElementById('coverFile').addEventListener('change', function(e) {
     }
 });
 
-// --- 4. PENYIMPANAN DATA NOVEL (KEMASKINI) ---
+// --- 5. PENYIMPANAN DATA NOVEL ---
 document.getElementById('newNovelForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const user = firebase.auth().currentUser;
     if (!user) return alert("Sila login!");
+    if (selectedGenres.length === 0) return alert("Sila pilih sekurang-kurangnya satu genre!");
 
     const title = document.getElementById('newTitle').value;
     const novelId = title.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
     
-    // Ambil data user dari Firestore untuk dapatkan nama yang betul
     const userDoc = await db.collection('users').doc(user.uid).get();
     const userData = userDoc.data();
 
     const novelData = {
         title: title,
-        genre: document.getElementById('newGenre').value,
+        genre: selectedGenres,
         description: document.getElementById('newSinopsis').value,
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         authorId: user.uid, 
@@ -71,7 +117,7 @@ document.getElementById('newNovelForm').addEventListener('submit', async (e) => 
     } catch (e) { alert("Ralat: " + e.message); }
 });
 
-// --- 5. MUAT SENARAI NOVEL (DROPDOWN & TABLE) ---
+// --- 6. MUAT SENARAI NOVEL (DROPDOWN & TABLE) ---
 async function loadNovelList() {
     const select = document.getElementById('selectNovel');
     const snapshot = await db.collection('novels').orderBy('title').get();
@@ -89,6 +135,8 @@ async function loadNovelTable() {
     tbody.innerHTML = '';
     snapshot.forEach(doc => {
         const data = doc.data();
+        const genreLabel = Array.isArray(data.genre) ? data.genre.join(', ') : data.genre;
+        
         tbody.innerHTML += `
             <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-all group">
                 <td class="py-5 px-4">
@@ -97,15 +145,18 @@ async function loadNovelTable() {
                         <span class="font-bold text-sm">${data.title}</span>
                     </div>
                 </td>
-                <td class="py-5 px-4 text-[10px] text-gray-500 font-bold uppercase tracking-widest">${data.genre}</td>
+                <td class="py-5 px-4 text-[10px] text-gray-500 font-bold uppercase tracking-widest">${genreLabel}</td>
                 <td class="py-5 px-4 text-center">
-                    <button onclick="editNovel('${doc.id}')" class="text-purple-500 hover:bg-purple-500/10 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-tighter transition-all">EDIT</button>
+                    <div class="flex justify-center gap-2">
+                        <button onclick="editNovel('${doc.id}')" class="text-purple-500 hover:bg-purple-500/10 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-tighter transition-all">EDIT</button>
+                        <button onclick="deleteNovel('${doc.id}', '${data.title}')" class="text-red-500 hover:bg-red-500/10 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-tighter transition-all">PADAM</button>
+                    </div>
                 </td>
             </tr>`;
     });
 }
 
-// --- 6. PENYIMPANAN DATA BAB ---
+// --- 7. PENYIMPANAN DATA BAB ---
 document.getElementById('updateChapterForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const novelId = document.getElementById('selectNovel').value;
@@ -123,14 +174,21 @@ document.getElementById('updateChapterForm').addEventListener('submit', async (e
     } catch (e) { alert("Gagal Simpan Bab"); }
 });
 
-// --- 7. FUNGSI EDIT NOVEL ---
+// --- 8. FUNGSI EDIT & PADAM ---
 async function editNovel(id) {
     const doc = await db.collection('novels').doc(id).get();
     const data = doc.data();
     
     document.getElementById('newTitle').value = data.title;
-    document.getElementById('newGenre').value = data.genre;
     document.getElementById('newSinopsis').value = data.description;
+
+    // Reset dan Set Genre
+    selectedGenres = Array.isArray(data.genre) ? data.genre : [data.genre];
+    document.querySelectorAll('.genre-item').forEach(item => {
+        item.classList.toggle('selected', selectedGenres.includes(item.getAttribute('data-value')));
+    });
+    updateGenreDisplay();
+
     if (data.image) {
         base64Image = data.image;
         document.getElementById('imagePreview').src = data.image;
@@ -144,25 +202,31 @@ async function editNovel(id) {
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-// TAMBAHAN LOGIK THEME TOGGLE
-const themeToggle = document.getElementById('themeToggle');
-const themeIcon = document.getElementById('themeIcon');
 
-themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('light-mode');
-    
-    // Tukar ikon berdasarkan mode
-    if (document.body.classList.contains('light-mode')) {
-        themeIcon.classList.replace('fa-moon', 'fa-sun');
-        localStorage.setItem('theme', 'light');
-    } else {
-        themeIcon.classList.replace('fa-sun', 'fa-moon');
-        localStorage.setItem('theme', 'dark');
+async function deleteNovel(id, title) {
+    if (confirm(`Padam novel "${title.toUpperCase()}" secara kekal?`)) {
+        try {
+            await db.collection('novels').doc(id).delete();
+            alert("Berjaya dipadam");
+            location.reload();
+        } catch (e) { alert("Ralat: " + e.message); }
     }
-});
+}
 
-// Semak pilihan tema yang disimpan semasa page dimuatkan
-if (localStorage.getItem('theme') === 'light') {
-    document.body.classList.add('light-mode');
-    themeIcon.classList.replace('fa-moon', 'fa-sun');
+// --- 9. THEME TOGGLE LOGIC ---
+function initTheme() {
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        themeIcon?.classList.replace('fa-moon', 'fa-sun');
+    }
+
+    themeToggle?.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        themeIcon?.classList.replace(isLight ? 'fa-moon' : 'fa-sun', isLight ? 'fa-sun' : 'fa-moon');
+    });
 }
