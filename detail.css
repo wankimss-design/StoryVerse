@@ -1,16 +1,19 @@
+/* --- GLOBAL STYLES --- */
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-body { overflow-x: hidden; transition: background 0.5s ease, color 0.5s ease; }
+body { 
+    overflow-x: hidden; 
+    transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease; 
+}
 
-/* Animasi Reveal */
+/* --- ANIMATIONS --- */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
 main { animation: fadeInUp 1s cubic-bezier(0.19, 1, 0.22, 1); }
 
-/* Efek Hover Gambar */
-.cover-container { transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1); }
-.cover-container:hover { transform: scale(1.02) rotate(1deg); }
+/* --- COMPONENTS --- */
+.text-glow { text-shadow: 0 0 20px rgba(168,85,247,0.3); }
 
 #novelTitle {
     background: linear-gradient(to right, #fff, #888);
@@ -18,40 +21,66 @@ main { animation: fadeInUp 1s cubic-bezier(0.19, 1, 0.22, 1); }
     -webkit-text-fill-color: transparent;
 }
 
-/* --- NAV PILL SYSTEM --- */
 .nav-pill {
     background-color: rgba(26, 26, 26, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.5s ease;
+    transition: all 0.4s ease;
 }
 
-/* --- LIGHT MODE SUPPORT --- */
-body.light-mode { background: #f8fafc !important; color: #0f172a !important; }
+/* Sinopsis Clamp */
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
+}
+
+/* --- LIGHT MODE OVERRIDES --- */
+body.light-mode { 
+    background-color: #f8fafc !important; 
+    color: #0f172a !important; 
+}
+
+body.light-mode #bgGlow { opacity: 0.1; }
 
 body.light-mode #novelTitle { 
     background: linear-gradient(to right, #0f172a, #64748b); 
     -webkit-background-clip: text; 
 }
 
-/* Memperbaiki Nav Pill dalam Light Mode */
+/* Nav Pill Color Correction */
 body.light-mode .nav-pill {
-    background-color: rgba(255, 255, 255, 0.8) !important;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
+/* Icon & Button Colors in Light Mode */
 body.light-mode .nav-pill button { color: #64748b !important; }
 body.light-mode .nav-pill button:hover { color: #0f172a !important; background: rgba(0,0,0,0.05); }
 
-/* Butang Aktif/Spesifik dalam Light Mode */
-body.light-mode .bg-white\/10 { background-color: rgba(0, 0, 0, 0.05) !important; color: #0f172a !important; }
-body.light-mode .bg-purple-500\/20 { background-color: rgba(168, 85, 247, 0.1) !important; }
-body.light-mode .text-purple-400 { color: #9333ea !important; }
-body.light-mode .text-gray-400 { color: #64748b !important; }
-
-/* Memperbaiki butang bulat (Back & Like) dalam Light Mode */
-body.light-mode .pointer-events-auto.bg-white\/5 {
-    background-color: rgba(255, 255, 255, 0.9) !important;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+/* Fix for independent buttons (Back & Like) */
+body.light-mode nav button.pointer-events-auto,
+body.light-mode .pointer-events-auto > button {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
     color: #0f172a !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Shared Classes Correction */
+body.light-mode .bg-white\/5, 
+body.light-mode .bg-white\/10 { 
+    background-color: rgba(0, 0, 0, 0.05) !important; 
+    color: #0f172a !important; 
+}
+
+body.light-mode .text-gray-400 { color: #64748b !important; }
+body.light-mode .text-purple-400 { color: #7e22ce !important; }
+body.light-mode .bg-purple-500\/20 { background-color: rgba(168, 85, 247, 0.1) !important; }
+
+/* Chapter List Hover in Light Mode */
+body.light-mode #chapterList > div:hover {
+    background-color: rgba(168, 85, 247, 0.05);
+    border-color: rgba(168, 85, 247, 0.3);
 }
