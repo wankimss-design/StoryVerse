@@ -134,29 +134,33 @@ async function loadMyNovels() {
         grid.innerHTML = '';
         tableBody.innerHTML = '';
 
-        snapshot.forEach(doc => {
-            const n = doc.data();
-            grid.innerHTML += `
-                <div class="group cursor-pointer" onclick="window.location.href='detail.html?id=${doc.id}'">
-                    <div class="aspect-[3/4] rounded-2xl overflow-hidden mb-4 shadow-xl border border-white/5 group-hover:border-purple-500/50 transition-all">
-                        <img src="${n.cover}" class="w-full h-full object-cover">
-                    </div>
-                    <h4 class="text-xs font-bold truncate italic">${n.title}</h4>
-                </div>`;
+        // Gantikan bahagian snapshot.forEach dalam fungsi loadMyNovels
+snapshot.forEach(doc => {
+    const n = doc.data();
+    // Gunakan n.coverImage (sepadan dengan admin.js)
+    const currentCover = n.coverImage || n.cover || 'https://via.placeholder.com/150';
+    
+    grid.innerHTML += `
+        <div class="group cursor-pointer" onclick="window.location.href='detail.html?id=${doc.id}'">
+            <div class="aspect-[3/4] rounded-2xl overflow-hidden mb-4 shadow-xl border border-white/5 group-hover:border-purple-500/50 transition-all">
+                <img src="${currentCover}" class="w-full h-full object-cover">
+            </div>
+            <h4 class="text-xs font-bold truncate italic uppercase tracking-tighter">${n.title}</h4>
+        </div>`;
 
-            tableBody.innerHTML += `
-                <tr class="hover:bg-white/[0.02] border-b border-white/5 transition-colors">
-                    <td class="px-6 py-4 font-bold text-gray-200">${n.title}</td>
-                    <td class="px-6 py-4 text-purple-400 font-mono">${n.views || 0}</td>
-                    <td class="px-6 py-4 text-center">
-                        <button onclick="window.location.href='admin.html'" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-purple-600 transition-all">
-                            <i class="fa-solid fa-pen-nib text-[10px]"></i>
-                        </button>
-                    </td>
-                </tr>`;
-        });
+    tableBody.innerHTML += `
+        <tr class="hover:bg-white/[0.02] border-b border-white/5 transition-colors">
+            <td class="px-6 py-4 font-bold text-gray-200 uppercase text-[11px]">${n.title}</td>
+            <td class="px-6 py-4 text-purple-400 font-mono text-xs">${n.views || 0} VIEWS</td>
+            <td class="px-6 py-4 text-center">
+                <button onclick="window.location.href='admin.html'" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-purple-600 transition-all">
+                    <i class="fa-solid fa-pen-nib text-[10px]"></i>
+                </button>
+            </td>
+        </tr>`;
     } catch (e) { console.error(e); }
 }
+});
 
 // 4. PROFILE EDITING SYSTEM
 window.toggleEditModal = function() {
