@@ -36,9 +36,10 @@ async function loadKatalog() {
     const searchInput = document.getElementById('searchInput');
     const term = searchInput?.value.toLowerCase() || "";
     
-    const selectedGenres = Array.from(document.querySelectorAll('input[name="genre"]:checked')).map(i => i.value);
-    const selectedStatus = document.querySelector('input[name="status"]:checked')?.value || "";
-
+    // --- PENYELESAIAN STATUS DI SINI ---
+    // Gunakan querySelector untuk ambil radio yang 'checked' sahaja
+    const statusRadio = document.querySelector('input[name="status"]:checked');
+    const selectedStatus = statusRadio ? statusRadio.value : "";
     try {
         // Gunakan 'db' terus dari firebase-config.js
         const snapshot = await db.collection('novels').orderBy('createdAt', 'desc').get();
