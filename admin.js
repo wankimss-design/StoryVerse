@@ -4,122 +4,70 @@ let selectedGenres = [];
 document.addEventListener('DOMContentLoaded', () => {
     initGenreLogic();
     initThemeLogic();
-    
-    const novelForm = document.getElementById('newNovelForm');
-    if (novelForm) {
-        novelForm.addEventListener('submit', saveNovel);
-    }
-});
-
-// LOGIK GENRE
-function initGenreLogic() {
-    const genreToggle = document.getElementById('genreToggle');
-    const genreDropdown = document.getElementById('genreDropdown');
-    const genreChevron const db = firebase.firestore();
-let selectedGenres = [];
-
-document.addEventListener('DOMContentLoaded', () => {
-    initGenreLogic();
-    // Tambah fungsi lain jika perlu (Theme, Form Submit, dll)
 });
 
 function initGenreLogic() {
-    const genreToggle = document.getElementById('genreToggle');
-    const genreDropdown = document.getElementById('genreDropdown');
-    const genreChevron = document.getElementById('genreChevron');
-    const genreDisplay = document.getElementById('selectedGenresDisplay');
+    const toggleBtn = document.getElementById('genreToggle');
+    const dropdown = document.getElementById('genreDropdown');
+    const chevron = document.getElementById('genreChevron');
+    const display = document.getElementById('selectedGenresDisplay');
 
-    if (!genreToggle || !genreDropdown) return;
+    if (!toggleBtn || !dropdown) return;
 
-    // BUKA / TUTUP DROPDOWN
-    genreToggle.addEventListener('click', (e) => {
-        e.stopPropagation(); // PENTING: Supaya klik ini tidak dikesan oleh window.onclick
-        genreDropdown.classList.toggle('active');
-        if (genreChevron) genreChevron.classList.toggle('rotate-180');
+    // 1. Klik butang untuk buka/tutup
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Halang klik dari sampai ke window
+        dropdown.classList.toggle('show');
+        chevron.classList.toggle('rotate');
     });
 
-    // PILIH GENRE
+    // 2. Klik item dalam dropdown
     document.querySelectorAll('.genre-item').forEach(item => {
         item.addEventListener('click', (e) => {
-            e.stopPropagation(); // PENTING: Supaya menu tak tutup bila kita pilih item
+            e.stopPropagation();
             const val = item.getAttribute('data-value');
-            const icon = item.querySelector('i');
 
             if (selectedGenres.includes(val)) {
                 selectedGenres = selectedGenres.filter(g => g !== val);
                 item.classList.remove('selected');
-                if (icon) icon.style.opacity = "0";
             } else {
                 selectedGenres.push(val);
                 item.classList.add('selected');
-                if (icon) icon.style.opacity = "1";
             }
 
-            // Kemaskini teks pada butang
-            genreDisplay.innerText = selectedGenres.length > 0 ? selectedGenres.join(', ').toUpperCase() : "PILIH GENRE...";
+            // Kemaskini teks paparan
+            if (selectedGenres.length > 0) {
+                display.innerText = selectedGenres.join(', ').toUpperCase();
+                display.classList.replace('text-gray-400', 'text-purple-500');
+            } else {
+                display.innerText = "PILIH GENRE...";
+                display.classList.replace('text-purple-500', 'text-gray-400');
+            }
         });
     });
 
-    // TUTUP BILA KLIK DI LUAR
+    // 3. Klik di luar untuk tutup dropdown
     window.addEventListener('click', () => {
-        genreDropdown.classList.remove('active');
-        if (genreChevron) genreChevron.classList.remove('rotate-180');
+        dropdown.classList.remove('show');
+        chevron.classList.remove('rotate');
     });
 }
 
-// LOGIK TEMA
 function initThemeLogic() {
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
+    const btn = document.getElementById('themeToggle');
+    const icon = document.getElementById('themeIcon');
+    
+    if (!btn) return;
 
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('light-mode');
-            const isLight = document.body.classList.contains('light-mode');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-
-            if (isLight) {
-                themeIcon.classList.replace('fa-moon', 'fa-sun');
-            } else {
-                themeIcon.classList.replace('fa-sun', 'fa-moon');
-            }
-        });
-    }
+    btn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        const isLight = document.body.classList.contains('light-mode');
+        icon.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    });
 
     if (localStorage.getItem('theme') === 'light') {
         document.body.classList.add('light-mode');
-        themeIcon?.classList.replace('fa-moon', 'fa-sun');
-    }
-}
-
-// FUNGSI SIMPAN
-async function saveNovel(e) {
-    e.preventDefault();
-    const btn = document.getElementById('mainSubmitBtn');
-    const title = document.getElementById('newTitle').value;
-
-    if (!title || selectedGenres.length === 0) {
-        alert("Sila isi tajuk dan genre!");
-        return;
-    }
-
-    try {
-        btn.disabled = true;
-        btn.innerHTML = 'Memproses... <i class="fa-solid fa-spinner fa-spin"></i>';
-
-        await db.collection('novels').add({
-            title: title,
-            synopsis: document.getElementById('newSinopsis').value,
-            genres: selectedGenres,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
-        alert('Berjaya!');
-        location.reload();
-    } catch (err) {
-        console.error(err);
-        alert('Gagal!');
-        btn.disabled = false;
-        btn.innerHTML = 'Publish Novel';
+        icon.className = 'fa-solid fa-sun';
     }
 }
