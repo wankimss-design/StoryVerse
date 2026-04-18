@@ -1,4 +1,4 @@
-// Global State
+// Global State - Mengambil tetapan simpanan pengguna
 let currentFontSize = parseInt(localStorage.getItem('readerFontSize')) || 18;
 let currentFontFamily = localStorage.getItem('readerFontFamily') || 'Lora';
 
@@ -7,32 +7,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = params.get('title') || "Novel StoryVerse";
     const chapter = parseInt(params.get('chapter')) || 1;
 
-    // 1. Inisialisasi UI
+    // 1. Inisialisasi Paparan
     updateHeaderUI(title, chapter);
     loadChapterContent(chapter);
     applyStoredSettings();
+    
+    // Semak tema asal (jika user pernah set light mode sebelum refresh)
+    if (localStorage.getItem('readerTheme') === 'light') {
+        document.body.classList.add('light-mode');
+        const icon = document.getElementById('themeIcon');
+        if (icon) icon.classList.replace('fa-moon', 'fa-sun');
+    }
 
     // 2. Firebase Sync (Sejarah Pembacaan)
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            saveHistoryToFirebase(user.uid, title, chapter);
-        }
-    });
+    if (typeof firebase !== 'undefined') {
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                saveHistoryToFirebase(user.uid, title, chapter);
+            }
+        });
+    }
 });
 
 // --- PENGURUSAN KANDUNGAN ---
 
 function updateHeaderUI(title, chapter) {
-    document.getElementById('readerNovelTitle').innerText = title;
-    document.getElementById('readerChapterNum').innerText = `Bab ${chapter.toString().padStart(2, '0')}`;
-    document.getElementById('chapterTitleDisplay').innerText = `Bahagian Ke-${chapter}`;
+    const titleEl = document.getElementById('readerNovelTitle');
+    const chapNumEl = document.getElementById('readerChapterNum');
+    const chapDisplayEl = document.getElementById('chapterTitleDisplay');
+    const prevBtn = document.getElementById('prevBtn');
+
+    if (titleEl) titleEl.innerText = title;
+    if (chapNumEl) chapNumEl.innerText = `Bab ${chapter.toString().padStart(2, '0')}`;
+    if (chapDisplayEl) chapDisplayEl.innerText = `Bahagian Ke-${chapter}`;
+    
     document.title = `Bab ${chapter} - ${title}`;
-    document.getElementById('prevBtn').disabled = (chapter <= 1);
+    if (prevBtn) prevBtn.disabled = (chapter <= 1);
 }
 
 function loadChapterContent(chapter) {
     const content = document.getElementById('novelContent');
-    // Simulasi data bab (Sesuai dengan niche romance fiction anda)
+    // Simulasi data bab
     content.innerHTML = `
         <p>Dia berdiri di sana, di bawah rintik hujan yang kian lebat, memerhatikan bayang-bayang yang semakin menjauh. Aliff tahu, setiap langkah yang diambilnya malam ini adalah satu pengkhianatan kepada hatinya sendiri.</p>
         <p>"Kenapa sekarang?" bisiknya perlahan. Suaranya hilang ditelan deru angin. Di tangannya, sehelai nota lama yang kian luntur tulisannya digenggam erat. Rahsia yang disimpan selama sepuluh tahun akhirnya terbongkar di hadapan matanya.</p>
@@ -45,7 +60,7 @@ function loadChapterContent(chapter) {
 
 function toggleSettings() {
     const panel = document.getElementById('settingsPanel');
-    panel.classList.toggle('translate-y-full');
+    if (panel) panel.classList.toggle('translate-y-full');
 }
 
 function changeFontSize(delta) {
@@ -71,8 +86,10 @@ function updateTypography() {
     const content = document.getElementById('novelContent');
     const display = document.getElementById('fontSizeDisplay');
     
-    content.style.fontSize = `${currentFontSize}px`;
-    content.style.fontFamily = currentFontFamily;
+    if (content) {
+        content.style.fontSize = `${currentFontSize}px`;
+        content.style.fontFamily = currentFontFamily;
+    }
     if (display) display.innerText = `${currentFontSize}px`;
 }
 
@@ -81,20 +98,28 @@ function toggleTheme() {
     const icon = document.getElementById('themeIcon');
     const isLight = document.body.classList.contains('light-mode');
     
-    icon.classList.replace(isLight ? 'fa-moon' : 'fa-sun', isLight ? 'fa-sun' : 'fa-moon');
+    // Simpan pilihan tema ke localStorage
+    localStorage.setItem('readerTheme', isLight ? 'light' : 'dark');
+    
+    // Tukar ikon
+    if (icon) {
+        if (isLight) {
+            icon.classList.replace('fa-moon', 'fa-sun');
+        } else {
+            icon.classList.replace('fa-sun', 'fa-moon');
+        }
+    }
 }
 
 // --- NAVIGASI BAB ---
 
 function changeChapter(direction) {
     const params = new URLSearchParams(window.location.search);
-    const title = params.get('title');
     let chapter = parseInt(params.get('chapter')) || 1;
     
     chapter += direction;
     if (chapter < 1) return;
 
-    // Kekalkan params sedia ada (termasuk cover jika ada)
     params.set('chapter', chapter);
     window.location.href = `reader.html?${params.toString()}`;
 }
@@ -104,6 +129,7 @@ function changeChapter(direction) {
 async function saveHistoryToFirebase(uid, title, chapter) {
     const novelId = title.replace(/\s+/g, '-').toLowerCase();
     try {
+        // Gunakan db (pastikan db telah di-init di dalam config firebase anda)
         await db.collection('users').doc(uid).collection('history').doc(novelId).set({
             title: title,
             lastChapter: chapter,
