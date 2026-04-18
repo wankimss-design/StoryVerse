@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membaca Novel | StoryVerse</title>
+    
+    <link rel="stylesheet" href="reader.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-[#0f0f0f] text-gray-300 min-h-screen font-['Plus_Jakarta_Sans'] transition-colors duration-500">
+
+    <nav class="fixed top-0 w-full z-50 bg-[#0f0f0f]/80 backdrop-blur-lg border-bottom border-white/5 px-6 h-20 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <button onclick="history.back()" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/5 transition-all">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <div>
+                <h2 id="readerNovelTitle" class="text-sm font-black uppercase tracking-wider text-white truncate max-w-[150px] md:max-w-none">Tajuk Novel</h2>
+                <p id="readerChapterNum" class="text-[10px] text-purple-500 font-bold uppercase tracking-widest">Bab 01</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl hover:bg-white/5 flex items-center justify-center transition-all">
+                <i id="themeIcon" class="fa-solid fa-moon"></i>
+            </button>
+            <button class="w-10 h-10 rounded-xl hover:bg-white/5 flex items-center justify-center transition-all">
+                <i class="fa-solid fa-font"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-3xl mx-auto">
+        <header class="mb-12 text-center">
+            <h1 id="chapterTitleDisplay" class="text-3xl md:text-5xl font-black text-white italic tracking-tighter mb-4 uppercase">Tajuk Bab</h1>
+            <div class="w-20 h-1 bg-purple-600 mx-auto rounded-full"></div>
+        </header>
+
+        <article id="novelContent" class="font-['Lora'] text-lg md:text-xl leading-[1.8] text-gray-400 space-y-8 first-letter:text-5xl first-letter:font-black first-letter:text-purple-500 first-letter:mr-3 first-letter:float-left">
+            Memuatkan cerita...
+        </article>
+
+        <div class="mt-20 flex flex-col items-center gap-8 pt-10 border-t border-white/5">
+            <div class="flex items-center gap-4 w-full">
+                <button id="prevBtn" onclick="changeChapter(-1)" class="flex-1 py-4 bg-white/5 border border-white/10 rounded-2xl font-bold hover:bg-white/10 transition-all disabled:opacity-20 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Bab Sebelum
+                </button>
+                <button id="nextBtn" onclick="changeChapter(1)" class="flex-1 py-4 bg-purple-600 text-white rounded-2xl font-bold hover:bg-purple-500 transition-all shadow-lg shadow-purple-600/20">
+                    Bab Seterusnya <i class="fa-solid fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+            
+            <button onclick="location.href='katalog.html'" class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-600 hover:text-purple-500 transition-colors">
+                Kembali ke Katalog
+            </button>
+        </div>
+    </main>
+
+    <script src="reader.js"></script>
+</body>
+</html>
