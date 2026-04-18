@@ -1,42 +1,46 @@
 // --- 1. PRELOADER & INITIAL THEME LOGIC ---
 window.addEventListener('load', () => {
     const preloader = document.getElementById('preloader');
-    const circle = document.querySelector('.loader-circle');
-    const text = document.querySelector('.loader-text');
-    const svg = document.querySelector('.loader-text text');
     
-    const savedTheme = localStorage.getItem('theme');
-    const themeIcon = document.getElementById('themeIconLucide'); // Kita kekalkan ID ini supaya tak perlu tukar HTML
+    // Kunci scroll sebaik sahaja halaman dimuatkan
+    document.body.style.overflow = 'hidden';
 
-    // Set tema segera sebelum preloader mula
+    // Logik Tema (Dijalankan segera)
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('themeIconLucide');
+
     if (savedTheme === 'light') {
         if (preloader) preloader.style.background = '#fdfbf7'; 
         document.body.classList.add('light-mode');
-        // Tukar ikon kepada matahari (Font Awesome class)
         if (themeIcon) themeIcon.className = 'fa-solid fa-sun';
     }
 
     if (!preloader) {
+        document.body.style.overflow = 'auto';
         if (typeof fetchNovels === 'function') fetchNovels();
         return;
     }
 
-          // TIMING: Bulatan (1.5s) + Menulis (3.5s) + Extra (0.3s) = 5.3s
-        setTimeout(() => {
-            if (preloader) {
-                preloader.classList.add('lift-up'); // Jalankan rollup
-                
-                if (typeof fetchNovels === 'function') fetchNovels();
-                
-                // Tunggu rollup 1.5s selesai baru buang terus dari DOM
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                }, 1500);
-            }
-        }, 5300); 
-    });
+    // TIMING ANIMASI: Bulatan + Menulis + Extra = 5.3s
+    setTimeout(() => {
+        if (preloader) {
+            preloader.classList.add('lift-up'); // Jalankan rollup
+            
+            // PENTING: Buka semula scroll sejurus animasi rollup bermula
+            document.body.style.overflow = 'auto';
+            document.body.style.height = 'auto';
 
-// --- 2. THEME TOGGLE LOGIC (FONT AWESOME VERSION) ---
+            if (typeof fetchNovels === 'function') fetchNovels();
+            
+            // Tunggu rollup selesai (1.5s) baru buang terus dari DOM
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 1500);
+        }
+    }, 5300); 
+});
+
+// --- 2. THEME TOGGLE LOGIC ---
 const themeBtn = document.getElementById('themeToggle');
 const themeIcon = document.getElementById('themeIconLucide');
 
@@ -44,16 +48,14 @@ themeBtn?.addEventListener('click', () => {
     document.body.classList.toggle('light-mode');
     const isLight = document.body.classList.contains('light-mode');
     
-    // Tukar ikon menggunakan className (Font Awesome)
-    if (isLight) {
-        if (themeIcon) themeIcon.className = 'fa-solid fa-sun';
-    } else {
-        if (themeIcon) themeIcon.className = 'fa-solid fa-moon';
+    if (themeIcon) {
+        themeIcon.className = isLight ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
     }
     
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
 });
 
+// --- 3. FETCH DATA DARI FIRESTORE ---
 async function fetchNovels() {
     const grid = document.getElementById('novelGrid');
     const fImg = document.getElementById('featuredImg');
@@ -66,23 +68,22 @@ async function fetchNovels() {
         const snapshot = await db.collection('novels').orderBy('createdAt', 'desc').limit(10).get();
         
         if (snapshot.empty) {
-            grid.innerHTML = '<p class="col-span-full text-center py-20 opacity-50">Tiada Novel Dijumpai</p>';
+            grid.innerHTML = '<p class="col-span-full text-center py-20 opacity-50 uppercase tracking-widest text-xs">Tiada Novel Dijumpai</p>';
             return;
         }
 
         grid.innerHTML = '';
         
-        // --- FEATURED NOVEL (Novel Teratas) ---
+        // Featured Novel
         const firstDoc = snapshot.docs[0];
         const firstData = firstDoc.data();
         if (fImg && fTitle && fCard) {
             fImg.src = firstData.coverImage || firstData.image || 'https://via.placeholder.com/600x800';
             fTitle.innerText = firstData.title;
-            // Hantar ID ke detail page
             fCard.onclick = () => window.location.href = `detail.html?id=${firstDoc.id}`;
         }
 
-        // --- GRID NOVELS (Siri Popular) ---
+        // Novel Grid
         snapshot.forEach(doc => {
             const data = doc.data();
             const currentCover = data.coverImage || data.image || 'https://via.placeholder.com/300x450';
@@ -104,64 +105,23 @@ async function fetchNovels() {
     }
 }
 
-// --- 4. FIREBASE AUTH & ACCESS ---
-function checkAccess(id) {
-    const user = firebase.auth().currentUser;
-    if (user) {
-        // Hantar ke halaman detail novel tersebut
-        window.location.href = `detail.html?id=${id}`;
-    } else {
-        alert("Sila Log Masuk untuk mula membaca!");
-        window.location.href = 'auth.html';
-    }
-}
-
-// Letakkan ini di bahagian paling bawah script.js
+// --- 4. FIREBASE AUTH MONITORING ---
+// Digabungkan supaya lebih efisien
 if (typeof firebase !== 'undefined') {
     firebase.auth().onAuthStateChanged((user) => {
         const authBtn = document.getElementById('authBtn');
+        const profileLink = document.querySelector('a[title="Profile"]');
+
         if (authBtn) {
             if (user) {
-                // Jika user dah login
-                authBtn.innerText = "Log Keluar";
-                authBtn.onclick = () => {
-                    firebase.auth().signOut().then(() => window.location.reload());
-                };
+                authBtn.innerText = "Keluar";
+                authBtn.onclick = () => firebase.auth().signOut().then(() => window.location.reload());
+                if (profileLink) profileLink.href = "profile.html";
             } else {
-                // Jika user belum login
                 authBtn.innerText = "Log Masuk";
-                authBtn.onclick = () => {
-                    window.location.href = 'auth.html'; // Pastikan fail auth.html wujud
-                };
+                authBtn.onclick = () => window.location.href = 'auth.html';
+                if (profileLink) profileLink.href = "auth.html";
             }
         }
     });
-}
-
-// Pantau status log masuk untuk butang nav
-firebase.auth().onAuthStateChanged((user) => {
-    const authBtn = document.getElementById('authBtn');
-    const profileLink = document.querySelector('a[title="Profile"]');
-
-    if (user) {
-        // Jika sudah login
-        if (authBtn) authBtn.innerText = "Keluar";
-        if (profileLink) profileLink.href = "profile.html";
-    } else {
-        // Jika belum login
-        if (authBtn) authBtn.innerText = "Log Masuk";
-        if (profileLink) profileLink.href = "auth.html";
-    }
-});
-
-// Fungsi untuk butang Log Masuk / Keluar
-function handleAuthAction() {
-    const user = firebase.auth().currentUser;
-    if (user) {
-        firebase.auth().signOut().then(() => {
-            window.location.reload();
-        });
-    } else {
-        window.location.href = "auth.html";
-    }
 }
