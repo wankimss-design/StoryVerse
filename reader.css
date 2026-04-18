@@ -1,25 +1,51 @@
-/* --- READER STYLES --- */
+/* --- 1. ASAS READER --- */
 body {
     scroll-behavior: smooth;
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
-/* Guna font Serif (Lora) untuk pembacaan lebih selesa */
+/* Typography untuk pembacaan novel */
 article {
     text-align: justify;
+    hyphens: auto;
 }
 
-/* Light Mode untuk Reader */
+/* Efek Huruf Pertama (Drop Cap) */
+#novelContent::first-letter {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #a855f7;
+    margin-right: 0.75rem;
+    line-height: 1;
+    float: left;
+}
+
+/* Jarak bawah supaya teks tidak tenggelam di belakang panel */
+main {
+    padding-bottom: 180px;
+}
+
+/* --- 2. LIGHT MODE STYLES (SEPIA) --- */
+
 body.light-mode {
-    background-color: #fcf8f2 !important; /* Warna kertas lama supaya tak sakit mata */
+    background-color: #fcf8f2 !important; /* Warna kertas lama */
     color: #2d3436 !important;
 }
 
+/* Navigasi dalam Light Mode */
 body.light-mode nav {
     background-color: rgba(252, 248, 242, 0.9) !important;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-body.light-mode #readerNovelTitle,
+/* Warna Ikon & Teks Navigasi */
+body.light-mode nav .fa-solid, 
+body.light-mode nav .fa-regular,
+body.light-mode nav h2 {
+    color: #2d3436 !important;
+}
+
+/* Warna Kandungan Novel */
 body.light-mode #chapterTitleDisplay {
     color: #1a1a1a !important;
 }
@@ -28,7 +54,60 @@ body.light-mode #novelContent {
     color: #3d3d3d !important;
 }
 
-body.light-mode .bg-white\/5 {
-    background-color: rgba(0,0,0,0.05) !important;
-    border-color: rgba(0,0,0,0.05) !important;
+/* --- 3. SETTINGS PANEL (LIGHT MODE) --- */
+
+body.light-mode #settingsPanel {
+    background-color: rgba(252, 248, 242, 0.98) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode #settingsPanel h3,
+body.light-mode #settingsPanel p {
+    color: #2d3436 !important;
+}
+
+body.light-mode #settingsPanel button {
+    color: #2d3436 !important;
+    background-color: rgba(0, 0, 0, 0.03) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-mode #settingsPanel button:hover {
+    background-color: rgba(168, 85, 247, 0.1) !important;
+    border-color: #a855f7 !important;
+}
+
+/* Warna simbol dalam butang */
+body.light-mode #settingsPanel .fa-xmark,
+body.light-mode #settingsPanel .fa-minus,
+body.light-mode #settingsPanel .fa-plus {
+    color: #2d3436 !important;
+}
+
+body.light-mode #fontSizeDisplay {
+    color: #1a1a1a !important; /* Saiz font jadi hitam pekat */
+}
+
+/* --- 4. BUTANG NAVIGASI BAWAH (LIGHT MODE) --- */
+
+/* Butang "Bab Sebelum" */
+body.light-mode #prevBtn {
+    background-color: rgba(0, 0, 0, 0.03) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    color: #2d3436 !important;
+}
+
+/* Butang "Kembali ke Katalog" */
+body.light-mode main button[onclick*="katalog.html"] {
+    color: #999 !important;
+}
+
+body.light-mode main button[onclick*="katalog.html"]:hover {
+    color: #a855f7 !important;
+}
+
+/* Garisan pemisah di atas butang navigasi */
+body.light-mode .border-t {
+    border-color: rgba(0, 0, 0, 0.05) !important;
 }
