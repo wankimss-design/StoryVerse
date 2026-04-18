@@ -1,4 +1,3 @@
-const db = firebase.firestore();
 let selectedGenres = [];
 
 document.addEventListener('DOMContentLoaded', () => {
