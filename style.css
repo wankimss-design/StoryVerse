@@ -323,3 +323,62 @@ body.light-mode .footer-icon-link:hover {
     color: #7000ff;
     background: rgba(112, 0, 255, 0.05);
 }
+
+/* --- 8. NOVEL GRID & CARD SYSTEM --- */
+#novelGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 kolum untuk mobile */
+    gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    #novelGrid {
+        grid-template-columns: repeat(3, 1fr); /* 3 kolum untuk tablet */
+    }
+}
+
+@media (min-width: 1024px) {
+    #novelGrid {
+        grid-template-columns: repeat(5, 1fr); /* 5 kolum untuk desktop */
+    }
+}
+
+/* Card Wrapper */
+.card-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4; /* Paksa saiz kotak 3:4 */
+    background: #151515;
+    border-radius: 1.25rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s ease;
+}
+
+.card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Penting: Supaya gambar tidak penyek */
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Efek Hover pada Card */
+.novel-card:hover .card-image-wrapper {
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    transform: translateY(-8px);
+}
+
+.novel-card:hover .card-img {
+    transform: scale(1.1); /* Zoom gambar sikit */
+}
+
+/* Light Mode Fix untuk Card */
+body.light-mode .card-image-wrapper {
+    background: #eee;
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .novel-card:hover .card-image-wrapper {
+    box-shadow: 0 10px 25px rgba(112, 0, 255, 0.1);
+}
