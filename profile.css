@@ -277,3 +277,41 @@ body.light-mode .admin-input {
 body.light-mode nav .text-gray-400 {
     color: #64748b !important;
 }
+
+/* --- PENYELARASAN BANNER DALAM MOD CERAH --- */
+body.light-mode .relative.overflow-hidden.rounded-\[40px\] {
+    background-color: #ffffff !important; /* Tukar banner jadi putih */
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Tukar warna gradient di bahagian atas banner */
+body.light-mode .absolute.top-0.left-0.w-full.h-32 {
+    background: linear-gradient(to right, rgba(147, 51, 234, 0.1), rgba(236, 72, 153, 0.1)) !important;
+    opacity: 1 !important;
+}
+
+/* Betulkan Nama Admin supaya matching (Warna Ungu Gelap) */
+body.light-mode #userName {
+    background: none !important;
+    -webkit-text-fill-color: #4c1d95 !important; /* Warna ungu gelap yang premium */
+    color: #4c1d95 !important;
+    font-style: normal !important; /* Buat dia tegak supaya nampak lebih kemas */
+    letter-spacing: -0.02em;
+}
+
+/* Betulkan Bio dan Email */
+body.light-mode #userBio {
+    color: #4b5563 !important;
+}
+
+body.light-mode #userEmail {
+    color: #9ca3af !important;
+}
+
+/* Tukar warna butang Log Keluar supaya tidak terlalu gelap */
+body.light-mode button[onclick="logout()"] {
+    background-color: rgba(0, 0, 0, 0.03) !important;
+    color: #4b5563 !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
