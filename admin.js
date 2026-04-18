@@ -1,17 +1,24 @@
-// 1. Deklarasi Global
+// 1. DEKLARASI GLOBAL
 let selectedGenres = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     initGenreLogic();
     initThemeLogic();
-    fetchNovels(); // Tarik data table
+    fetchNovels(); // Memanggil data table & dropdown
     
+    // Listener untuk Form Novel Baru
     const novelForm = document.getElementById('newNovelForm');
     if (novelForm) {
         novelForm.addEventListener('submit', saveNovel);
     }
 
-    // Papar nama fail bila dipilih
+    // Listener untuk Form Tambah Bab
+    const chapterForm = document.getElementById('updateChapterForm');
+    if (chapterForm) {
+        chapterForm.addEventListener('submit', saveChapter);
+    }
+
+    // Papar nama fail gambar bila dipilih
     document.getElementById('coverFile')?.addEventListener('change', function(e) {
         const fileName = e.target.files[0]?.name || "PILIH GAMBAR";
         const display = document.getElementById('fileNameDisplay');
@@ -19,82 +26,60 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// 2. Logik Genre (Multi-select)
-function initGenreLogic() {
-    const genreToggle = document.getElementById('genreToggle');
-    const genreDropdown = document.getElementById('genreDropdown');
-    const genreChevron = document.getElementById('genreChevron');
-    const genreDisplay = document.getElementById('selectedGenresDisplay');
+// 2. PAPAR DATA REAL-TIME (TABLE & DROPDOWN)
+async function fetchNovels() {
+    const tbody = document.getElementById('novelTableBody');
+    const selectNovel = document.getElementById('selectNovel'); 
+    if (!tbody) return;
 
-    if (!genreToggle || !genreDropdown) return;
+    db.collection('novels').orderBy('createdAt', 'desc').onSnapshot((snapshot) => {
+        tbody.innerHTML = ''; 
+        // Reset dropdown pilihan novel untuk bab
+        if (selectNovel) selectNovel.innerHTML = '<option value="" disabled selected>PILIH NOVEL UNTUK BAB...</option>';
 
-    genreToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        genreDropdown.classList.toggle('hidden');
-        genreChevron?.classList.toggle('rotate-180');
-    });
+        if (snapshot.empty) {
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-gray-500">Tiada karya dijumpai.</td></tr>`;
+            return;
+        }
 
-    document.querySelectorAll('.genre-item').forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const val = item.getAttribute('data-value');
-            const icon = item.querySelector('i');
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            
+            // Masukkan data ke Table
+            const row = `
+                <tr class="bg-white/5 rounded-2xl overflow-hidden hover:bg-white/10 transition-all group">
+                    <td class="px-6 py-4">
+                        <img src="${data.coverImage || 'https://via.placeholder.com/150'}" class="w-12 h-16 object-cover rounded-lg shadow-lg border border-white/10 group-hover:scale-105 transition-transform">
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="font-bold text-white group-hover:text-purple-400 transition-colors uppercase text-sm">${data.title}</p>
+                        <p class="text-[10px] text-gray-500 mt-1 uppercase">ID: ${doc.id.substring(0,8)}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex flex-wrap gap-1">
+                            ${data.genres ? data.genres.map(g => `<span class="px-2 py-0.5 bg-purple-600/10 text-purple-400 text-[9px] font-black rounded border border-purple-500/20 uppercase">${g}</span>`).join('') : '-'}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="deleteNovel('${doc.id}')" class="w-10 h-10 flex items-center justify-center text-red-500 hover:bg-red-500/10 rounded-xl transition-all">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            tbody.innerHTML += row;
 
-            if (selectedGenres.includes(val)) {
-                selectedGenres = selectedGenres.filter(g => g !== val);
-                item.classList.remove('selected');
-                if (icon) icon.style.opacity = "0";
-            } else {
-                selectedGenres.push(val);
-                item.classList.add('selected');
-                if (icon) icon.style.opacity = "1";
+            // Masukkan data ke Dropdown Bab
+            if (selectNovel) {
+                const option = document.createElement('option');
+                option.value = doc.id;
+                option.textContent = data.title.toUpperCase();
+                selectNovel.appendChild(option);
             }
-
-            genreDisplay.innerText = selectedGenres.length > 0 
-                ? selectedGenres.join(', ').toUpperCase() 
-                : "PILIH GENRE...";
         });
-    });
-
-    window.addEventListener('click', (e) => {
-        if (!genreToggle.contains(e.target) && !genreDropdown.contains(e.target)) {
-            genreDropdown.classList.add('hidden');
-            genreChevron?.classList.remove('rotate-180');
-        }
     });
 }
 
-// 3. Logik Tema
-function initThemeLogic() {
-    const themeBtns = document.querySelectorAll('.themeToggle');
-    const applyTheme = (isLight) => {
-        if (isLight) {
-            document.body.classList.add('light-mode');
-            themeBtns.forEach(btn => {
-                const icon = btn.querySelector('i');
-                if(icon) icon.className = 'fa-solid fa-sun';
-            });
-        } else {
-            document.body.classList.remove('light-mode');
-            themeBtns.forEach(btn => {
-                const icon = btn.querySelector('i');
-                if(icon) icon.className = 'fa-solid fa-moon';
-            });
-        }
-    };
-
-    themeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const isLight = !document.body.classList.contains('light-mode');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            applyTheme(isLight);
-        });
-    });
-
-    if (localStorage.getItem('theme') === 'light') applyTheme(true);
-}
-
-// 4. Fungsi Simpan (Firestore + Base64)
+// 3. FUNGSI SIMPAN NOVEL BARU
 async function saveNovel(e) {
     e.preventDefault();
     const btn = document.getElementById('mainSubmitBtn');
@@ -130,15 +115,10 @@ async function saveNovel(e) {
         });
 
         alert('Karya berjaya diterbitkan!');
-        document.getElementById('newNovelForm').reset();
+        e.target.reset();
         document.getElementById('fileNameDisplay').innerText = "PILIH GAMBAR";
         selectedGenres = [];
-        document.getElementById('selectedGenresDisplay').innerText = "PILIH GENRE...";
-        document.querySelectorAll('.genre-item').forEach(item => {
-            item.classList.remove('selected');
-            const icon = item.querySelector('i');
-            if(icon) icon.style.opacity = "0";
-        });
+        resetGenreUI();
 
     } catch (err) {
         console.error("Ralat:", err);
@@ -149,45 +129,110 @@ async function saveNovel(e) {
     }
 }
 
-// 5. Papar Data Real-time
-async function fetchNovels() {
-    const tbody = document.getElementById('novelTableBody');
-    if (!tbody) return;
+// 4. FUNGSI SIMPAN BAB
+async function saveChapter(e) {
+    e.preventDefault();
+    const novelId = document.getElementById('selectNovel').value;
+    const chapterNum = document.getElementById('chapterNum').value;
+    const chapterTitle = document.getElementById('chapterTitle').value;
+    const content = document.getElementById('chapterContent').value;
+    const btn = e.target.querySelector('button');
 
-    db.collection('novels').orderBy('createdAt', 'desc').onSnapshot((snapshot) => {
-        tbody.innerHTML = ''; 
-        if (snapshot.empty) {
-            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-gray-500">Tiada karya dijumpai.</td></tr>`;
-            return;
-        }
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            const row = `
-                <tr class="bg-white/5 rounded-2xl overflow-hidden hover:bg-white/10 transition-all group">
-                    <td class="px-6 py-4">
-                        <img src="${data.coverImage || 'https://via.placeholder.com/150'}" class="w-12 h-16 object-cover rounded-lg shadow-lg border border-white/10 group-hover:scale-105 transition-transform">
-                    </td>
-                    <td class="px-6 py-4">
-                        <p class="font-bold text-white group-hover:text-purple-400 transition-colors uppercase text-sm">${data.title}</p>
-                        <p class="text-[10px] text-gray-500 mt-1 uppercase">ID: ${doc.id.substring(0,8)}</p>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="flex flex-wrap gap-1">
-                            ${data.genres ? data.genres.map(g => `<span class="px-2 py-0.5 bg-purple-600/10 text-purple-400 text-[9px] font-black rounded border border-purple-500/20 uppercase">${g}</span>`).join('') : '-'}
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 text-right">
-                        <button onclick="deleteNovel('${doc.id}')" class="w-10 h-10 flex items-center justify-center text-red-500 hover:bg-red-500/10 rounded-xl transition-all">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </td>
-                </tr>`;
-            tbody.innerHTML += row;
+    if (!novelId || !chapterNum || !chapterTitle || !content) {
+        alert("Sila lengkapkan semua maklumat bab!");
+        return;
+    }
+
+    try {
+        btn.disabled = true;
+        btn.innerHTML = 'Menyimpan... <i class="fa-solid fa-spinner fa-spin"></i>';
+
+        await db.collection('novels').doc(novelId).collection('chapters').doc(chapterNum).set({
+            chapterNumber: parseInt(chapterNum),
+            title: chapterTitle,
+            content: content,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        alert(`Bab ${chapterNum} berjaya disimpan!`);
+        e.target.reset();
+
+    } catch (err) {
+        console.error("Ralat bab:", err);
+        alert("Gagal menyimpan bab.");
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Simpan Bab <i class="fa-solid fa-floppy-disk text-xs"></i>';
+    }
+}
+
+// --- LOGIK UI (GENRE, TEMA, HELPER) ---
+
+function initGenreLogic() {
+    const genreToggle = document.getElementById('genreToggle');
+    const genreDropdown = document.getElementById('genreDropdown');
+    const genreChevron = document.getElementById('genreChevron');
+    const genreDisplay = document.getElementById('selectedGenresDisplay');
+
+    if (!genreToggle || !genreDropdown) return;
+
+    genreToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        genreDropdown.classList.toggle('hidden');
+        genreChevron?.classList.toggle('rotate-180');
+    });
+
+    document.querySelectorAll('.genre-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const val = item.getAttribute('data-value');
+            const icon = item.querySelector('i');
+
+            if (selectedGenres.includes(val)) {
+                selectedGenres = selectedGenres.filter(g => g !== val);
+                item.classList.remove('selected');
+                if (icon) icon.style.opacity = "0";
+            } else {
+                selectedGenres.push(val);
+                item.classList.add('selected');
+                if (icon) icon.style.opacity = "1";
+            }
+
+            genreDisplay.innerText = selectedGenres.length > 0 ? selectedGenres.join(', ').toUpperCase() : "PILIH GENRE...";
         });
     });
 }
 
-// 6. Fungsi Padam & Base64
+function resetGenreUI() {
+    document.getElementById('selectedGenresDisplay').innerText = "PILIH GENRE...";
+    document.querySelectorAll('.genre-item').forEach(item => {
+        item.classList.remove('selected');
+        const icon = item.querySelector('i');
+        if(icon) icon.style.opacity = "0";
+    });
+}
+
+function initThemeLogic() {
+    const themeBtns = document.querySelectorAll('.themeToggle');
+    const applyTheme = (isLight) => {
+        if (isLight) {
+            document.body.classList.add('light-mode');
+        } else {
+            document.body.classList.remove('light-mode');
+        }
+    };
+
+    themeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const isLight = !document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            applyTheme(isLight);
+        });
+    });
+
+    if (localStorage.getItem('theme') === 'light') applyTheme(true);
+}
+
 async function deleteNovel(id) {
     if (confirm('Padam karya ini?')) await db.collection('novels').doc(id).delete();
 }
