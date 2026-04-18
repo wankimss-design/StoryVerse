@@ -1,29 +1,30 @@
-// --- 1. FIREBASE AUTH & USER PROFILE ---
-firebase.auth().onAuthStateChanged((user) => {
+// --- 1. FIREBASE AUTH & USER PROFILE (KATALOG.JS) ---
+firebase.auth().onAuthStateChanged(async (user) => {
     if (!user) {
-        // Jika tidak log masuk, hantar ke auth.html
         window.location.href = "auth.html";
     } else {
-        // Ambil elemen imej profil di navbar
         const navProfileImg = document.getElementById('navProfileImg');
         
         if (navProfileImg) {
-            // 1. Cuba ambil photoURL dari Firebase Auth dahulu
-            // 2. Jika tiada, sistem akan jana avatar automatik berdasarkan nama/email
-            const fallbackAvatar = `https://ui-avatars.com/api/?name=${user.displayName || user.email}&background=a855f7&color=fff`;
+            // 1. Set gambar default dahulu (sementara tunggu data Firestore)
+            const fallbackAvatar = `https://ui-avatars.com/api/?name=${user.email}&background=a855f7&color=fff`;
             navProfileImg.src = user.photoURL || fallbackAvatar;
 
-            // OPTIONAL: Jika anda simpan URL gambar dalam Firestore (Custom Profile)
-            /*
-            firebase.firestore().collection("users").doc(user.uid).onSnapshot((doc) => {
-                if (doc.exists && doc.data().profileImage) {
-                    navProfileImg.src = doc.data().profileImage;
+            // 2. AMBIL DATA DARI FIRESTORE (Tempat profile.js simpan gambar)
+            try {
+                const db = firebase.firestore();
+                const doc = await db.collection('users').doc(user.uid).get();
+                
+                if (doc.exists && doc.data().photoURL) {
+                    // Jika ada gambar di Firestore, guna yang itu (kerana itu yang terbaru)
+                    navProfileImg.src = doc.data().photoURL;
                 }
-            });
-            */
+            } catch (error) {
+                console.log("Ralat mengambil data profil dari Firestore:", error);
+            }
         }
         
-        loadKatalog(); // Muat data novel selepas auth berjaya
+        loadKatalog(); 
     }
 });
 
