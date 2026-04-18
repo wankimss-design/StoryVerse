@@ -135,3 +135,77 @@ body.light-mode #settingsPanel {
 #chapterSelector {
     display: none;
 }
+
+/* --- PEMBETULAN VISIBILITI LIGHT MODE (FULL FIX) --- */
+
+body.light-mode #readerNovelTitle {
+    color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Memastikan butang bab dan chevron jelas */
+body.light-mode #chapterBtn, 
+body.light-mode #chapterBtn span,
+body.light-mode #chapterChevron {
+    color: #a855f7 !important;
+}
+
+/* Memastikan semua ikon navigasi (Back, Moon, Font) jadi gelap */
+body.light-mode nav button i {
+    color: #2d3436 !important;
+}
+
+/* Membaiki Dropdown Menu */
+body.light-mode #chapterDropdown {
+    background: #ffffff !important;
+    border: 1px solid rgba(168, 85, 247, 0.3) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-mode #chapterDropdown .p-4 {
+    background: rgba(0, 0, 0, 0.02) !important; /* Header dropdown */
+}
+
+body.light-mode #chapterDropdown p {
+    color: rgba(0, 0, 0, 0.4) !important;
+}
+
+body.light-mode .chapter-item {
+    color: #2d3436 !important; /* Teks Bab 01, dll */
+}
+
+body.light-mode .chapter-item:hover {
+    background: rgba(168, 85, 247, 0.1) !important;
+}
+
+body.light-mode .chapter-item.active {
+    background: rgba(168, 85, 247, 0.05) !important;
+    color: #a855f7 !important;
+}
+
+/* Butang Navigasi Bawah */
+body.light-mode #prevBtn {
+    color: #2d3436 !important;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+body.light-mode #prevBtn i {
+    color: #2d3436 !important;
+}
+
+/* Panel Tetapan Font */
+body.light-mode #settingsPanel {
+    background-color: #fcf8f2 !important;
+}
+
+body.light-mode #settingsPanel h3,
+body.light-mode #settingsPanel p,
+body.light-mode #fontSizeDisplay {
+    color: #2d3436 !important;
+}
+
+body.light-mode #settingsPanel button {
+    background-color: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: #2d3436 !important;
+}
