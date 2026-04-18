@@ -6,6 +6,7 @@ let selectedGenres = [];
 firebase.auth().onAuthStateChanged(async (user) => {
     if (user) {
         const userDoc = await db.collection('users').doc(user.uid).get();
+        // Pastikan ejaan role tepat seperti di Firestore anda
         if (userDoc.exists && userDoc.data().role === 'Admin / Author') {
             console.log("Akses Admin Diterima");
         } else {
@@ -21,39 +22,51 @@ firebase.auth().onAuthStateChanged(async (user) => {
 document.addEventListener('DOMContentLoaded', () => {
     loadNovelList();
     loadNovelTable();
-    initTheme();
+    initTheme(); // Panggil fungsi tema sekali sahaja
+    initGenreLogic(); // Panggil fungsi genre
 });
 
 // --- 3. LOGIK MULTI-SELECT GENRE ---
-const genreToggle = document.getElementById('genreToggle');
-const genreDropdown = document.getElementById('genreDropdown');
-const genreChevron = document.getElementById('genreChevron');
-const genreDisplay = document.getElementById('selectedGenresDisplay');
+function initGenreLogic() {
+    const genreToggle = document.getElementById('genreToggle');
+    const genreDropdown = document.getElementById('genreDropdown');
+    const genreChevron = document.getElementById('genreChevron');
 
-genreToggle.addEventListener('click', (e) => {
-    e.stopPropagation();
-    genreDropdown.classList.toggle('active');
-    genreChevron.classList.toggle('rotate');
-});
+    if (genreToggle) {
+        genreToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            genreDropdown.classList.toggle('active');
+            genreChevron?.classList.toggle('rotate');
+        });
+    }
 
-document.querySelectorAll('.genre-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const value = item.getAttribute('data-value');
-        
-        if (selectedGenres.includes(value)) {
-            selectedGenres = selectedGenres.filter(g => g !== value);
-            item.classList.remove('selected');
-        } else {
-            selectedGenres.push(value);
-            item.classList.add('selected');
-        }
-        
-        updateGenreDisplay();
+    document.querySelectorAll('.genre-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const value = item.getAttribute('data-value');
+            
+            if (selectedGenres.includes(value)) {
+                selectedGenres = selectedGenres.filter(g => g !== value);
+                item.classList.remove('selected');
+            } else {
+                selectedGenres.push(value);
+                item.classList.add('selected');
+            }
+            updateGenreDisplay();
+        });
     });
-});
+
+    window.addEventListener('click', () => {
+        genreDropdown?.classList.remove('active');
+        genreChevron?.classList.remove('rotate');
+    });
+}
 
 function updateGenreDisplay() {
+    const genreDisplay = document.getElementById('selectedGenresDisplay');
+    if (!genreDisplay) return;
+
     if (selectedGenres.length > 0) {
         genreDisplay.innerText = selectedGenres.join(', ').toUpperCase();
         genreDisplay.classList.add('text-white');
@@ -63,14 +76,8 @@ function updateGenreDisplay() {
     }
 }
 
-// Tutup dropdown jika klik di luar
-window.addEventListener('click', () => {
-    genreDropdown.classList.remove('active');
-    genreChevron.classList.remove('rotate');
-});
-
 // --- 4. UPLOAD GAMBAR KE BASE64 ---
-document.getElementById('coverFile').addEventListener('change', function(e) {
+document.getElementById('coverFile')?.addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
@@ -85,9 +92,8 @@ document.getElementById('coverFile').addEventListener('change', function(e) {
 });
 
 // --- 5. PENYIMPANAN DATA NOVEL ---
-document.getElementById('newNovelForm').addEventListener('submit', async (e) => {
+document.getElementById('newNovelForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
     const user = firebase.auth().currentUser;
     if (!user) return alert("Sila login!");
     if (selectedGenres.length === 0) return alert("Sila pilih sekurang-kurangnya satu genre!");
@@ -117,11 +123,11 @@ document.getElementById('newNovelForm').addEventListener('submit', async (e) => 
     } catch (e) { alert("Ralat: " + e.message); }
 });
 
-// --- 6. MUAT SENARAI NOVEL (DROPDOWN & TABLE) ---
+// --- 6. MUAT SENARAI NOVEL ---
 async function loadNovelList() {
     const select = document.getElementById('selectNovel');
-    const snapshot = await db.collection('novels').orderBy('title').get();
     if(!select) return;
+    const snapshot = await db.collection('novels').orderBy('title').get();
     select.innerHTML = '<option value="">Pilih Novel...</option>';
     snapshot.forEach(doc => {
         select.innerHTML += `<option value="${doc.id}">${doc.data().title}</option>`;
@@ -157,7 +163,7 @@ async function loadNovelTable() {
 }
 
 // --- 7. PENYIMPANAN DATA BAB ---
-document.getElementById('updateChapterForm').addEventListener('submit', async (e) => {
+document.getElementById('updateChapterForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const novelId = document.getElementById('selectNovel').value;
     const num = document.getElementById('chapterNum').value;
@@ -182,7 +188,6 @@ async function editNovel(id) {
     document.getElementById('newTitle').value = data.title;
     document.getElementById('newSinopsis').value = data.description;
 
-    // Reset dan Set Genre
     selectedGenres = Array.isArray(data.genre) ? data.genre : [data.genre];
     document.querySelectorAll('.genre-item').forEach(item => {
         item.classList.toggle('selected', selectedGenres.includes(item.getAttribute('data-value')));
@@ -217,16 +222,24 @@ async function deleteNovel(id, title) {
 function initTheme() {
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
 
     if (localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light-mode');
+        body.classList.add('light-mode');
         themeIcon?.classList.replace('fa-moon', 'fa-sun');
     }
 
     themeToggle?.addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
-        const isLight = document.body.classList.contains('light-mode');
+        body.classList.toggle('light-mode');
+        const isLight = body.classList.contains('light-mode');
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
-        themeIcon?.classList.replace(isLight ? 'fa-moon' : 'fa-sun', isLight ? 'fa-sun' : 'fa-moon');
+        
+        if (themeIcon) {
+            if (isLight) {
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            }
+        }
     });
 }
