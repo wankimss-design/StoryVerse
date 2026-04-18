@@ -4,8 +4,7 @@ body {
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* --- 1. IKON BAR KANAN ATAS --- */
-/* Pastikan div "nav-container-floating" dalam HTML anda dibungkus dengan class ini */
+/* --- 1. POSISI NAV KANAN ATAS --- */
 .fixed.bottom-10 { 
     top: 20px !important;
     right: 20px !important;
@@ -33,45 +32,37 @@ body {
     box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.1);
 }
 
-/* Style Cantik untuk Input Nombor Bab */
-input[type="number"] {
-    -webkit-appearance: none;
-    margin: 0;
-    -moz-appearance: textfield;
-    border: 2px solid rgba(168, 85, 247, 0.2);
-}
-
-input[type="number"]:focus {
-    border-color: #a855f7;
-    box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
-}
-
-/* --- 3. FIX GENRE DROPDOWN (PENTING) --- */
-.relative { position: relative; } /* Pastikan parent genre adalah relative */
+/* --- 3. GENRE DROPDOWN SYSTEM (Satu Definisi Sahaja) --- */
+.relative { position: relative; }
 
 #genreDropdown {
-    display: none; /* Sembunyi asal */
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    z-index: 9999 !important;
+    z-index: 9999;
     background: #151515;
     border: 1px solid rgba(168, 85, 247, 0.2);
     border-radius: 1rem;
     margin-top: 8px;
-    overflow: hidden;
+    overflow-y: auto;
+    max-height: 250px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    
+    /* Sembunyi secara default */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px) scale(0.95);
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Apabila Aktif */
 #genreDropdown.active {
-    display: block; /* Guna block supaya boleh ditekan */
-    animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
 }
 
 .genre-item {
@@ -83,6 +74,7 @@ input[type="number"]:focus {
     transition: all 0.2s ease;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     border-left: 3px solid transparent;
@@ -91,7 +83,6 @@ input[type="number"]:focus {
 .genre-item:hover {
     background: rgba(168, 85, 247, 0.1);
     color: #a855f7;
-    padding-left: 25px;
 }
 
 .genre-item.selected {
@@ -100,47 +91,34 @@ input[type="number"]:focus {
     border-left: 3px solid #a855f7;
 }
 
-/* --- 4. LIGHT MODE (OVERWRITE TAILWIND) --- */
-body.light-mode {
-    background-color: #f3f4f6 !important;
-    color: #111827 !important;
+.genre-item.selected i {
+    opacity: 1 !important;
 }
+
+#genreChevron.rotate {
+    transform: rotate(180deg);
+}
+
+/* --- 4. LIGHT MODE --- */
+body.light-mode { background-color: #f3f4f6 !important; color: #111827 !important; }
 
 body.light-mode aside, 
-body.light-mode section {
-    background-color: #ffffff !important;
-    border-color: #e5e7eb !important;
-    color: #111827 !important;
+body.light-mode section,
+body.light-mode #genreDropdown { 
+    background-color: #ffffff !important; 
+    border-color: #e5e7eb !important; 
 }
 
-body.light-mode .admin-input,
-body.light-mode input[type="number"] {
+body.light-mode .admin-input {
     background-color: #ffffff !important;
     border: 1px solid #d1d5db !important;
     color: #111827 !important;
 }
 
-body.light-mode h1, 
-body.light-mode h2, 
-body.light-mode label {
-    color: #111827 !important;
-}
+body.light-mode .genre-item { color: #6b7280; }
+body.light-mode .genre-item.selected { background: #f3e8ff; color: #a855f7; }
 
-body.light-mode #genreDropdown {
-    background: white;
-    border-color: #e5e7eb;
-}
-
-body.light-mode .genre-item {
-    color: #6b7280;
-}
-
-body.light-mode .genre-item.selected {
-    background: #f3e8ff;
-    color: #a855f7;
-}
-
-/* --- 5. FLOATING NAV STYLE --- */
+/* --- 5. FLOATING NAV --- */
 .nav-container-floating {
     background: rgba(21, 21, 21, 0.8);
     backdrop-filter: blur(10px);
@@ -158,10 +136,4 @@ body.light-mode .genre-item.selected {
     border-radius: 12px;
     color: #9ca3af;
     transition: all 0.3s ease;
-}
-
-.nav-btn-icon:hover {
-    background: rgba(168, 85, 247, 0.1);
-    color: #a855f7;
-    transform: translateY(-3px);
 }
