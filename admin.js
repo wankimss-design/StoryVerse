@@ -111,9 +111,17 @@ function initNovelDropdownLogic() {
     });
 }
 
-// 4. FUNGSI SIMPAN NOVEL BARU (Kekal)
+// 4. FUNGSI SIMPAN NOVEL BARU (SUDAH DIPERBAIKI)
 async function saveNovel(e) {
     e.preventDefault();
+    const user = firebase.auth().currentUser; // AMBIL USER YANG SEDANG LOGIN
+
+    // Jika user belum login, jangan bagi upload
+    if (!user) {
+        alert("Sila log masuk untuk menerbitkan karya!");
+        return;
+    }
+
     const btn = document.getElementById('mainSubmitBtn');
     const title = document.getElementById('newTitle').value;
     const synopsis = document.getElementById('newSinopsis').value;
@@ -138,16 +146,22 @@ async function saveNovel(e) {
             base64Image = await convertToBase64(file);
         }
 
+        // --- SIMPAN DATA KE FIRESTORE ---
         await db.collection('novels').add({
             title: title,
             synopsis: synopsis,
             genres: selectedGenres,
             coverImage: base64Image,
+            authorId: user.uid, // <--- INI WAJIB ADA supaya muncul di Profil
+            authorName: user.displayName || "Penulis StoryVerse", // Nama penulis
+            views: 0, // Set tontonan awal kepada 0
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
         alert('Karya berjaya diterbitkan!');
         e.target.reset();
+        
+        // Reset UI Form
         document.getElementById('fileNameDisplay').innerText = "PILIH GAMBAR";
         selectedGenres = [];
         resetGenreUI();
