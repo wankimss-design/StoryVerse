@@ -1,15 +1,33 @@
-// --- 1. FIREBASE AUTH ---
+// --- 1. FIREBASE AUTH & USER PROFILE ---
 firebase.auth().onAuthStateChanged((user) => {
     if (!user) {
+        // Jika tidak log masuk, hantar ke auth.html
         window.location.href = "auth.html";
     } else {
-        const navAvatar = document.getElementById('navAvatar');
-        if (navAvatar) navAvatar.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName || 'U'}&background=a855f7&color=fff`;
-        loadKatalog();
+        // Ambil elemen imej profil di navbar
+        const navProfileImg = document.getElementById('navProfileImg');
+        
+        if (navProfileImg) {
+            // 1. Cuba ambil photoURL dari Firebase Auth dahulu
+            // 2. Jika tiada, sistem akan jana avatar automatik berdasarkan nama/email
+            const fallbackAvatar = `https://ui-avatars.com/api/?name=${user.displayName || user.email}&background=a855f7&color=fff`;
+            navProfileImg.src = user.photoURL || fallbackAvatar;
+
+            // OPTIONAL: Jika anda simpan URL gambar dalam Firestore (Custom Profile)
+            /*
+            firebase.firestore().collection("users").doc(user.uid).onSnapshot((doc) => {
+                if (doc.exists && doc.data().profileImage) {
+                    navProfileImg.src = doc.data().profileImage;
+                }
+            });
+            */
+        }
+        
+        loadKatalog(); // Muat data novel selepas auth berjaya
     }
 });
 
-// --- 2. DROPDOWN ---
+// --- 2. DROPDOWN LOGIC ---
 function toggleDropdown(id) {
     const menus = ['genreMenu', 'statusMenu'];
     menus.forEach(m => {
@@ -24,7 +42,7 @@ window.onclick = (e) => {
     }
 };
 
-// --- 3. DATA & RENDER ---
+// --- 3. DATA & RENDER (ARRAY NOVEL) ---
 const novels = [
     { title: "Sumpahan Penulis Terakhir", genre: "Seram", status: "Complete", cover: "https://images.unsplash.com/photo-1543004629-142a76f50c8e?w=500" },
     { title: "Cinta Di Balik Dimensi", genre: "Romantik", status: "Ongoing", cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=500" },
@@ -33,7 +51,10 @@ const novels = [
 ];
 
 function loadKatalog() {
-    const term = document.getElementById('searchInput').value.toLowerCase();
+    const searchInput = document.getElementById('searchInput');
+    if (!searchInput) return;
+
+    const term = searchInput.value.toLowerCase();
     const selectedGenres = Array.from(document.querySelectorAll('input[name="genre"]:checked')).map(i => i.value);
     const selectedStatus = document.querySelector('input[name="status"]:checked')?.value || "";
 
@@ -57,7 +78,7 @@ function renderGrid(data) {
     }
 
     grid.innerHTML = data.map(n => `
-        <div class="novel-card group cursor-pointer">
+        <div class="novel-card group cursor-pointer" onclick="location.href='reader.html?title=${encodeURIComponent(n.title)}'">
             <div class="card-image-container">
                 <img src="${n.cover}" alt="${n.title}">
                 <div class="read-overlay">
@@ -74,14 +95,25 @@ function renderGrid(data) {
     `).join('');
 }
 
-// --- 4. THEME & LOGOUT ---
+// --- 4. THEME & UTILITY ---
 function toggleTheme() {
     document.body.classList.toggle('light-mode');
+    const themeIcon = document.getElementById('themeIcon');
     const isLight = document.body.classList.contains('light-mode');
-    document.getElementById('themeIcon').classList.replace(isLight ? 'fa-circle-half-stroke' : 'fa-sun', isLight ? 'fa-sun' : 'fa-circle-half-stroke');
+    
+    if (themeIcon) {
+        themeIcon.classList.replace(isLight ? 'fa-circle-half-stroke' : 'fa-sun', isLight ? 'fa-sun' : 'fa-circle-half-stroke');
+    }
 }
 
-document.getElementById('searchInput')?.addEventListener('input', loadKatalog);
-document.querySelectorAll('input').forEach(i => i.addEventListener('change', loadKatalog));
+function logout() {
+    firebase.auth().signOut().then(() => {
+        window.location.href = "auth.html";
+    });
+}
 
-function logout() { firebase.auth().signOut().then(() => window.location.href = "auth.html"); }
+// Event Listeners
+document.getElementById('searchInput')?.addEventListener('input', loadKatalog);
+document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(i => {
+    i.addEventListener('change', loadKatalog);
+});
