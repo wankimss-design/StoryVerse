@@ -1,0 +1,34 @@
+/* --- READER STYLES --- */
+body {
+    scroll-behavior: smooth;
+}
+
+/* Guna font Serif (Lora) untuk pembacaan lebih selesa */
+article {
+    text-align: justify;
+}
+
+/* Light Mode untuk Reader */
+body.light-mode {
+    background-color: #fcf8f2 !important; /* Warna kertas lama supaya tak sakit mata */
+    color: #2d3436 !important;
+}
+
+body.light-mode nav {
+    background-color: rgba(252, 248, 242, 0.9) !important;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+body.light-mode #readerNovelTitle,
+body.light-mode #chapterTitleDisplay {
+    color: #1a1a1a !important;
+}
+
+body.light-mode #novelContent {
+    color: #3d3d3d !important;
+}
+
+body.light-mode .bg-white\/5 {
+    background-color: rgba(0,0,0,0.05) !important;
+    border-color: rgba(0,0,0,0.05) !important;
+}
