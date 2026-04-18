@@ -24,7 +24,6 @@ body {
 
 /* --- 3. GENRE DROPDOWN (FLOATING) --- */
 #genreDropdown {
-    display: none;
     position: absolute;
     top: 100%;
     left: 0;
@@ -38,8 +37,8 @@ body {
     overflow: hidden;
 }
 
-#genreDropdown.active {
-    display: block !important;
+.rotate {
+    transform: rotate(180deg);
 }
 
 .genre-item {
