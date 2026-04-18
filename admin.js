@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// LOGIK GENRE
 function initGenreLogic() {
     const genreToggle = document.getElementById('genreToggle');
     const genreDropdown = document.getElementById('genreDropdown');
@@ -42,14 +41,17 @@ function initGenreLogic() {
                 icon.style.opacity = "1";
             }
 
-            genreDisplay.innerText = selectedGenres.length > 0 ? selectedGenres.join(', ').toUpperCase() : "PILIH GENRE...";
-            genreDisplay.style.color = selectedGenres.length > 0 ? (document.body.classList.contains('light-mode') ? "#1b1b1b" : "white") : "#9ca3af";
+            genreDisplay.innerText = selectedGenres.length > 0 
+                ? selectedGenres.join(', ').toUpperCase() 
+                : "PILIH GENRE...";
         });
     });
 
-    window.addEventListener('click', () => {
-        genreDropdown.classList.remove('active');
-        genreChevron?.classList.remove('rotate');
+    window.addEventListener('click', (e) => {
+        if (!genreToggle.contains(e.target) && !genreDropdown.contains(e.target)) {
+            genreDropdown.classList.add('hidden');
+            genreChevron?.classList.remove('rotate');
+        }
     });
 }
 
