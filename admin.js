@@ -11,7 +11,6 @@ function initGenreLogic() {
 
     if (!genreToggle || !genreDropdown) return;
 
-    // Klik untuk Buka/Tutup dropdown
     genreToggle.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -19,7 +18,6 @@ function initGenreLogic() {
         genreChevron?.classList.toggle('rotate');
     });
 
-    // Pilih Genre (Multi-select)
     document.querySelectorAll('.genre-item').forEach(item => {
         item.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -33,7 +31,6 @@ function initGenreLogic() {
                 item.classList.add('selected');
             }
 
-            // Kemaskini teks paparan butang
             if (selectedGenres.length > 0) {
                 genreDisplay.innerText = selectedGenres.join(', ').toUpperCase();
                 genreDisplay.classList.add('text-white');
@@ -46,40 +43,65 @@ function initGenreLogic() {
         });
     });
 
-    // Tutup dropdown jika klik di luar kawasan
     window.addEventListener('click', () => {
         genreDropdown.classList.remove('active');
         genreChevron?.classList.remove('rotate');
     });
 }
 
-// 3. FUNGSI SIMPAN NOVEL KE FIREBASE
+// 3. LOGIK TUKAR TEMA (LIGHT/DARK)
+function initThemeLogic() {
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            
+            // Simpan pilihan user dalam local storage (Optional tapi bagus)
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+
+            if (isLight) {
+                themeIcon?.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                themeIcon?.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
+    }
+
+    // Semak tema asal semasa load
+    if (localStorage.getItem('theme') === 'light') {
+        document.body.classList.add('light-mode');
+        themeIcon?.classList.replace('fa-moon', 'fa-sun');
+    }
+}
+
+// 4. FUNGSI SIMPAN NOVEL KE FIREBASE
 async function saveNovel(e) {
-    if (e) e.preventDefault(); // Elakkan page refresh
+    if (e) e.preventDefault();
 
-    const title = document.getElementById('newTitle').value;
-    const synopsis = document.getElementById('newSinopsis').value;
+    const titleInput = document.getElementById('newTitle');
+    const synopsisInput = document.getElementById('newSinopsis');
     const btn = document.getElementById('mainSubmitBtn');
+    const genreDisplay = document.getElementById('selectedGenresDisplay');
 
-    // Validasi input
-    if (!title || selectedGenres.length === 0) {
+    if (!titleInput.value || selectedGenres.length === 0) {
         alert("Sila isi tajuk dan pilih sekurang-kurangnya satu genre!");
         return;
     }
 
     try {
-        // Loading state
         btn.disabled = true;
         btn.innerHTML = 'Memproses... <i class="fa-solid fa-spinner fa-spin"></i>';
 
         const novelData = {
-            title: title,
-            synopsis: synopsis,
+            title: titleInput.value,
+            synopsis: synopsisInput.value,
             genres: selectedGenres,
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         };
 
-        // Simpan ke Firestore
         await db.collection('novels').add(novelData);
         alert('Novel berjaya diterbitkan!');
 
@@ -88,22 +110,23 @@ async function saveNovel(e) {
         selectedGenres = []; 
         document.querySelectorAll('.genre-item').forEach(item => item.classList.remove('selected'));
         genreDisplay.innerText = "PILIH GENRE...";
-        genreDisplay.classList.replace('text-white', 'text-gray-400');
+        genreDisplay.classList.add('text-gray-400');
+        genreDisplay.classList.remove('text-white');
 
     } catch (error) {
         console.error("Ralat: ", error);
-        alert("Gagal menerbitkan novel. Sila cuba lagi.");
+        alert("Gagal menerbitkan novel.");
     } finally {
         btn.disabled = false;
         btn.innerHTML = 'Publish Novel <i class="fa-solid fa-paper-plane text-xs"></i>';
     }
 }
 
-// 4. JALANKAN SEMASA PAGE DIBUKA
+// 5. JALANKAN SEMUA
 document.addEventListener('DOMContentLoaded', () => {
     initGenreLogic();
+    initThemeLogic();
     
-    // Bind fungsi saveNovel ke form submit
     const novelForm = document.getElementById('newNovelForm');
     if (novelForm) {
         novelForm.addEventListener('submit', saveNovel);
