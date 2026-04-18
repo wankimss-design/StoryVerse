@@ -40,16 +40,26 @@
             </div>
         </aside>
 
-        <div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[10000]">
-            <div class="nav-container-floating flex items-center bg-[#151515]/80 backdrop-blur-xl p-1.5 rounded-2xl border border-white/5 shadow-2xl">
-                <a href="index.html" class="nav-btn-icon" title="Home"><i class="fa-solid fa-house"></i></a>
-                <a href="katalog.html" class="nav-btn-icon" title="Archive"><i class="fa-solid fa-box-archive"></i></a>
-                <a href="profile.html" class="nav-btn-icon" title="Profile"><i class="fa-solid fa-user"></i></a>
-                <button id="themeToggle" class="nav-btn-icon" title="Toggle Theme">
-                    <i class="fa-solid fa-moon" id="themeIcon"></i>
-                </button>
-            </div>
+       <div class="fixed top-5 right-5 z-[9999] hidden md:flex gap-3">
+            <a href="index.html" class="nav-btn-icon"><i class="fa-solid fa-house"></i></a>
+            <a href="katalog.html" class="nav-btn-icon"><i class="fa-solid fa-box-archive"></i></a>
+            <a href="profile.html" class="nav-btn-icon"><i class="fa-solid fa-user"></i></a>
+        
+            <!-- THEME BUTTON -->
+            <button id="themeToggle" class="nav-btn-icon" title="Toggle Theme">
+                <i class="fa-solid fa-moon" id="themeIcon"></i>
+            </button>
+       <div class="flex bg-[#151515] p-2 rounded-2xl gap-2">
+            <a href="index.html" class="nav-btn-icon"><i class="fa-solid fa-house"></i></a>
+            <a href="katalog.html" class="nav-btn-icon"><i class="fa-solid fa-box-archive"></i></a>
+            <a href="profile.html" class="nav-btn-icon"><i class="fa-solid fa-user"></i></a>
+        
+            <!-- THEME BUTTON -->
+            <button id="themeToggle" class="nav-btn-icon">
+                <i class="fa-solid fa-moon" id="themeIcon"></i>
+            </button>
         </div>
+    </div>
 
         <main class="flex-1 p-6 md:p-12 overflow-y-auto">
             <header class="mb-12">
