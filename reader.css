@@ -174,3 +174,25 @@ body.light-mode #prevBtn {
 #chapterSelector {
     display: none;
 }
+/* Gaya Komen */
+.comment-card {
+    padding: 1rem;
+    border-radius: 1.25rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.light-mode .comment-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+body.light-mode #commentInput {
+    color: #2d3436;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode #commentInput:focus {
+    border-color: #a855f7;
+}
