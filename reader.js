@@ -1,75 +1,47 @@
-let currentFontSize = 18;
+// Global State
+let currentFontSize = parseInt(localStorage.getItem('readerFontSize')) || 18;
+let currentFontFamily = localStorage.getItem('readerFontFamily') || 'Lora';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Ambil data dari URL
     const params = new URLSearchParams(window.location.search);
     const title = params.get('title') || "Novel StoryVerse";
     const chapter = parseInt(params.get('chapter')) || 1;
 
-    // 2. Papar Data Awal
-    updateUI(title, chapter);
+    // 1. Inisialisasi UI
+    updateHeaderUI(title, chapter);
+    loadChapterContent(chapter);
+    applyStoredSettings();
 
-    // 3. Load Content (Simulasi)
-    loadStoryContent(chapter);
-
-    // 4. Firebase Sync (History & Bookmark)
-    if (typeof firebase !== 'undefined') {
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                saveReadingHistory(user.uid, title, chapter);
-            }
-        });
-    }
-
-    // 5. Muat turun saiz font dari storage jika ada
-    const savedSize = localStorage.getItem('readerFontSize');
-    if (savedSize) {
-        currentFontSize = parseInt(savedSize);
-        applyFontSize();
-    }
+    // 2. Firebase Sync (Sejarah Pembacaan)
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            saveHistoryToFirebase(user.uid, title, chapter);
+        }
+    });
 });
 
-// --- FUNGSI UTAMA ---
+// --- PENGURUSAN KANDUNGAN ---
 
-function updateUI(title, chapter) {
+function updateHeaderUI(title, chapter) {
     document.getElementById('readerNovelTitle').innerText = title;
     document.getElementById('readerChapterNum').innerText = `Bab ${chapter.toString().padStart(2, '0')}`;
     document.getElementById('chapterTitleDisplay').innerText = `Bahagian Ke-${chapter}`;
-    document.title = `Bab ${chapter} - ${title} | StoryVerse`;
+    document.title = `Bab ${chapter} - ${title}`;
     document.getElementById('prevBtn').disabled = (chapter <= 1);
 }
 
-function loadStoryContent(chapter) {
-    // Di sini anda boleh buat fetch dari Firebase/API berdasarkan chapter
-    const contentEl = document.getElementById('novelContent');
-    contentEl.innerHTML = `
-        <p>Langkah pertamanya terhenti di hadapan sebuah rak buku usang. Udara di sekelilingnya mula bergetar, memancarkan aura biru yang misteri. Dia tahu, ini bukan perpustakaan biasa.</p>
-        <p>"Adakah anda bersedia?" satu suara halus berbisik di telinganya. Aliff memalingkan wajah, namun tiada sesiapa di sana. Hanya bayang-bayang buku yang menari mengikut rentak cahaya.</p>
-        <p>Dia menyentuh sebuah buku berkulit tebal. Tiba-tiba, ruang di sekelilingnya berpusing. Realiti mula pecah menjadi kepingan dimensi yang tidak logik. Inilah pengembaraan yang dicarinya selama ini.</p>
+function loadChapterContent(chapter) {
+    const content = document.getElementById('novelContent');
+    // Simulasi data bab (Sesuai dengan niche romance fiction anda)
+    content.innerHTML = `
+        <p>Dia berdiri di sana, di bawah rintik hujan yang kian lebat, memerhatikan bayang-bayang yang semakin menjauh. Aliff tahu, setiap langkah yang diambilnya malam ini adalah satu pengkhianatan kepada hatinya sendiri.</p>
+        <p>"Kenapa sekarang?" bisiknya perlahan. Suaranya hilang ditelan deru angin. Di tangannya, sehelai nota lama yang kian luntur tulisannya digenggam erat. Rahsia yang disimpan selama sepuluh tahun akhirnya terbongkar di hadapan matanya.</p>
+        <p>Tiba-tiba, satu cahaya lembut muncul dari hujung jalan. Bukan cahaya lampu jalan, tetapi sesuatu yang lebih murni. Sesuatu yang mengingatkannya kepada janji yang pernah dibuatnya di dimensi yang lain. Cinta ini mungkin mustahil, tetapi Aliff tidak akan sesekali berpaling lagi.</p>
     `;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// --- SISTEM FIREBASE HISTORY ---
-
-async function saveReadingHistory(uid, title, chapter) {
-    const novelId = title.replace(/\s+/g, '-').toLowerCase();
-    const historyRef = db.collection('users').doc(uid).collection('history').doc(novelId);
-
-    try {
-        await historyRef.set({
-            title: title,
-            lastChapter: chapter,
-            lastRead: firebase.firestore.FieldValue.serverTimestamp(),
-            novelId: novelId
-        }, { merge: true });
-        console.log("Sejarah disimpan!");
-    } catch (e) {
-        console.error("Gagal simpan sejarah:", e);
-    }
-}
-
-// --- TETAPAN PEMBACAAN ---
+// --- SISTEM TETAPAN (FONT & TEMA) ---
 
 function toggleSettings() {
     const panel = document.getElementById('settingsPanel');
@@ -81,20 +53,38 @@ function changeFontSize(delta) {
     if (currentFontSize < 14) currentFontSize = 14;
     if (currentFontSize > 32) currentFontSize = 32;
     
-    applyFontSize();
+    updateTypography();
     localStorage.setItem('readerFontSize', currentFontSize);
 }
 
-function applyFontSize() {
-    const content = document.getElementById('novelContent');
-    content.style.fontSize = `${currentFontSize}px`;
-    document.getElementById('fontSizeDisplay').innerText = `${currentFontSize}px`;
-}
-
 function changeFontFace(family) {
-    document.getElementById('novelContent').style.fontFamily = family;
+    currentFontFamily = family;
+    updateTypography();
     localStorage.setItem('readerFontFamily', family);
 }
+
+function applyStoredSettings() {
+    updateTypography();
+}
+
+function updateTypography() {
+    const content = document.getElementById('novelContent');
+    const display = document.getElementById('fontSizeDisplay');
+    
+    content.style.fontSize = `${currentFontSize}px`;
+    content.style.fontFamily = currentFontFamily;
+    if (display) display.innerText = `${currentFontSize}px`;
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('light-mode');
+    const icon = document.getElementById('themeIcon');
+    const isLight = document.body.classList.contains('light-mode');
+    
+    icon.classList.replace(isLight ? 'fa-moon' : 'fa-sun', isLight ? 'fa-sun' : 'fa-moon');
+}
+
+// --- NAVIGASI BAB ---
 
 function changeChapter(direction) {
     const params = new URLSearchParams(window.location.search);
@@ -104,14 +94,23 @@ function changeChapter(direction) {
     chapter += direction;
     if (chapter < 1) return;
 
-    window.location.href = `reader.html?title=${encodeURIComponent(title)}&chapter=${chapter}`;
+    // Kekalkan params sedia ada (termasuk cover jika ada)
+    params.set('chapter', chapter);
+    window.location.href = `reader.html?${params.toString()}`;
 }
 
-function toggleTheme() {
-    document.body.classList.toggle('light-mode');
-    const icon = document.getElementById('themeIcon');
-    const isLight = document.body.classList.contains('light-mode');
-    
-    icon.classList.toggle('fa-moon', !isLight);
-    icon.classList.toggle('fa-sun', isLight);
+// --- FIREBASE HISTORY ---
+
+async function saveHistoryToFirebase(uid, title, chapter) {
+    const novelId = title.replace(/\s+/g, '-').toLowerCase();
+    try {
+        await db.collection('users').doc(uid).collection('history').doc(novelId).set({
+            title: title,
+            lastChapter: chapter,
+            lastRead: firebase.firestore.FieldValue.serverTimestamp(),
+            novelId: novelId
+        }, { merge: true });
+    } catch (e) {
+        console.error("Sejarah tidak dapat disimpan:", e);
+    }
 }
