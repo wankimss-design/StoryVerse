@@ -1,9 +1,10 @@
-// 1. Deklarasi Global (Hanya sekali sahaja)
+// 1. Deklarasi Global
 let selectedGenres = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     initGenreLogic();
     initThemeLogic();
+    fetchNovels(); // Tarik data table
     
     const novelForm = document.getElementById('newNovelForm');
     if (novelForm) {
@@ -63,10 +64,9 @@ function initGenreLogic() {
     });
 }
 
-// 3. Logik Tema (Menyokong Desktop & Mobile)
+// 3. Logik Tema
 function initThemeLogic() {
     const themeBtns = document.querySelectorAll('.themeToggle');
-    
     const applyTheme = (isLight) => {
         if (isLight) {
             document.body.classList.add('light-mode');
@@ -91,9 +91,7 @@ function initThemeLogic() {
         });
     });
 
-    if (localStorage.getItem('theme') === 'light') {
-        applyTheme(true);
-    }
+    if (localStorage.getItem('theme') === 'light') applyTheme(true);
 }
 
 // 4. Fungsi Simpan (Firestore + Base64)
@@ -115,7 +113,6 @@ async function saveNovel(e) {
         btn.innerHTML = 'Memproses... <i class="fa-solid fa-spinner fa-spin"></i>';
 
         let base64Image = "";
-        
         if (file) {
             if (file.size > 800000) { 
                 alert("Fail terlalu besar! Sila guna gambar bawah 800KB.");
@@ -133,8 +130,6 @@ async function saveNovel(e) {
         });
 
         alert('Karya berjaya diterbitkan!');
-        
-        // Reset Segala-galanya
         document.getElementById('newNovelForm').reset();
         document.getElementById('fileNameDisplay').innerText = "PILIH GAMBAR";
         selectedGenres = [];
@@ -147,14 +142,56 @@ async function saveNovel(e) {
 
     } catch (err) {
         console.error("Ralat:", err);
-        if (err.message !== "File too large") alert('Gagal menyimpan ke Firestore.');
+        if (err.message !== "File too large") alert('Gagal menyimpan.');
     } finally {
         btn.disabled = false;
         btn.innerHTML = 'Publish Novel <i class="fa-solid fa-paper-plane text-xs"></i>';
     }
 }
 
-// 5. Helper: Tukar Gambar ke Base64
+// 5. Papar Data Real-time
+async function fetchNovels() {
+    const tbody = document.getElementById('novelTableBody');
+    if (!tbody) return;
+
+    db.collection('novels').orderBy('createdAt', 'desc').onSnapshot((snapshot) => {
+        tbody.innerHTML = ''; 
+        if (snapshot.empty) {
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-gray-500">Tiada karya dijumpai.</td></tr>`;
+            return;
+        }
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const row = `
+                <tr class="bg-white/5 rounded-2xl overflow-hidden hover:bg-white/10 transition-all group">
+                    <td class="px-6 py-4">
+                        <img src="${data.coverImage || 'https://via.placeholder.com/150'}" class="w-12 h-16 object-cover rounded-lg shadow-lg border border-white/10 group-hover:scale-105 transition-transform">
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="font-bold text-white group-hover:text-purple-400 transition-colors uppercase text-sm">${data.title}</p>
+                        <p class="text-[10px] text-gray-500 mt-1 uppercase">ID: ${doc.id.substring(0,8)}</p>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="flex flex-wrap gap-1">
+                            ${data.genres ? data.genres.map(g => `<span class="px-2 py-0.5 bg-purple-600/10 text-purple-400 text-[9px] font-black rounded border border-purple-500/20 uppercase">${g}</span>`).join('') : '-'}
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="deleteNovel('${doc.id}')" class="w-10 h-10 flex items-center justify-center text-red-500 hover:bg-red-500/10 rounded-xl transition-all">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                </tr>`;
+            tbody.innerHTML += row;
+        });
+    });
+}
+
+// 6. Fungsi Padam & Base64
+async function deleteNovel(id) {
+    if (confirm('Padam karya ini?')) await db.collection('novels').doc(id).delete();
+}
+
 function convertToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
