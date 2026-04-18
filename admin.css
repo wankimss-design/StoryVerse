@@ -1,28 +1,70 @@
-/* --- 1. ASAS & TRANSISI --- */
+/* --- 1. ASAS --- */
 body { 
     font-family: 'Plus Jakarta Sans', sans-serif; 
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- 2. POSISI NAV (KANAN ATAS) --- */
-/* Memastikan bar navigasi terapung di penjuru kanan atas */
-.fixed.bottom-10 { 
-    top: 20px !important;
-    right: 20px !important;
-    bottom: auto !important;
-    left: auto !important;
-    transform: none !important;
+/* --- 2. INPUTS (FIX KOTAK PUTIH) --- */
+.admin-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 1rem;
+    padding: 0.8rem 1.25rem;
+    color: white !important;
+    font-size: 0.875rem;
+    outline: none;
+    transition: all 0.3s ease;
 }
 
-/* --- 3. NAV ICON & EFFECTS --- */
-.nav-container-floating {
-    background: rgba(21, 21, 21, 0.8) !important;
-    backdrop-filter: blur(10px);
-    padding: 8px;
-    border-radius: 1.5rem;
-    border: 1px solid rgba(255,255,255,0.05);
+.admin-input:focus {
+    border-color: #a855f7 !important;
+    background: rgba(168, 85, 247, 0.05) !important;
 }
 
+/* --- 3. GENRE DROPDOWN (FLOATING) --- */
+#genreDropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 9999 !important;
+    background: #151515 !important;
+    border: 1px solid rgba(168, 85, 247, 0.3) !important;
+    border-radius: 1rem;
+    margin-top: 8px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+#genreDropdown.active {
+    display: block !important;
+}
+
+.genre-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.genre-item:hover {
+    background: rgba(168, 85, 247, 0.1);
+}
+
+.genre-item.selected {
+    background: rgba(168, 85, 247, 0.2) !important;
+    color: white !important;
+}
+
+.genre-item.selected i {
+    opacity: 1 !important;
+}
+
+/* --- 4. FLOATING NAV --- */
 .nav-btn-icon {
     width: 42px;
     height: 42px;
@@ -30,89 +72,28 @@ body {
     align-items: center;
     justify-content: center;
     border-radius: 12px;
-    color: #9ca3af !important; /* Warna kelabu asal */
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    color: #9ca3af !important;
+    transition: all 0.3s ease !important;
     cursor: pointer;
 }
 
-/* Efek hover ungu yang hilang tadi */
 .nav-btn-icon:hover {
     background: rgba(168, 85, 247, 0.2) !important;
     color: #a855f7 !important;
     transform: translateY(-3px);
 }
 
-/* --- 4. GENRE DROPDOWN (FIXED) --- */
-#genreDropdown {
-    display: none; /* Kita guna display:none untuk elak masalah pointer-events */
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 9999 !important;
-    background: #151515 !important;
-    border: 1px solid rgba(168, 85, 247, 0.2) !important;
-    border-radius: 1rem;
-    margin-top: 8px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    overflow: hidden;
-}
-
-/* Apabila class .active ditambah oleh JS */
-#genreDropdown.active {
-    display: block !important;
-    animation: slideDown 0.2s ease-out;
-}
-
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.genre-item {
-    padding: 14px 20px;
-    font-size: 11px;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.4);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    justify-content: space-between;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-}
-
-.genre-item:hover {
-    background: rgba(168, 85, 247, 0.1);
-    color: #a855f7;
-}
-
-.genre-item.selected {
-    background: rgba(168, 85, 247, 0.2) !important;
-    color: white !important;
-    border-left: 3px solid #a855f7;
-}
-
-#genreChevron.rotate {
-    transform: rotate(180deg);
-}
-
-/* --- 5. LIGHT MODE (FULL OVERRIDE) --- */
-/* Menggunakan !important untuk lawan Tailwind */
-body.light-mode {
-    background-color: #f3f4f6 !important;
-    color: #1b1b1b !important;
-}
+/* --- 5. LIGHT MODE OVERRIDES --- */
+body.light-mode { background-color: #f3f4f6 !important; color: #1b1b1b !important; }
 
 body.light-mode aside, 
-body.light-mode main,
-body.light-mode section {
+body.light-mode section, 
+body.light-mode main {
     background-color: #ffffff !important;
     border-color: #e5e7eb !important;
 }
 
-body.light-mode .admin-input, 
-body.light-mode #genreToggle {
+body.light-mode .admin-input {
     background-color: #f9fafb !important;
     border: 1px solid #d1d5db !important;
     color: #1b1b1b !important;
@@ -123,22 +104,11 @@ body.light-mode #genreDropdown {
     border: 1px solid #e5e7eb !important;
 }
 
-body.light-mode .genre-item {
-    color: #4b5563 !important;
-}
-
-body.light-mode .genre-item:hover {
-    background: #f3e8ff !important;
-}
-
-body.light-mode h1, 
-body.light-mode h2, 
-body.light-mode label,
-body.light-mode span:not(.text-purple-500) {
+body.light-mode h1, body.light-mode h2, body.light-mode span:not(.text-purple-500) {
     color: #1b1b1b !important;
 }
 
 body.light-mode .nav-container-floating {
-    background: rgba(255, 255, 255, 0.8) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
     border: 1px solid #e5e7eb !important;
 }
