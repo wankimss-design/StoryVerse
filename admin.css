@@ -1,115 +1,53 @@
-/* --- 1. ASAS --- */
-body { 
-    font-family: 'Plus Jakarta Sans', sans-serif; 
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
+/* Base Style */
+body { font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.3s ease; }
 
-/* --- 2. INPUTS (FIX KOTAK PUTIH) --- */
 .admin-input {
     width: 100%;
     background: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 1rem;
-    padding: 0.8rem 1.25rem;
+    padding: 1rem;
     color: white !important;
-    font-size: 0.875rem;
     outline: none;
-    transition: all 0.3s ease;
 }
 
-.admin-input:focus {
-    border-color: #a855f7 !important;
-    background: rgba(168, 85, 247, 0.05) !important;
-}
-
-/* --- 3. GENRE DROPDOWN (FLOATING) --- */
+/* GENRE LOGIC */
 #genreDropdown {
-    display: none; /* Sembunyi asal */
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    z-index: 9999 !important; /* Kekal tinggi */
-    background: #151515 !important;
-    border: 1px solid rgba(168, 85, 247, 0.3) !important;
-    border-radius: 1rem;
-    margin-top: 8px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-    overflow: hidden;
+    display: none; /* Default tersembunyi */
 }
 
-/* Paksa papar bila ada class .active */
-#genreDropdown.active {
-    display: block !important;
-}
-
-.genre-item {
-    padding: 12px 20px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background 0.2s;
-}
-
-.genre-item:hover {
-    background: rgba(168, 85, 247, 0.1);
+#genreDropdown.show {
+    display: block !important; /* Dipanggil oleh JS */
+    z-index: 9999 !important;
 }
 
 .genre-item.selected {
-    background: rgba(168, 85, 247, 0.2) !important;
-    color: white !important;
+    background: rgba(168, 85, 247, 0.15) !important;
+    border-left: 4px solid #a855f7;
 }
 
 .genre-item.selected i {
     opacity: 1 !important;
 }
 
-/* --- 4. FLOATING NAV --- */
+#genreChevron.rotate { transform: rotate(180deg); }
+
+/* FLOATING NAV */
 .nav-btn-icon {
-    width: 42px;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 12px;
-    color: #9ca3af !important;
-    transition: all 0.3s ease !important;
-    cursor: pointer;
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 12px; color: #9ca3af !important;
+    transition: 0.3s;
 }
 
 .nav-btn-icon:hover {
     background: rgba(168, 85, 247, 0.2) !important;
     color: #a855f7 !important;
-    transform: translateY(-3px);
 }
 
-/* --- 5. LIGHT MODE OVERRIDES --- */
-body.light-mode { background-color: #f3f4f6 !important; color: #1b1b1b !important; }
-
-body.light-mode aside, 
-body.light-mode section, 
-body.light-mode main {
-    background-color: #ffffff !important;
-    border-color: #e5e7eb !important;
-}
-
-body.light-mode .admin-input {
-    background-color: #f9fafb !important;
-    border: 1px solid #d1d5db !important;
-    color: #1b1b1b !important;
-}
-
-body.light-mode #genreDropdown {
-    background-color: #ffffff !important;
-    border: 1px solid #e5e7eb !important;
-}
-
-body.light-mode h1, body.light-mode h2, body.light-mode span:not(.text-purple-500) {
-    color: #1b1b1b !important;
-}
-
-body.light-mode .nav-container-floating {
-    background: rgba(255, 255, 255, 0.9) !important;
-    border: 1px solid #e5e7eb !important;
-}
+/* LIGHT MODE */
+body.light-mode { background: #f3f4f6 !important; color: #111827 !important; }
+body.light-mode section, body.light-mode aside { background: white !important; border-color: #e5e7eb !important; }
+body.light-mode .admin-input { background: #f9fafb !important; border-color: #d1d5db !important; color: #111827 !important; }
+body.light-mode #genreDropdown { background: white !important; border-color: #e5e7eb !important; }
+body.light-mode .genre-item { color: #4b5563 !important; }
