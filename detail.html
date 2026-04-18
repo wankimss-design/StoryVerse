@@ -30,7 +30,7 @@
 
             <div class="flex-1">
                 <span id="detailGenre" class="text-purple-500 font-black uppercase text-[10px] tracking-[0.3em] mb-4 block">Genre</span>
-                <h1 id="detailTitle" class="text-4xl md:text-6xl font-black tracking-tighter mb-6 italic uppercase">Tajuk Novel</h1>
+                <h1 id="detailTitle" class="text-4xl md:text-6xl font-black tracking-tighter mb-6 italic uppercase">Memuatkan...</h1>
                 
                 <div class="flex gap-8 mb-8 opacity-60 text-xs font-bold uppercase tracking-widest">
                     <span><i class="fa-solid fa-eye mr-2 text-purple-500"></i> 1.2k Views</span>
@@ -38,7 +38,7 @@
                     <span><i class="fa-solid fa-list mr-2 text-blue-500"></i> 10 Bab</span>
                 </div>
 
-                <p id="detailSinopsis" class="text-gray-400 leading-relaxed mb-10 text-sm md:text-base">
+                <p id="detailSinopsis" class="text-gray-400 leading-relaxed mb-10 text-sm md:text-base italic">
                     Memuatkan sinopsis...
                 </p>
 
@@ -56,35 +56,52 @@
     </main>
 
     <script>
-        // Logik untuk ambil data dari URL
         document.addEventListener('DOMContentLoaded', () => {
+            // 1. Tangkap data dari URL (Query Parameters)
             const params = new URLSearchParams(window.location.search);
-            const title = params.get('title') || "Novel Tanpa Tajuk";
             
-            // Simulasi data (Nanti boleh ambil dari Firebase)
-            document.getElementById('detailTitle').innerText = title;
-            document.getElementById('detailCover').src = "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400"; // Contoh cover
-            document.getElementById('detailGenre').innerText = "Romantik / Fantasi";
-            document.getElementById('detailSinopsis').innerText = "Ini adalah sinopsis epik bagi novel " + title + ". Kisah tentang pengembaraan seorang penulis yang terperangkap dalam dunianya sendiri dan perlu mencari jalan keluar melalui bab-bab yang ditulisnya.";
+            const title = params.get('title') || "Tajuk Tidak Ditemui";
+            const genre = params.get('genre') || "Umum";
+            const status = params.get('status') || "Unknown";
+            const cover = params.get('cover') || "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400";
 
-            // Jana Senarai Bab
+            // 2. Masukkan data ke dalam UI
+            document.getElementById('detailTitle').innerText = title;
+            document.getElementById('detailGenre').innerText = genre;
+            document.getElementById('detailCover').src = cover;
+            document.title = `${title} | StoryVerse`;
+
+            // 3. Set Sinopsis (Simulasi berasaskan tajuk & genre)
+            document.getElementById('detailSinopsis').innerText = 
+                `Terokai kisah menakjubkan dalam "${title}". Sebuah naskhah bergenre ${genre} yang membawakan emosi mendalam. Berstatus ${status}, karya ini menjanjikan plot yang tidak dijangka bagi setiap pembaca StoryVerse.`;
+
+            // 4. Jana Senarai Bab
             const list = document.getElementById('chapterList');
-            for(let i=1; i<=10; i++) {
+            list.innerHTML = ""; // Kosongkan placeholder
+            
+            for(let i = 1; i <= 10; i++) {
                 list.innerHTML += `
-                    <div class="group flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-2xl hover:border-purple-500/50 transition-all cursor-pointer">
+                    <div class="group flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-2xl hover:border-purple-500/50 transition-all cursor-pointer" 
+                         onclick="goToReader(${i})">
                         <div class="flex items-center gap-4">
                             <span class="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center text-[10px] font-black text-purple-500">${i}</span>
-                            <span class="text-sm font-bold opacity-80 group-hover:opacity-100 group-hover:text-purple-400">Bab ${i}: Tajuk Bab Menarik Disini</span>
+                            <span class="text-sm font-bold opacity-80 group-hover:opacity-100 group-hover:text-purple-400">Bab ${i}: Rahsia Bermula</span>
                         </div>
-                        <i class="fa-solid fa-chevron-right text-[10px] opacity-20"></i>
+                        <i class="fa-solid fa-chevron-right text-[10px] opacity-20 group-hover:text-purple-500 group-hover:opacity-100 transition-all"></i>
                     </div>
                 `;
             }
         });
 
-        function startReading() {
+        // Fungsi ke halaman pembaca
+        function goToReader(chapterNum) {
             const title = document.getElementById('detailTitle').innerText;
-            window.location.href = `reader.html?title=${encodeURIComponent(title)}`;
+            window.location.href = `reader.html?title=${encodeURIComponent(title)}&chapter=${chapterNum}`;
+        }
+
+        // Fungsi butang utama
+        function startReading() {
+            goToReader(1);
         }
     </script>
 </body>
