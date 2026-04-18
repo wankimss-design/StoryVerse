@@ -30,47 +30,100 @@
             </nav>
         </aside>
 
-        <main class="flex-1 p-8 md:p-12">
-            <header class="mb-12">
-                <h1 class="text-3xl font-black italic uppercase tracking-tighter">Muat Naik <span class="text-purple-500">Novel Baru</span></h1>
-                <p class="text-gray-500 text-sm">Isi borang di bawah untuk menambah koleksi ke StoryVerse.</p>
-            </header>
+        <main class="pt-24 pb-20 px-6 max-w-6xl mx-auto">
+    <header class="mb-12">
+        <h1 class="text-4xl font-black text-white uppercase tracking-tighter">Admin <span class="text-purple-500">Panel</span></h1>
+        <p class="text-gray-500 text-sm">Uruskan koleksi karya anda di StoryVerse.</p>
+    </header>
 
-            <section class="max-w-3xl bg-[#121212] border border-white/5 rounded-[32px] p-8">
-                <form id="novelForm" class="space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        
+        <section class="bg-[#121212] p-8 rounded-[2.5rem] border border-white/5 shadow-2xl">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-purple-600/20 rounded-2xl flex items-center justify-center text-purple-500">
+                    <i class="fa-solid fa-plus-circle text-xl"></i>
+                </div>
+                <h2 class="text-xl font-bold text-white">Muat Naik Novel Baru</h2>
+            </div>
+
+            <form id="newNovelForm" class="space-y-6">
+                <div>
+                    <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Tajuk Novel</label>
+                    <input type="text" id="newTitle" placeholder="Contoh: Sumpahan Penulis Terakhir" 
+                        class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-purple-500 outline-none transition-all">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">Tajuk Novel</label>
-                        <input type="text" id="novelTitle" required class="admin-input" placeholder="Contoh: Cinta Di Verse 01">
+                        <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Genre</label>
+                        <select id="newGenre" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-purple-500 outline-none appearance-none">
+                            <option value="Romance">Romance</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Action">Action</option>
+                        </select>
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">Genre</label>
-                            <select id="novelGenre" class="admin-input">
-                                <option value="Romance">Romance</option>
-                                <option value="Fantasy">Fantasy</option>
-                                <option value="Action">Action</option>
-                                <option value="Mystery">Mystery</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">URL Gambar Cover</label>
-                            <input type="url" id="novelCover" required class="admin-input" placeholder="https://image-link.com/photo.jpg">
-                        </div>
-                    </div>
-
                     <div>
-                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500 block mb-2">Sinopsis Ringkas</label>
-                        <textarea id="novelSynopsis" rows="4" required class="admin-input" placeholder="Ceritakan sedikit tentang novel ini..."></textarea>
+                        <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">URL Cover</label>
+                        <input type="text" id="newCover" placeholder="https://..." class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-purple-500 outline-none">
                     </div>
+                </div>
 
-                    <button type="submit" class="w-full bg-purple-600 py-4 rounded-2xl font-black uppercase text-xs tracking-[0.2em] hover:bg-purple-500 transition-all shadow-xl shadow-purple-500/20 active:scale-95">
-                        Publish Novel <i class="fa-solid fa-paper-plane ml-2"></i>
-                    </button>
-                </form>
-            </section>
-        </main>
+                <div>
+                    <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Sinopsis Ringkas</label>
+                    <textarea id="newSinopsis" rows="4" placeholder="Ceritakan sedikit tentang novel ini..." 
+                        class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-purple-500 outline-none resize-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-black uppercase tracking-widest py-5 rounded-2xl transition-all shadow-lg shadow-purple-600/20 flex items-center justify-center gap-3">
+                    Publish Novel <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </form>
+        </section>
+
+        <section class="bg-[#121212] p-8 rounded-[2.5rem] border border-white/5 shadow-2xl">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-12 h-12 bg-blue-600/20 rounded-2xl flex items-center justify-center text-blue-500">
+                    <i class="fa-solid fa-pen-nib text-xl"></i>
+                </div>
+                <h2 class="text-xl font-bold text-white">Tambah / Edit Bab</h2>
+            </div>
+
+            <form id="updateChapterForm" class="space-y-6">
+                <div>
+                    <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Pilih Novel</label>
+                    <select id="selectNovel" class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-blue-500 outline-none">
+                        <option value="">Memuatkan senarai novel...</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">No. Bab</label>
+                        <input type="number" id="chapterNum" placeholder="Contoh: 1" 
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Tajuk Bab</label>
+                        <input type="text" id="chapterTitle" placeholder="Contoh: Pertemuan Pertama" 
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-blue-500 outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Isi Kandungan Bab</label>
+                    <textarea id="chapterContent" rows="8" placeholder="Tuliskan cerita anda di sini..." 
+                        class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-blue-500 outline-none resize-none font-serif"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest py-5 rounded-2xl transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-3">
+                    Simpan Bab <i class="fa-solid fa-floppy-disk text-xs"></i>
+                </button>
+            </form>
+        </section>
+
     </div>
+</main>
 
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
