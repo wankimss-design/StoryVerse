@@ -3,6 +3,7 @@
     --primary-gradient: linear-gradient(90deg, #ff0055, #7000ff);
     --bg-dark: #0a0a0a;
     --bg-light: #fdfbf7;
+    --accent-purple: #a855f7;
 }
 
 body {
@@ -19,7 +20,7 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
-/* --- 2. FLOATING NAV BAR STYLE (MODULAR) --- */
+/* --- 2. FLOATING NAV BAR --- */
 .nav-container-floating {
     backdrop-filter: blur(15px);
     background: rgba(21, 21, 21, 0.7);
@@ -31,7 +32,6 @@ body {
     animation: floatAnim 4s ease-in-out infinite;
 }
 
-/* Gaya Butang Ikon & Auth */
 .nav-btn-icon, .nav-btn-auth {
     display: flex;
     align-items: center;
@@ -44,31 +44,15 @@ body {
     cursor: pointer;
 }
 
-.nav-btn-icon {
-    width: 45px;
-    height: 45px;
-}
-
-.nav-btn-auth {
-    padding: 0 20px;
-    height: 45px;
-    font-size: 0.85rem;
-    font-weight: 700;
-    white-space: nowrap;
-}
+.nav-btn-icon { width: 45px; height: 45px; }
+.nav-btn-auth { padding: 0 20px; height: 45px; font-size: 0.85rem; font-weight: 700; white-space: nowrap; }
 
 .nav-btn-icon:hover, .nav-btn-auth:hover {
     background: #222;
-    color: #a855f7;
+    color: var(--accent-purple);
     transform: translateY(-5px);
     border: 1px solid rgba(168, 85, 247, 0.4);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 
-                0 0 15px rgba(168, 85, 247, 0.2);
-}
-
-.nav-btn-icon svg {
-    width: 20px;
-    height: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(168, 85, 247, 0.2);
 }
 
 @keyframes floatAnim {
@@ -76,26 +60,10 @@ body {
     50% { transform: translateY(-3px); }
 }
 
-/* --- 3. BUTTONS UTAMA --- */
-.btn-primary {
-    background: var(--primary-gradient);
-    padding: 1rem 2.5rem;
-    border-radius: 0.75rem;
-    font-weight: 800;
-    color: white !important;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 0 10px 30px rgba(112, 0, 255, 0.3);
-}
-
-.btn-primary:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(112, 0, 255, 0.5);
-}
-
-/* --- 4. TYPOGRAPHY (HERO SECTION) --- */
+/* --- 3. HERO SECTION & FEATURED CARD --- */
 .sub-title-purple {
     display: block !important;
-    color: #a855f7 !important;
+    color: var(--accent-purple) !important;
     font-family: 'Itim', cursive !important;
     font-weight: bold;
     letter-spacing: 0.2em;
@@ -111,12 +79,7 @@ body {
     margin-top: 0 !important;
     margin-bottom: 25px !important;
     display: inline-block;
-    color: white; /* Warna asal di mode gelap */
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s;
-}
-
-.hero-title:hover {
-    transform: scale(1.03);
 }
 
 .hero-description {
@@ -126,35 +89,43 @@ body {
     max-width: 500px;
 }
 
-/* --- KEMASKINI HERO VISUAL --- */
+.btn-primary {
+    background: var(--primary-gradient);
+    padding: 1rem 2.5rem;
+    border-radius: 0.75rem;
+    font-weight: 800;
+    color: white !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 30px rgba(112, 0, 255, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(112, 0, 255, 0.5);
+}
+
+/* Featured Large Card */
 .novel-card-large {
     width: 100%;
     max-width: 450px;
-    height: 550px;
+    aspect-ratio: 3 / 4;
     background: #1a1a1a;
     border-radius: 2rem;
     position: relative;
     overflow: hidden;
-    /* Kedudukan asal (senget sikit) */
     transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
     box-shadow: -30px 30px 60px rgba(0,0,0,0.5);
-    
-    /* Pastikan transition adalah pada 'transform' */
     transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.6s ease;
-    
-    z-index: 1; /* Pastikan dia berada di atas lapisan lain */
+    z-index: 1;
     cursor: pointer;
 }
 
-/* APABILA CURSOR DI ATAS KAD */
 .novel-card-large:hover {
-    /* Kembali ke posisi tegak dan membesar sikit */
     transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1.05) !important;
     box-shadow: 0 20px 50px rgba(112, 0, 255, 0.3);
     z-index: 10;
 }
 
-/* Pastikan gambar di dalam ikut sekali */
 .cover-img {
     width: 100%;
     height: 100%;
@@ -163,191 +134,22 @@ body {
     transition: opacity 0.3s ease;
 }
 
-.novel-card-large:hover .cover-img {
-    opacity: 1; /* Gambar jadi terang sikit bila hover */
-}
+.novel-card-large:hover .cover-img { opacity: 1; }
 
-/* --- 6. PRELOADER: TALI PUTUS & MENULIS BERANGKAI --- */
-/* --- 6. PRELOADER: EFEK TALI & TULISAN BERANGKAI --- */
-#preloader {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100vh;
-    background: #050505; 
-    display: flex; justify-content: center; align-items: center;
-    z-index: 99999;
-    /* transition ditingkatkan kepada 1.5s untuk rollup yang lebih dramatik */
-    transition: transform 1.5s cubic-bezier(1, 0, 0, 1);
-    pointer-events: none; /* Supaya tak kacau klik masa tengah naik */
-}
-
-/* Light Mode Background */
-body.light-mode #preloader {
-    background: var(--bg-light);
-}
-
-/* EFEK ROLLUP (Hanya transform, buang visibility) */
-#preloader.lift-up { 
-    transform: translateY(-100%); 
-}
-
-.loader-wrapper {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* 1. Bulatan yang akan 'putus' */
-.loader-circle {
-    position: absolute;
-    width: 100px; height: 100px;
-    border: 3px solid transparent;
-    border-top: 3px solid #a855f7;
-    border-radius: 50%;
-    animation: 
-        spin 0.8s linear infinite, 
-        unravel 0.6s ease-in forwards 1.5s;
-}
-
-/* 2. Tulisan Berangkai (Ular) */
-.snake-svg {
-    width: 500px;
-    overflow: visible;
-}
-
-.snake-text {
-    font-family: 'Dancing Script', cursive;
-    font-size: 80px;
-    fill: transparent;
-    stroke: #a855f7;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-dasharray: 1200;
-    stroke-dashoffset: 1200;
-    /* Mula melukis bila bulatan mengecil */
-    animation: drawCursive 3.5s ease-in-out forwards 1.8s;
-}
-
-/* --- ANIMASI --- */
-@keyframes spin { to { transform: rotate(360deg); } }
-
-@keyframes unravel {
-    0% { transform: rotate(360deg) scale(1); opacity: 1; }
-    100% { transform: rotate(1080deg) scale(0); opacity: 0; }
-}
-
-@keyframes drawCursive {
-    0% { stroke-dashoffset: 1200; }
-    70% { stroke-dashoffset: 0; fill: transparent; }
-    100% { stroke-dashoffset: 0; fill: #a855f7; }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .snake-svg { width: 320px; }
-    .snake-text { font-size: 55px; }
-}
-
-/* --- 7. LIGHT MODE FIX (BAHAGIAN PENTING) --- */
-body.light-mode {
-    background-color: var(--bg-light) !important;
-    color: #2c2c2c !important;
-}
-
-/* Baiki tulisan Hero yang hilang di Light Mode */
-body.light-mode .hero-title {
-    color: #1a1a1a !important; /* Paksa jadi hitam/gelap */
-}
-
-body.light-mode .hero-description {
-    color: #4b5563 !important;
-}
-
-/* Kemaskini Nav Bar di Light Mode */
-body.light-mode .nav-container-floating {
-    background: rgba(255, 255, 255, 0.6); /* Biar dia nampak macam kaca nipis atas warna cream */
-    border-color: rgba(0, 0, 0, 0.05);
-}
-
-body.light-mode .nav-btn-icon, 
-body.light-mode .nav-btn-auth {
-    background: #ffffff;
-    border-color: #eee;
-    color: #777;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02); /* Tambah shadow halus biar nampak timbul atas cream */
-}
-
-body.light-mode .nav-btn-icon:hover, 
-body.light-mode .nav-btn-auth:hover {
-    background: #fff;
-    color: #7000ff;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-    .hero-title { font-size: 3.5rem !important; }
-    .novel-card-large { height: 350px; transform: none !important; margin: 0 auto; }
-}
-
-/* --- FOOTER ICONS FINE-TUNING --- */
-.footer-icon-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 35px; /* Kecilkan sikit */
-    height: 35px;
-    background: transparent; /* Buang kotak kelabu tu */
-    color: #666; /* Warna asal lebih malap */
-    border-radius: 50%; /* Bulat lebih elegan */
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
-}
-
-.footer-icon-link i {
-    font-size: 1.2rem; /* Saiz ikon yang konsisten */
-}
-
-.footer-icon-link:hover {
-    color: #a855f7; /* Warna ungu Story Verse */
-    background: rgba(168, 85, 247, 0.1); /* Glow ungu halus di belakang */
-    transform: translateY(-3px);
-}
-
-/* Untuk Light Mode (Cream) */
-body.light-mode .footer-icon-link {
-    color: #999;
-}
-
-body.light-mode .footer-icon-link:hover {
-    color: #7000ff;
-    background: rgba(112, 0, 255, 0.05);
-}
-
-/* --- 8. NOVEL GRID & CARD SYSTEM --- */
+/* --- 4. NOVEL GRID & CARD SYSTEM --- */
 #novelGrid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 kolum untuk mobile */
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
 }
 
-@media (min-width: 768px) {
-    #novelGrid {
-        grid-template-columns: repeat(3, 1fr); /* 3 kolum untuk tablet */
-    }
-}
+@media (min-width: 768px) { #novelGrid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1024px) { #novelGrid { grid-template-columns: repeat(5, 1fr); } }
 
-@media (min-width: 1024px) {
-    #novelGrid {
-        grid-template-columns: repeat(5, 1fr); /* 5 kolum untuk desktop */
-    }
-}
-
-/* Card Wrapper */
 .card-image-wrapper {
     position: relative;
     width: 100%;
-    aspect-ratio: 3 / 4; /* Paksa saiz kotak 3:4 */
+    aspect-ratio: 3 / 4;
     background: #151515;
     border-radius: 1.25rem;
     overflow: hidden;
@@ -358,27 +160,91 @@ body.light-mode .footer-icon-link:hover {
 .card-img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Penting: Supaya gambar tidak penyek */
+    object-fit: cover;
     transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    display: block;
 }
 
-/* Efek Hover pada Card */
 .novel-card:hover .card-image-wrapper {
     border-color: rgba(168, 85, 247, 0.4);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
     transform: translateY(-8px);
 }
 
-.novel-card:hover .card-img {
-    transform: scale(1.1); /* Zoom gambar sikit */
+.novel-card:hover .card-img { transform: scale(1.1); }
+
+/* --- 5. PRELOADER --- */
+#preloader {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100vh;
+    background: #050505; 
+    display: flex; justify-content: center; align-items: center;
+    z-index: 99999;
+    transition: transform 1.5s cubic-bezier(1, 0, 0, 1);
+    pointer-events: none;
 }
 
-/* Light Mode Fix untuk Card */
-body.light-mode .card-image-wrapper {
-    background: #eee;
-    border-color: rgba(0, 0, 0, 0.05);
+#preloader.lift-up { transform: translateY(-100%); }
+
+.loader-circle {
+    position: absolute;
+    width: 100px; height: 100px;
+    border: 3px solid transparent;
+    border-top: 3px solid var(--accent-purple);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite, unravel 0.6s ease-in forwards 1.5s;
 }
 
-body.light-mode .novel-card:hover .card-image-wrapper {
-    box-shadow: 0 10px 25px rgba(112, 0, 255, 0.1);
+.snake-svg { width: 500px; overflow: visible; }
+.snake-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: 80px;
+    fill: transparent;
+    stroke: var(--accent-purple);
+    stroke-width: 1.5;
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    animation: drawCursive 3.5s ease-in-out forwards 1.8s;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes unravel {
+    0% { transform: rotate(360deg) scale(1); opacity: 1; }
+    100% { transform: rotate(1080deg) scale(0); opacity: 0; }
+}
+@keyframes drawCursive {
+    0% { stroke-dashoffset: 1200; }
+    70% { stroke-dashoffset: 0; fill: transparent; }
+    100% { stroke-dashoffset: 0; fill: var(--accent-purple); }
+}
+
+/* --- 6. LIGHT MODE FIX --- */
+body.light-mode { background-color: var(--bg-light) !important; color: #2c2c2c !important; }
+body.light-mode #preloader { background: var(--bg-light); }
+body.light-mode .hero-title { color: #1a1a1a !important; }
+body.light-mode .hero-description { color: #4b5563 !important; }
+body.light-mode .nav-container-floating { background: rgba(255, 255, 255, 0.6); border-color: rgba(0, 0, 0, 0.05); }
+body.light-mode .nav-btn-icon, body.light-mode .nav-btn-auth { background: #ffffff; border-color: #eee; color: #777; }
+body.light-mode .nav-btn-icon:hover, body.light-mode .nav-btn-auth:hover { color: #7000ff; }
+body.light-mode .card-image-wrapper { background: #eee; border-color: rgba(0, 0, 0, 0.05); }
+
+/* --- 7. FOOTER & RESPONSIVE --- */
+.footer-icon-link {
+    display: flex; align-items: center; justify-content: center;
+    width: 35px; height: 35px;
+    color: #666; border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.footer-icon-link:hover {
+    color: var(--accent-purple);
+    background: rgba(168, 85, 247, 0.1);
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+    .hero-title { font-size: 3.5rem !important; }
+    .novel-card-large { height: 350px; transform: none !important; margin: 0 auto; }
+    .snake-svg { width: 320px; }
+    .snake-text { font-size: 55px; }
 }
