@@ -42,9 +42,9 @@ async function loadNovelDetails() {
             currentNovelData = doc.data();
             document.getElementById('readerNovelTitle').innerText = currentNovelData.title;
             
-            // Muatkan Senarai Bab
+            // MUATKAN BAB: Gunakan 'chapterNumber' (kerana admin.js guna ini)
             const chaptersSnap = await db.collection('novels').doc(novelId)
-                                     .collection('chapters').orderBy('order', 'asc').get();
+                                     .collection('chapters').orderBy('chapterNumber', 'asc').get();
             
             chaptersList = [];
             chaptersSnap.forEach(snap => {
@@ -52,10 +52,19 @@ async function loadNovelDetails() {
             });
 
             if (chaptersList.length > 0) {
-                // Check jika URL ada spesifik bab, jika tidak mula dari index 0
-                const urlChapter = parseInt(urlParams.get('chapter')) - 1 || 0;
-                renderChapter(urlChapter >= 0 && urlChapter < chaptersList.length ? urlChapter : 0);
+                // Check jika URL ada spesifik bab
+                const requestedChapNum = parseInt(urlParams.get('chapter'));
+                
+                // Cari index berdasarkan chapterNumber
+                let targetIndex = chaptersList.findIndex(c => c.chapterNumber === requestedChapNum);
+                
+                // Jika tak jumpa, guna index 0 (Bab 1)
+                if (targetIndex === -1) targetIndex = 0;
+                
+                renderChapter(targetIndex);
                 renderChapterDropdown();
+            } else {
+                document.getElementById('novelContent').innerText = "Maaf, belum ada bab yang dimuat naik untuk novel ini.";
             }
         }
     } catch (e) {
@@ -70,20 +79,22 @@ function renderChapter(index) {
     const chapter = chaptersList[index];
     
     // UI Updates
-    document.getElementById('currentChapterText').innerText = `Bab ${String(index + 1).padStart(2, '0')}`;
+    document.getElementById('currentChapterText').innerText = `Bab ${chapter.chapterNumber}`;
     document.getElementById('chapterTitleDisplay').innerText = chapter.title;
     document.title = `${chapter.title} - ${currentNovelData.title}`;
     
-    // Format Kandungan (Newline -> Paragraph)
-    const formattedContent = chapter.content.split('\n').map(p => 
-        p.trim() !== "" ? `<p class="mb-6">${p}</p>` : ""
-    ).join('');
-    
-    document.getElementById('novelContent').innerHTML = formattedContent;
+    // Format Kandungan
+    if (chapter.content) {
+        const formattedContent = chapter.content.split('\n').map(p => 
+            p.trim() !== "" ? `<p class="mb-8">${p}</p>` : ""
+        ).join('');
+        document.getElementById('novelContent').innerHTML = formattedContent;
+    }
 
     // Navigation Buttons
     document.getElementById('prevBtn').disabled = (index === 0);
     const nextBtn = document.getElementById('nextBtn');
+    
     if (index === chaptersList.length - 1) {
         nextBtn.innerHTML = `Tamat Cerita <i class="fa-solid fa-flag-checkered ml-2"></i>`;
     } else {
@@ -92,7 +103,7 @@ function renderChapter(index) {
 
     // Sync Functions
     saveHistory(chapter);
-    loadComments(); // Muat komen khusus untuk bab ini
+    loadComments(); 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -100,9 +111,12 @@ function renderChapterDropdown() {
     const list = document.getElementById('chapterList');
     list.innerHTML = chaptersList.map((ch, i) => `
         <li onclick="renderChapter(${i}); toggleChapterList()" class="px-6 py-4 hover:bg-purple-500/10 cursor-pointer transition-all border-b border-white/5 flex justify-between items-center ${i === currentChapterIndex ? 'bg-purple-500/5' : ''}">
-            <span class="text-[11px] font-bold ${i === currentChapterIndex ? 'text-purple-500' : 'text-gray-400'} uppercase tracking-tight">
-                BAB ${i + 1}: ${ch.title}
-            </span>
+            <div class="flex flex-col">
+                <span class="text-[8px] text-purple-500 font-black uppercase">BAB ${ch.chapterNumber}</span>
+                <span class="text-[11px] font-bold ${i === currentChapterIndex ? 'text-white' : 'text-gray-400'} uppercase tracking-tight">
+                    ${ch.title}
+                </span>
+            </div>
             ${i === currentChapterIndex ? '<i class="fa-solid fa-check text-[10px] text-purple-500"></i>' : ''}
         </li>
     `).join('');
@@ -117,13 +131,14 @@ window.changeChapter = function(direction) {
     }
 };
 
-/* --- 4. KOMEN (PER CHAPTER) --- */
+/* --- 4. KOMEN --- */
 
 async function loadComments() {
     const list = document.getElementById('commentsList');
+    if (chaptersList.length === 0) return;
+    
     const chapterId = chaptersList[currentChapterIndex].id;
 
-    // Gunakan onSnapshot untuk real-time update
     db.collection('novels').doc(novelId)
       .collection('chapters').doc(chapterId)
       .collection('comments').orderBy('timestamp', 'desc')
@@ -135,12 +150,13 @@ async function loadComments() {
         list.innerHTML = snapshot.docs.map(doc => {
             const c = doc.data();
             const date = c.timestamp ? new Date(c.timestamp.toDate()).toLocaleDateString('ms-MY') : 'Baru sahaja';
+            const initial = c.userName ? c.userName.charAt(0) : '?';
             return `
                 <div class="bg-white/[0.03] p-6 rounded-[1.5rem] border border-white/5 mb-4">
                     <div class="flex justify-between items-center mb-3">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-[10px] font-bold text-white uppercase">
-                                ${c.userName.charAt(0)}
+                                ${initial}
                             </div>
                             <span class="text-purple-500 font-black text-[10px] uppercase tracking-widest">${c.userName}</span>
                         </div>
@@ -157,7 +173,7 @@ window.postComment = async function() {
     const user = firebase.auth().currentUser;
     const chapterId = chaptersList[currentChapterIndex].id;
 
-    if (!user) return alert("Sila log masuk.");
+    if (!user) return alert("Sila log masuk untuk memberi komen.");
     if (!input.value.trim()) return;
 
     try {
@@ -176,14 +192,15 @@ window.postComment = async function() {
 
 async function saveHistory(chapter) {
     const user = firebase.auth().currentUser;
-    if (!user) return;
+    if (!user || !currentNovelData) return;
 
     const progress = Math.round(((currentChapterIndex + 1) / chaptersList.length) * 100);
     try {
         await db.collection('users').doc(user.uid).collection('history').doc(novelId).set({
             title: currentNovelData.title,
-            cover: currentNovelData.cover,
+            image: currentNovelData.image || currentNovelData.coverImage || "", // Sesuaikan field gambar
             lastChapter: chapter.title,
+            chapterNumber: chapter.chapterNumber,
             progress: progress,
             lastRead: firebase.firestore.FieldValue.serverTimestamp(),
             novelId: novelId
@@ -191,7 +208,7 @@ async function saveHistory(chapter) {
     } catch (e) { console.error(e); }
 }
 
-// Fungsi UI (Theme, Font, Dropdown)
+// Fungsi UI
 window.toggleSettings = () => document.getElementById('settingsPanel').classList.toggle('translate-y-full');
 
 window.toggleChapterList = () => {
@@ -218,7 +235,7 @@ function updateTypography() {
     const content = document.getElementById('novelContent');
     if (content) {
         content.style.fontSize = `${currentFontSize}px`;
-        content.style.fontFamily = currentFontFamily;
+        content.style.fontFamily = `'${currentFontFamily}', serif`;
     }
     const display = document.getElementById('fontSizeDisplay');
     if (display) display.innerText = `${currentFontSize}px`;
