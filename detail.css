@@ -21,24 +21,32 @@ main { animation: fadeInUp 1s cubic-bezier(0.19, 1, 0.22, 1); }
     -webkit-text-fill-color: transparent;
 }
 
+/* --- NAV PILL STABILITY --- */
 .nav-pill {
     background-color: rgba(26, 26, 26, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: all 0.4s ease;
 }
 
-/* --- PROFILE BUTTON LOGIC (Penyelesaian Ungu) --- */
-/* Keadaan asal: Kelabu/Transparent */
+/* Kotak seragam untuk semua butang nav */
 .nav-pill button {
-    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #94a3b8;
 }
 
-/* Keadaan bila cursor di atas ikon profil atau mana-mana butang dalam pill */
 .nav-pill button:hover {
-    background-color: #a855f7 !important; /* Purple-500 */
+    background-color: #a855f7 !important;
     color: white !important;
-    border-color: #a855f7 !important;
-    transform: scale(1.1);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 10px 20px rgba(168, 85, 247, 0.3);
 }
 
 /* Sinopsis Clamp */
@@ -62,23 +70,27 @@ body.light-mode #novelTitle {
     -webkit-background-clip: text; 
 }
 
-/* Nav Pill Color Correction */
 body.light-mode .nav-pill {
     background-color: rgba(255, 255, 255, 0.9) !important;
     border: 1px solid rgba(0, 0, 0, 0.1) !important;
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-/* Icon & Button Colors in Light Mode */
-body.light-mode .nav-pill button { color: #64748b !important; }
-body.light-mode .nav-pill button:hover { 
-    color: #fff !important; 
-    background-color: #9333ea !important; /* Purple-600 untuk light mode */
+body.light-mode .nav-pill button {
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    color: #64748b !important;
 }
 
-/* Fix for independent buttons (Back & Like) */
+body.light-mode .nav-pill button:hover { 
+    color: #fff !important; 
+    background-color: #9333ea !important;
+}
+
+/* Independent Buttons in Light Mode (Back, Like, Share) */
 body.light-mode nav button.pointer-events-auto,
-body.light-mode .pointer-events-auto > button {
+body.light-mode .pointer-events-auto > button,
+body.light-mode main button.w-14 {
     background-color: rgba(255, 255, 255, 0.95) !important;
     border: 1px solid rgba(0, 0, 0, 0.1) !important;
     color: #0f172a !important;
