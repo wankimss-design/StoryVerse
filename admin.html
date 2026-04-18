@@ -30,10 +30,6 @@
                     <i class="fa-solid fa-gauge-high"></i> 
                     <span class="text-xs font-bold uppercase tracking-widest">Dashboard Admin</span>
                 </a>
-                <a href="library.html" class="flex items-center gap-3 p-4 text-gray-400 hover:text-white hover:bg-white/5 rounded-2xl transition-all group">
-                    <i class="fa-solid fa-book-open group-hover:text-purple-500 transition-colors"></i> 
-                    <span class="text-xs font-bold uppercase tracking-widest">Perpustakaan</span>
-                </a>
             </nav>
 
             <div class="pt-6 border-t border-white/5">
@@ -43,22 +39,17 @@
                 </button>
             </div>
         </aside>
-        <div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[9999]">
-    <div class="nav-container-floating flex items-center bg-[#151515]/80 backdrop-blur-xl p-1.5 rounded-2xl border border-white/5 shadow-2xl">
-        <a href="index.html" class="nav-btn-icon" title="Home">
-            <i class="fa-solid fa-house"></i>
-        </a>
-        <a href="katalog.html" class="nav-btn-icon" title="Archive">
-            <i class="fa-solid fa-box-archive"></i>
-        </a>
-        <a href="profile.html" class="nav-btn-icon" title="Profile">
-            <i class="fa-solid fa-user"></i>
-        </a>
-        <button id="themeToggle" class="nav-btn-icon" title="Toggle Theme">
-            <i class="fa-solid fa-moon" id="themeIcon"></i>
-        </button>
-    </div>
-</div>
+
+        <div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[10000]">
+            <div class="nav-container-floating flex items-center bg-[#151515]/80 backdrop-blur-xl p-1.5 rounded-2xl border border-white/5 shadow-2xl">
+                <a href="index.html" class="nav-btn-icon" title="Home"><i class="fa-solid fa-house"></i></a>
+                <a href="katalog.html" class="nav-btn-icon" title="Archive"><i class="fa-solid fa-box-archive"></i></a>
+                <a href="profile.html" class="nav-btn-icon" title="Profile"><i class="fa-solid fa-user"></i></a>
+                <button id="themeToggle" class="nav-btn-icon" title="Toggle Theme">
+                    <i class="fa-solid fa-moon" id="themeIcon"></i>
+                </button>
+            </div>
+        </div>
 
         <main class="flex-1 p-6 md:p-12 overflow-y-auto">
             <header class="mb-12">
@@ -83,53 +74,32 @@
 
                         <div class="grid grid-cols-2 gap-4">
                             <div class="relative">
-    <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Genre (Boleh Pilih Banyak)</label>
-    
-    <button type="button" id="genreToggle" class="admin-input flex justify-between items-center cursor-pointer min-h-[50px] w-full">
-        <span id="selectedGenresDisplay" class="text-xs font-bold text-gray-400">PILIH GENRE...</span>
-        <i class="fa-solid fa-chevron-down text-[10px] transition-transform" id="genreChevron"></i>
-    </button>
+                                <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Genre</label>
+                                <button type="button" id="genreToggle" class="admin-input flex justify-between items-center cursor-pointer min-h-[50px] w-full">
+                                    <span id="selectedGenresDisplay" class="text-xs font-bold text-gray-400">PILIH GENRE...</span>
+                                    <i class="fa-solid fa-chevron-down text-[10px] transition-transform" id="genreChevron"></i>
+                                </button>
+                                <div id="genreDropdown" class="absolute left-0 right-0 mt-2 bg-[#151515] border border-white/10 rounded-2xl z-[9999] max-h-60 overflow-y-auto shadow-2xl">
+                                    <div class="genre-item" data-value="Romance"><span>Romance</span><i class="fa-solid fa-heart text-purple-500 opacity-0"></i></div>
+                                    <div class="genre-item" data-value="Fantasy"><span>Fantasy</span><i class="fa-solid fa-wand-sparkles text-purple-500 opacity-0"></i></div>
+                                    <div class="genre-item" data-value="Horror"><span>Horror</span><i class="fa-solid fa-ghost text-purple-500 opacity-0"></i></div>
+                                    <div class="genre-item" data-value="Action"><span>Action</span><i class="fa-solid fa-gun text-purple-500 opacity-0"></i></div>
+                                    <div class="genre-item" data-value="Mystery"><span>Mystery</span><i class="fa-solid fa-magnifying-glass text-purple-500 opacity-0"></i></div>
+                                </div>
+                            </div>
 
-    <div id="genreDropdown" class="absolute left-0 right-0 mt-2 bg-[#151515] border border-white/10 rounded-2xl z-[9999] custom-scrollbar max-h-60 overflow-y-auto shadow-2xl">
-    </div>
-        <div class="genre-item p-4 hover:bg-white/5 cursor-pointer flex justify-between items-center" data-value="Romance">
-            <span class="text-[10px] font-bold uppercase tracking-widest">Romance</span>
-            <i class="fa-solid fa-heart text-purple-500 opacity-0 transition-opacity"></i>
-        </div>
-        <div class="genre-item p-4 hover:bg-white/5 cursor-pointer flex justify-between items-center" data-value="Fantasy">
-            <span class="text-[10px] font-bold uppercase tracking-widest">Fantasy</span>
-            <i class="fa-solid fa-wand-sparkles text-purple-500 opacity-0 transition-opacity"></i>
-        </div>
-        <div class="genre-item p-4 hover:bg-white/5 cursor-pointer flex justify-between items-center" data-value="Horror">
-            <span class="text-[10px] font-bold uppercase tracking-widest">Horror</span>
-            <i class="fa-solid fa-ghost text-purple-500 opacity-0 transition-opacity"></i>
-        </div>
-        <div class="genre-item p-4 hover:bg-white/5 cursor-pointer flex justify-between items-center" data-value="Action">
-            <span class="text-[10px] font-bold uppercase tracking-widest">Action</span>
-            <i class="fa-solid fa-gun text-purple-500 opacity-0 transition-opacity"></i>
-        </div>
-        <div class="genre-item p-4 hover:bg-white/5 cursor-pointer flex justify-between items-center" data-value="Mystery">
-            <span class="text-[10px] font-bold uppercase tracking-widest">Mystery</span>
-            <i class="fa-solid fa-magnifying-glass text-purple-500 opacity-0 transition-opacity"></i>
-        </div>
-    </div>
-</div>
                             <div>
                                 <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Upload Cover</label>
                                 <input type="file" id="coverFile" accept="image/*" class="hidden">
-                                <label for="coverFile" class="w-full bg-white/5 border border-dashed border-white/10 rounded-2xl p-4 text-center cursor-pointer hover:border-purple-500 transition-all block">
+                                <label for="coverFile" class="w-full bg-white/5 border border-dashed border-white/10 rounded-2xl p-4 text-center cursor-pointer hover:border-purple-500 transition-all block min-h-[50px] flex items-center justify-center">
                                     <span id="fileNameDisplay" class="text-[10px] font-bold text-gray-400">PILIH GAMBAR</span>
                                 </label>
                             </div>
                         </div>
 
-                        <div id="previewContainer" class="hidden flex justify-center py-4 bg-black/20 rounded-2xl border border-white/5">
-                            <img id="imagePreview" src="" class="w-24 h-32 object-cover rounded-lg shadow-xl">
-                        </div>
-
                         <div>
                             <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Sinopsis</label>
-                            <textarea id="newSinopsis" rows="4" class="admin-input resize-none"></textarea>
+                            <textarea id="newSinopsis" rows="4" class="admin-input resize-none" placeholder="Ringkasan cerita..."></textarea>
                         </div>
 
                         <button type="submit" id="mainSubmitBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-black uppercase tracking-widest py-5 rounded-2xl transition-all flex items-center justify-center gap-3">
@@ -147,40 +117,18 @@
                     </div>
 
                     <form id="updateChapterForm" class="space-y-6">
-                        <div>
-                            <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Pilih Novel</label>
-                            <select id="selectNovel" class="admin-input"></select>
-                        </div>
-
+                        <select id="selectNovel" class="admin-input"></select>
                         <div class="grid grid-cols-2 gap-4">
                             <input type="number" id="chapterNum" placeholder="No. Bab" class="admin-input">
                             <input type="text" id="chapterTitle" placeholder="Tajuk Bab" class="admin-input">
                         </div>
-
                         <textarea id="chapterContent" rows="8" placeholder="Tuliskan cerita anda..." class="admin-input font-serif"></textarea>
-
                         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest py-5 rounded-2xl transition-all flex items-center justify-center gap-3">
                             Simpan Bab <i class="fa-solid fa-floppy-disk text-xs"></i>
                         </button>
                     </form>
                 </section>
             </div>
-
-            <section class="mt-12 bg-[#121212] p-8 rounded-[2.5rem] border border-white/5 shadow-2xl overflow-hidden">
-                <h2 class="text-xl font-bold text-white mb-8">Senarai Novel Saya</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead>
-                            <tr class="border-b border-white/5">
-                                <th class="pb-4 text-[10px] uppercase text-gray-500 px-4">Novel</th>
-                                <th class="pb-4 text-[10px] uppercase text-gray-500 px-4">Genre</th>
-                                <th class="pb-4 text-[10px] uppercase text-gray-500 px-4 text-center">Tindakan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="novelTableBody"></tbody>
-                    </table>
-                </div>
-            </section>
         </main>
     </div>
 
