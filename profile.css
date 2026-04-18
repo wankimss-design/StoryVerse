@@ -315,3 +315,31 @@ body.light-mode button[onclick="logout()"] {
     color: #4b5563 !important;
     border-color: rgba(0, 0, 0, 0.1) !important;
 }
+
+/* --- FIX ICON HOVER DALAM LIGHT MODE --- */
+
+/* Pastikan ikon dalam nav nampak gelap (kelabu) pada asalnya */
+body.light-mode nav i {
+    color: #64748b !important;
+}
+
+/* Tukar warna ikon kepada UNGU apabila hover dalam mod cerah */
+body.light-mode nav a:hover i, 
+body.light-mode nav button:hover i {
+    color: #a855f7 !important; /* Warna ungu StoryVerse */
+    transform: scale(1.1); /* Tambah kesan zoom sikit supaya nampak interaktif */
+}
+
+/* Khusus untuk butang Logout (merah) supaya lebih jelas */
+body.light-mode button[onclick="logout()"]:hover i {
+    color: #ef4444 !important; /* Warna merah */
+}
+
+/* Pastikan butang Admin (Pen Nib) kekal ungu cerah atau bertukar ungu gelap */
+body.light-mode a[href="admin.html"] i {
+    color: #a855f7 !important;
+}
+
+body.light-mode a[href="admin.html"]:hover i {
+    color: #7e22ce !important; /* Ungu lebih pekat bila hover */
+}
