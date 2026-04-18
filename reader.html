@@ -25,11 +25,10 @@
             <div>
                 <h2 id="readerNovelTitle" class="text-sm font-black uppercase tracking-wider text-white truncate max-w-[120px] md:max-w-none italic leading-tight">Tajuk Novel</h2>
                 
-                <div class="relative inline-block leading-none">
-                    <select id="chapterSelector" onchange="jumpToChapter(this.value)" class="bg-transparent text-[10px] text-purple-500 font-bold uppercase tracking-widest outline-none cursor-pointer hover:text-purple-400 transition-colors appearance-none pr-4">
-                        <option value="1">Bab 01</option>
+                <div class="relative flex items-center">
+                    <select id="chapterSelector" onchange="jumpToChapter(this.value)" class="appearance-none pr-4">
                         </select>
-                    <i class="fa-solid fa-chevron-down text-[7px] text-purple-500 absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                    <i class="fa-solid fa-chevron-down text-[7px] text-purple-500 absolute right-0 pointer-events-none"></i>
                 </div>
             </div>
         </div>
