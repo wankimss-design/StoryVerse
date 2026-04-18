@@ -135,14 +135,17 @@ function initThemeLogic() {
     }
 }
 
-// FUNGSI SIMPAN
 async function saveNovel(e) {
     e.preventDefault();
     const btn = document.getElementById('mainSubmitBtn');
     const title = document.getElementById('newTitle').value;
+    const synopsis = document.getElementById('newSinopsis').value;
+    const fileInput = document.getElementById('coverFile');
+    const file = fileInput.files[0];
 
+    // Validasi
     if (!title || selectedGenres.length === 0) {
-        alert("Sila isi tajuk dan genre!");
+        alert("Sila isi tajuk dan pilih sekurang-kurangnya satu genre!");
         return;
     }
 
@@ -150,19 +153,58 @@ async function saveNovel(e) {
         btn.disabled = true;
         btn.innerHTML = 'Memproses... <i class="fa-solid fa-spinner fa-spin"></i>';
 
+        let base64Image = "";
+        
+        // Jika ada gambar dipilih, tukar ke Base64
+        if (file) {
+            // Optional: Hadkan saiz fail (Firestore ada had 1MB se-dokumen)
+            if (file.size > 800000) { // 800KB
+                alert("Fail terlalu besar! Sila guna gambar bawah 800KB.");
+                btn.disabled = false;
+                btn.innerHTML = 'Publish Novel';
+                return;
+            }
+            base64Image = await convertToBase64(file);
+        }
+
+        // Simpan ke Firestore
         await db.collection('novels').add({
             title: title,
-            synopsis: document.getElementById('newSinopsis').value,
+            synopsis: synopsis,
             genres: selectedGenres,
+            coverImage: base64Image, // Data Base64 disimpan di sini
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        alert('Berjaya!');
-        location.reload();
+        alert('Karya berjaya diterbitkan!');
+        
+        // Reset Form
+        document.getElementById('newNovelForm').reset();
+        document.getElementById('fileNameDisplay').innerText = "PILIH GAMBAR";
+        selectedGenres = [];
+        document.getElementById('selectedGenresDisplay').innerText = "PILIH GENRE...";
+        document.querySelectorAll('.genre-item').forEach(item => item.classList.remove('selected'));
+
     } catch (err) {
-        console.error(err);
-        alert('Gagal!');
+        console.error("Ralat:", err);
+        alert('Gagal menyimpan. Pastikan saiz gambar tidak terlalu besar.');
+    } finally {
         btn.disabled = false;
-        btn.innerHTML = 'Publish Novel';
+        btn.innerHTML = 'Publish Novel <i class="fa-solid fa-paper-plane text-xs"></i>';
     }
 }
+// Fungsi menukar fail gambar ke Base64 string
+function convertToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+
+// Tambahan: Papar nama fail bila dipilih
+document.getElementById('coverFile')?.addEventListener('change', function(e) {
+    const fileName = e.target.files[0]?.name || "PILIH GAMBAR";
+    document.getElementById('fileNameDisplay').innerText = fileName.toUpperCase();
+});
