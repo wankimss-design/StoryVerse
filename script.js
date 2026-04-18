@@ -59,11 +59,10 @@ async function fetchNovels() {
     if (!grid) return;
 
     try {
-        // Ambil 10 novel terbaru
         const snapshot = await db.collection('novels').orderBy('createdAt', 'desc').limit(10).get();
         
         if (snapshot.empty) {
-            grid.innerHTML = '<p class="col-span-full text-center opacity-50 uppercase tracking-widest text-xs py-20">Tiada Novel Dijumpai</p>';
+            grid.innerHTML = '<p class="col-span-full text-center py-20 opacity-50">Tiada Novel Dijumpai</p>';
             return;
         }
 
@@ -71,31 +70,32 @@ async function fetchNovels() {
         snapshot.forEach(doc => {
             const data = doc.data();
             
-            // --- LOGIK PEMILIHAN GAMBAR (PENTING) ---
-            // Kita semak semua kemungkinan nama field yang mungkin anda guna di database
-            const finalCover = data.coverImage || data.cover || data.image || 'https://via.placeholder.com/300x450?text=No+Cover';
+            // --- DEBUG: Lihat apa sebenarnya nama field dalam database anda ---
+            console.log("Data Novel ID:", doc.id, data);
+
+            // Kita cuba tangkap semua kemungkinan nama field imej
+            const finalCover = data.coverImage || data.cover || data.image || data.coverURL || '';
+
+            // Jika finalCover kosong, kita guna placeholder supaya nampak kotak
+            const displayImage = finalCover ? finalCover : 'https://via.placeholder.com/300x450?text=Tiada+Gambar';
 
             grid.innerHTML += `
                 <div class="novel-card group cursor-pointer" onclick="checkAccess('${doc.id}')">
-                    <div class="card-image-wrapper shadow-xl relative overflow-hidden rounded-2xl aspect-[3/4] bg-[#1a1a1a]">
-                        <img src="${finalCover}" 
-                             class="card-img w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                    <div class="card-image-wrapper shadow-xl mb-4">
+                        <img src="${displayImage}" 
+                             class="card-img w-full h-full object-cover" 
                              alt="${data.title}" 
-                             onerror="this.src='https://via.placeholder.com/300x450?text=StoryVerse'">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                             <span class="text-[10px] font-bold uppercase tracking-widest text-white bg-purple-600 px-2 py-1 rounded">Baca Sekarang</span>
-                        </div>
+                             onerror="this.src='https://via.placeholder.com/300x450?text=Error+Load'">
                     </div>
-                    <div class="mt-4">
-                        <h3 class="font-bold text-sm md:text-base group-hover:text-purple-500 transition truncate uppercase italic tracking-tighter">${data.title}</h3>
-                        <p class="text-[10px] text-gray-500 italic font-medium uppercase tracking-widest">${data.genre || 'Novel'}</p>
+                    <div>
+                        <h3 class="font-bold text-sm md:text-base group-hover:text-purple-500 transition uppercase italic tracking-tighter">${data.title}</h3>
+                        <p class="text-[10px] text-gray-500 italic uppercase tracking-widest">${data.genre || 'Romance'}</p>
                     </div>
                 </div>
             `;
         });
     } catch (error) {
         console.error("Firestore Error:", error);
-        grid.innerHTML = '<p class="text-center text-red-500 text-xs">Ralat memuatkan data. Sila refresh.</p>';
     }
 }
 
