@@ -3,25 +3,30 @@
 document.addEventListener('DOMContentLoaded', () => {
     initFirebase();
     initTabs();
-    initTheme(); // <--- Tambah ini untuk fungsi Light/Dark mode
+    initTheme(); // <--- Fungsi ini akan mengaktifkan CSS light-mode anda
 });
 
-// 1. TEMA (LIGHT/DARK MODE)
+// 1. LOGIK TUKAR MOD (LIGHT/DARK)
 function initTheme() {
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = themeToggle?.querySelector('i');
     
+    // Fungsi untuk tukar rupa ikon & simpan pilihan user
     const applyTheme = (theme) => {
         if (theme === 'light') {
             document.body.classList.add('light-mode');
-            if(themeIcon) themeIcon.className = 'fa-solid fa-sun text-xs';
+            if(themeIcon) {
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            }
         } else {
             document.body.classList.remove('light-mode');
-            if(themeIcon) themeIcon.className = 'fa-solid fa-moon text-xs';
+            if(themeIcon) {
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            }
         }
     };
 
-    // Muat tema dari storage
+    // Semak pilihan lama dalam browser (Local Storage)
     const savedTheme = localStorage.getItem('theme') || 'dark';
     applyTheme(savedTheme);
 
@@ -47,7 +52,7 @@ function initFirebase() {
                     document.getElementById('userBio').innerText = data.bio || "Tiada bio lagi.";
                     if (data.photoURL) document.getElementById('userAvatar').src = data.photoURL;
                 }
-            } catch (e) { console.error(e); }
+            } catch (e) { console.error("Ralat Profil:", e); }
             loadHistory(); 
         } else {
             window.location.href = "auth.html";
@@ -67,8 +72,8 @@ function initTabs() {
         }
     };
 
-    // Set indicator awal
-    setTimeout(() => updateIndicator(tabs[0]), 500);
+    // Set posisi awal indicator
+    setTimeout(() => updateIndicator(document.querySelector('.tab-btn.active')), 500);
 
     tabs.forEach(btn => {
         btn.onclick = () => {
@@ -94,19 +99,14 @@ function switchTabContent(tab) {
     }
 }
 
-// 4. DATABASE LOADERS (LOGIK GAMBAR DIPERBAIKI)
+// 4. LOADERS (Penyelesaian masalah gambar tidak keluar)
 async function loadHistory() {
     const grid = document.getElementById('readingList');
-    const totalReadEl = document.getElementById('totalRead');
     const user = firebase.auth().currentUser;
     const db = firebase.firestore();
 
     try {
-        const historyRef = db.collection('users').doc(user.uid).collection('history');
-        const totalSnapshot = await historyRef.get();
-        if(totalReadEl) totalReadEl.innerText = totalSnapshot.size;
-
-        const snapshot = await historyRef.orderBy('lastRead', 'desc').limit(6).get();
+        const snapshot = await db.collection('users').doc(user.uid).collection('history').orderBy('lastRead', 'desc').limit(6).get();
         if (snapshot.empty) {
             grid.innerHTML = '<p class="col-span-full text-center py-20 opacity-30 text-[10px] uppercase tracking-[0.3em]">Tiada sejarah</p>';
             return;
@@ -115,8 +115,9 @@ async function loadHistory() {
         grid.innerHTML = '';
         snapshot.forEach(doc => {
             const n = doc.data();
-            // Cuba ambil coverImage, jika tiada ambil cover, jika tiada guna placeholder
-            const currentCover = n.coverImage || n.cover || 'https://via.placeholder.com/300x400?text=No+Cover';
+            // FIX GAMBAR: Menyemak pelbagai kemungkinan nama field (coverImage, cover, atau image)
+            const currentCover = n.coverImage || n.cover || n.image || 'https://via.placeholder.com/300x400?text=No+Cover';
+            
             grid.innerHTML += `
                 <div class="group cursor-pointer" onclick="window.location.href='detail.html?id=${doc.id}'">
                     <div class="aspect-[3/4] rounded-2xl overflow-hidden mb-4 shadow-xl border border-white/5 group-hover:scale-105 transition-all duration-500">
@@ -143,7 +144,8 @@ async function loadBookmarks() {
         grid.innerHTML = '';
         snapshot.forEach(doc => {
             const n = doc.data();
-            const currentCover = n.coverImage || n.cover || 'https://via.placeholder.com/300x400?text=No+Cover';
+            const currentCover = n.coverImage || n.cover || n.image || 'https://via.placeholder.com/300x400?text=No+Cover';
+            
             grid.innerHTML += `
                 <div class="group cursor-pointer" onclick="window.location.href='detail.html?id=${doc.id}'">
                     <div class="aspect-[3/4] rounded-2xl overflow-hidden mb-4 shadow-xl border border-white/5 group-hover:scale-105 transition-all">
@@ -155,6 +157,7 @@ async function loadBookmarks() {
     } catch (e) { console.error(e); }
 }
 
+// Fungsi My Novels & Profile Editing kekal sama...
 async function loadMyNovels() {
     const grid = document.getElementById('readingList');
     const tableBody = document.getElementById('trafficTableBody');
@@ -176,7 +179,7 @@ async function loadMyNovels() {
             const currentCover = n.coverImage || n.cover || 'https://via.placeholder.com/300x400?text=No+Cover';
             grid.innerHTML += `
                 <div class="group cursor-pointer" onclick="window.location.href='detail.html?id=${doc.id}'">
-                    <div class="aspect-[3/4] rounded-2xl overflow-hidden mb-4 shadow-xl border border-white/5 group-hover:border-purple-500/50 transition-all">
+                    <div class="aspect-[3/4] rounded-2xl overflow-hidden mb-4 shadow-xl border border-white/5 group-hover:scale-105 transition-all">
                         <img src="${currentCover}" class="w-full h-full object-cover">
                     </div>
                     <h4 class="text-xs font-bold truncate italic uppercase tracking-tighter">${n.title}</h4>
@@ -196,7 +199,6 @@ async function loadMyNovels() {
     } catch (e) { console.error(e); }
 }
 
-// 5. PROFILE EDITING & UTILITY
 window.toggleEditModal = function() {
     const modal = document.getElementById('editModal');
     modal.classList.toggle('hidden');
