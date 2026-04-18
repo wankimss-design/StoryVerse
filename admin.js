@@ -1,104 +1,117 @@
 const db = firebase.firestore();
+let base64Image = "";
 
 // --- 1. INISIALISASI ---
 document.addEventListener('DOMContentLoaded', () => {
     loadNovelList();
+    loadNovelTable();
 });
 
-// --- 2. MUAT SENARAI NOVEL (Untuk Dropdown di Seksyen Update) ---
+// --- 2. UPLOAD GAMBAR KE BASE64 ---
+document.getElementById('coverFile').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onloadend = function() {
+            base64Image = reader.result;
+            document.getElementById('imagePreview').src = base64Image;
+            document.getElementById('previewContainer').classList.remove('hidden');
+            document.getElementById('fileNameDisplay').innerText = file.name.toUpperCase();
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// --- 3. MUAT SENARAI NOVEL (DROPDOWN & TABLE) ---
 async function loadNovelList() {
     const select = document.getElementById('selectNovel');
-    if (!select) return;
+    const snapshot = await db.collection('novels').orderBy('title').get();
+    select.innerHTML = '<option value="">Pilih Novel...</option>';
+    snapshot.forEach(doc => {
+        select.innerHTML += `<option value="${doc.id}">${doc.data().title}</option>`;
+    });
+}
+
+async function loadNovelTable() {
+    const tbody = document.getElementById('novelTableBody');
+    const snapshot = await db.collection('novels').orderBy('createdAt', 'desc').get();
+    tbody.innerHTML = '';
+    snapshot.forEach(doc => {
+        const data = doc.data();
+        tbody.innerHTML += `
+            <tr class="border-b border-white/5 hover:bg-white/[0.02] transition-all group">
+                <td class="py-5 px-4">
+                    <div class="flex items-center gap-4">
+                        <img src="${data.image}" class="w-10 h-14 object-cover rounded-lg shadow-lg">
+                        <span class="font-bold text-sm">${data.title}</span>
+                    </div>
+                </td>
+                <td class="py-5 px-4 text-[10px] text-gray-500 font-bold uppercase tracking-widest">${data.genre}</td>
+                <td class="py-5 px-4 text-center">
+                    <button onclick="editNovel('${doc.id}')" class="text-purple-500 hover:bg-purple-500/10 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-tighter transition-all">EDIT</button>
+                </td>
+            </tr>`;
+    });
+}
+
+// --- 4. PENYIMPANAN DATA NOVEL ---
+document.getElementById('newNovelForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('newTitle').value;
+    const novelId = title.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+    
+    const novelData = {
+        title: title,
+        genre: document.getElementById('newGenre').value,
+        description: document.getElementById('newSinopsis').value,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        author: "Admin StoryVerse",
+        status: "Publish"
+    };
+
+    if (base64Image) novelData.image = base64Image;
 
     try {
-        const snapshot = await db.collection('novels').orderBy('title').get();
-        select.innerHTML = '<option value="">-- Pilih Novel Untuk Update --</option>';
-        
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            const option = document.createElement('option');
-            option.value = doc.id; // Ini adalah slug (ID unik dokumen)
-            option.textContent = data.title;
-            select.appendChild(option);
+        await db.collection('novels').doc(novelId).set(novelData, { merge: true });
+        alert("Novel Berjaya Disimpan!");
+        location.reload();
+    } catch (e) { alert("Ralat: " + e.message); }
+});
+
+// --- 5. PENYIMPANAN DATA BAB ---
+document.getElementById('updateChapterForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const novelId = document.getElementById('selectNovel').value;
+    const num = document.getElementById('chapterNum').value;
+
+    try {
+        await db.collection('novels').doc(novelId).collection('chapters').doc(`chapter-${num}`).set({
+            chapterNumber: parseInt(num),
+            title: document.getElementById('chapterTitle').value,
+            content: document.getElementById('chapterContent').value,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-    } catch (error) {
-        console.error("Gagal memuatkan senarai novel:", error);
+        alert(`Bab ${num} Berjaya Disimpan!`);
+        e.target.reset();
+    } catch (e) { alert("Gagal Simpan Bab"); }
+});
+
+// --- 6. FUNGSI EDIT NOVEL ---
+async function editNovel(id) {
+    const doc = await db.collection('novels').doc(id).get();
+    const data = doc.data();
+    
+    document.getElementById('newTitle').value = data.title;
+    document.getElementById('newGenre').value = data.genre;
+    document.getElementById('newSinopsis').value = data.description;
+    if (data.image) {
+        base64Image = data.image;
+        document.getElementById('imagePreview').src = data.image;
+        document.getElementById('previewContainer').classList.remove('hidden');
     }
-}
-
-// --- 3. SEKSYEN: TAMBAH NOVEL BARU ---
-const newNovelForm = document.getElementById('newNovelForm');
-if (newNovelForm) {
-    newNovelForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const title = document.getElementById('newTitle').value.trim();
-        const genre = document.getElementById('newGenre').value;
-        const cover = document.getElementById('newCover').value.trim();
-        const sinopsis = document.getElementById('newSinopsis').value.trim();
-
-        if (!title || !sinopsis) {
-            alert("Sila isi tajuk dan sinopsis!");
-            return;
-        }
-
-        // Bina slug unik (Contoh: "Cinta Terlarang" -> "cinta-terlarang")
-        const novelId = title.toLowerCase()
-                             .replace(/[^\w ]+/g, '') // Buang simbol
-                             .replace(/ +/g, '-');    // Tukar ruang ke dash
-
-        try {
-            await db.collection('novels').doc(novelId).set({
-                title: title,
-                genre: genre,
-                image: cover || "https://via.placeholder.com/300x450", // Default image jika kosong
-                description: sinopsis,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                author: "Admin StoryVerse",
-                status: "Publish"
-            });
-
-            alert("Novel berjaya didaftarkan ke sistem!");
-            newNovelForm.reset();
-            loadNovelList(); // Update dropdown secara automatik
-        } catch (error) {
-            console.error("Ralat simpan novel:", error);
-            alert("Gagal mendaftarkan novel.");
-        }
-    });
-}
-
-// --- 4. SEKSYEN: TAMBAH / UPDATE BAB ---
-const updateChapterForm = document.getElementById('updateChapterForm');
-if (updateChapterForm) {
-    updateChapterForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const novelId = document.getElementById('selectNovel').value;
-        const chapNum = document.getElementById('chapterNum').value;
-        const chapTitle = document.getElementById('chapterTitle').value.trim();
-        const content = document.getElementById('chapterContent').value.trim();
-
-        if (!novelId || !chapNum || !content) {
-            alert("Sila pilih novel, nombor bab dan isi kandungan!");
-            return;
-        }
-
-        try {
-            // Simpan bab ke dalam sub-collection 'chapters'
-            await db.collection('novels').doc(novelId)
-                .collection('chapters').doc(`chapter-${chapNum}`).set({
-                    title: chapTitle || `Bab ${chapNum}`,
-                    content: content,
-                    chapterNumber: parseInt(chapNum),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-            alert(`Isi kandungan Bab ${chapNum} berjaya disimpan!`);
-            updateChapterForm.reset();
-        } catch (error) {
-            console.error("Ralat simpan bab:", error);
-            alert("Gagal menyimpan bab.");
-        }
-    });
+    
+    const btn = document.getElementById('mainSubmitBtn');
+    btn.innerHTML = `Kemaskini Novel <i class="fa-solid fa-arrows-rotate ml-2 text-[10px]"></i>`;
+    btn.classList.replace('bg-purple-600', 'bg-emerald-600');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
