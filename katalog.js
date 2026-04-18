@@ -31,7 +31,15 @@ function toggleDropdown(id) {
     });
 }
 
-// --- 3. DATA & RENDER (FIRESTORE VERSION) ---
+// Tutup dropdown jika klik di luar
+window.onclick = function(event) {
+    if (!event.target.matches('.dropdown-btn') && !event.target.closest('.menu-box')) {
+        document.getElementById('genreMenu')?.classList.add('hidden');
+        document.getElementById('statusMenu')?.classList.add('hidden');
+    }
+}
+
+// --- 3. DATA & RENDER ---
 async function loadKatalog() {
     const grid = document.getElementById('katalogGrid');
     const searchInput = document.getElementById('searchInput');
@@ -51,12 +59,8 @@ async function loadKatalog() {
 
         const filtered = allNovels.filter(n => {
             const matchSearch = n.title.toLowerCase().includes(term);
-            
-            // Penambahbaikan Logik Genre: Sokong Array DAN String Tunggal
             const novelGenres = Array.isArray(n.genres) ? n.genres : (n.genre ? [n.genre] : []);
-            const matchGenre = selectedGenres.length === 0 || 
-                              novelGenres.some(g => selectedGenres.includes(g));
-                              
+            const matchGenre = selectedGenres.length === 0 || novelGenres.some(g => selectedGenres.includes(g));
             const matchStatus = selectedStatus === "" || n.status === selectedStatus;
             
             return matchSearch && matchGenre && matchStatus;
@@ -79,10 +83,7 @@ function renderGrid(data) {
     }
 
     grid.innerHTML = data.map(n => {
-        // Fallback imej yang lebih luas (sokong pelbagai nama field)
         const finalCover = n.coverImage || n.cover || n.image || 'https://via.placeholder.com/300x450';
-        
-        // Papar genre pertama atau fallback
         const displayGenre = Array.isArray(n.genres) && n.genres.length > 0 ? n.genres[0] : (n.genre || 'Umum');
         
         return `
@@ -99,29 +100,30 @@ function renderGrid(data) {
                 <span class="text-[9px] text-gray-700">•</span>
                 <span class="text-[9px] font-bold text-gray-500 uppercase tracking-tighter">${n.status || 'Ongoing'}</span>
             </div>
-        </div>
-    `}).join('');
+        </div>`;
+    }).join('');
 }
 
-// --- 4. THEME & UTILITY ---
+// --- 4. THEME & LOGOUT ---
 function toggleTheme() {
     document.body.classList.toggle('light-mode');
-    // Simpan preferensi tema (opsional)
-    const isLight = document.body.classList.contains('light-mode');
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
 }
 
-// Muat tema asal dari storage
-if (localStorage.getItem('theme') === 'light') {
-    document.body.classList.add('light-mode');
-}
+if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
 
 function logout() {
     firebase.auth().signOut().then(() => { window.location.href = "auth.html"; });
 }
 
-// Event Listeners
+// --- 5. GLOBAL EVENT LISTENERS (Letakkan di sini) ---
+
+// 1. Untuk Carian (Search)
 document.getElementById('searchInput')?.addEventListener('input', loadKatalog);
-document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(i => {
-    i.addEventListener('change', loadKatalog);
+
+// 2. Untuk Checkbox Genre & Radio Status
+document.addEventListener('change', (e) => {
+    if (e.target.name === 'genre' || e.target.name === 'status') {
+        loadKatalog(); 
+    }
 });
