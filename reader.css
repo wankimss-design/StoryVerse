@@ -20,124 +20,118 @@ article {
     float: left;
 }
 
-/* Jarak bawah supaya teks tidak tenggelam di belakang panel */
 main {
     padding-bottom: 180px;
 }
 
-/* --- 2. LIGHT MODE STYLES (SEPIA) --- */
+/* --- 2. CUSTOM DROPDOWN (MODERN LOOK) --- */
+
+/* Animasi untuk Dropdown */
+#chapterDropdown {
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#chapterDropdown.active {
+    opacity: 1;
+    scale: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+#chapterChevron {
+    transition: transform 0.3s ease;
+}
+
+#chapterChevron.rotate {
+    transform: rotate(180deg);
+}
+
+/* Gaya Senarai Bab */
+.chapter-item {
+    padding: 14px 20px;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border-left: 3px solid transparent;
+}
+
+.chapter-item:hover {
+    background: rgba(168, 85, 247, 0.08);
+    color: #a855f7;
+    padding-left: 25px; /* Efek anjakan sedikit bila hover */
+}
+
+.chapter-item.active {
+    background: rgba(168, 85, 247, 0.12);
+    color: #a855f7;
+    border-left: 3px solid #a855f7;
+    color: white;
+}
+
+/* Scrollbar halus untuk senarai bab */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(168, 85, 247, 0.3);
+    border-radius: 10px;
+}
+
+/* --- 3. LIGHT MODE STYLES --- */
 
 body.light-mode {
-    background-color: #fcf8f2 !important; /* Warna kertas lama */
-    color: #2d3436 !important;
-}
-
-/* Navigasi dalam Light Mode */
-body.light-mode nav {
-    background-color: rgba(252, 248, 242, 0.9) !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-/* Warna Ikon & Teks Navigasi */
-body.light-mode nav .fa-solid, 
-body.light-mode nav .fa-regular,
-body.light-mode nav h2 {
-    color: #2d3436 !important;
-}
-
-/* Warna Kandungan Novel */
-body.light-mode #chapterTitleDisplay {
-    color: #1a1a1a !important;
-}
-
-body.light-mode #novelContent {
-    color: #3d3d3d !important;
-}
-
-/* --- 3. SETTINGS PANEL (LIGHT MODE) --- */
-
-body.light-mode #settingsPanel {
-    background-color: rgba(252, 248, 242, 0.98) !important;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.05);
-}
-
-body.light-mode #settingsPanel h3,
-body.light-mode #settingsPanel p {
-    color: #2d3436 !important;
-}
-
-body.light-mode #settingsPanel button {
-    color: #2d3436 !important;
-    background-color: rgba(0, 0, 0, 0.03) !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
-}
-
-body.light-mode #settingsPanel button:hover {
-    background-color: rgba(168, 85, 247, 0.1) !important;
-    border-color: #a855f7 !important;
-}
-
-/* Warna simbol dalam butang */
-body.light-mode #settingsPanel .fa-xmark,
-body.light-mode #settingsPanel .fa-minus,
-body.light-mode #settingsPanel .fa-plus {
-    color: #2d3436 !important;
-}
-
-body.light-mode #fontSizeDisplay {
-    color: #1a1a1a !important; /* Saiz font jadi hitam pekat */
-}
-
-/* --- 4. BUTANG NAVIGASI BAWAH (LIGHT MODE) --- */
-
-/* Butang "Bab Sebelum" */
-body.light-mode #prevBtn {
-    background-color: rgba(0, 0, 0, 0.03) !important;
-    border-color: rgba(0, 0, 0, 0.1) !important;
-    color: #2d3436 !important;
-}
-
-/* Butang "Kembali ke Katalog" */
-body.light-mode main button[onclick*="katalog.html"] {
-    color: #999 !important;
-}
-
-body.light-mode main button[onclick*="katalog.html"]:hover {
-    color: #a855f7 !important;
-}
-
-/* Garisan pemisah di atas butang navigasi */
-body.light-mode .border-t {
-    border-color: rgba(0, 0, 0, 0.05) !important;
-}
-
-/* Gaya untuk dropdown pilih bab */
-#chapterSelector {
-    padding-right: 20px;
-    background: none;
-    border: none;
-    color: #a855f7; /* Warna purple */
-    font-weight: 800;
-    cursor: pointer;
-}
-
-/* Membaiki rupa 'box' pilihan bab (Dropdown menu) */
-#chapterSelector option {
-    background-color: #121212 !important; /* Warna gelap sama dengan panel */
-    color: #a855f7 !important;
-    padding: 12px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-/* Jika dalam Mode Light, tukar warna dropdown jadi cerah */
-body.light-mode #chapterSelector option {
     background-color: #fcf8f2 !important;
     color: #2d3436 !important;
 }
 
-/* Menghilangkan border biru bila diklik (Focus) */
-#chapterSelector:focus {
-    outline: none;
-    border: none;
+body.light-mode nav {
+    background-color: rgba(252, 248, 242, 0.85) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode #readerNovelTitle {
+    color: rgba(0, 0, 0, 0.3) !important;
+}
+
+body.light-mode #chapterDropdown {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-blur: 20px;
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .chapter-item {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+body.light-mode .chapter-item:hover {
+    background: rgba(168, 85, 247, 0.05);
+}
+
+body.light-mode .chapter-item.active {
+    background: rgba(168, 85, 247, 0.1);
+    color: #a855f7;
+}
+
+body.light-mode #settingsPanel {
+    background-color: rgba(252, 248, 242, 0.98) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* --- 4. LAIN-LAIN --- */
+
+/* Membuang gaya chapterSelector lama (kerana kita sudah guna custom dropdown) */
+#chapterSelector {
+    display: none;
 }
