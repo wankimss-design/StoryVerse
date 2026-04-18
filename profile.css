@@ -100,6 +100,24 @@ nav a.bg-white\/10 i {
     overflow: hidden;
 }
 
+/* Pastikan gambar dalam card sentiasa cantik */
+.profile-novel-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ini sangat penting supaya gambar tak penyek */
+    transition: transform 0.5s ease;
+}
+
+.profile-novel-card:hover img {
+    transform: scale(1.05); /* Efek zoom sikit bila hover */
+}
+
+/* Memperkemaskan TextArea untuk Bio */
+textarea.admin-input {
+    min-height: 100px;
+    resize: none;
+    line-height: 1.6;
+}
 .profile-novel-card:hover { 
     transform: translateY(-5px); 
     border-color: rgba(168, 85, 247, 0.3); 
@@ -178,4 +196,34 @@ nav a.bg-white\/10 i {
     display: flex !important;
     align-items: center;
     justify-content: center;
+}
+
+/* Container Utama untuk Scroll */
+.custom-scroll {
+    scrollbar-width: thin; /* Untuk Firefox */
+    scrollbar-color: rgba(168, 85, 247, 0.3) transparent;
+}
+
+/* Scrollbar untuk Chrome, Safari, Edge */
+.custom-scroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+    background: rgba(168, 85, 247, 0.2);
+    border-radius: 20px;
+    transition: all 0.3s;
+}
+
+.custom-scroll:hover::-webkit-scrollbar-thumb {
+    background: rgba(168, 85, 247, 0.5); /* Warna lebih terang bila mouse hover */
+}
+
+/* Pastikan saiz kad novel konsisten */
+.profile-novel-card {
+    min-height: 250px;
 }
