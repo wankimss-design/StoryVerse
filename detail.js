@@ -1,8 +1,3 @@
-// 1. PENGURUSAN DATA & DATABASE
-if (typeof db === 'undefined') {
-    var db = firebase.firestore();
-}
-
 const urlParams = new URLSearchParams(window.location.search);
 const novelId = urlParams.get('id');
 
