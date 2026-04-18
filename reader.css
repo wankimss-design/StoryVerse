@@ -111,3 +111,33 @@ body.light-mode main button[onclick*="katalog.html"]:hover {
 body.light-mode .border-t {
     border-color: rgba(0, 0, 0, 0.05) !important;
 }
+
+/* Gaya untuk dropdown pilih bab */
+#chapterSelector {
+    padding-right: 20px;
+    background: none;
+    border: none;
+    color: #a855f7; /* Warna purple */
+    font-weight: 800;
+    cursor: pointer;
+}
+
+/* Membaiki rupa 'box' pilihan bab (Dropdown menu) */
+#chapterSelector option {
+    background-color: #121212 !important; /* Warna gelap sama dengan panel */
+    color: #a855f7 !important;
+    padding: 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Jika dalam Mode Light, tukar warna dropdown jadi cerah */
+body.light-mode #chapterSelector option {
+    background-color: #fcf8f2 !important;
+    color: #2d3436 !important;
+}
+
+/* Menghilangkan border biru bila diklik (Focus) */
+#chapterSelector:focus {
+    outline: none;
+    border: none;
+}
