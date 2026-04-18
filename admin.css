@@ -111,3 +111,41 @@ body.light-mode .nav-container-floating {
     background: rgba(255, 255, 255, 0.9) !important;
     border: 1px solid #e5e7eb !important;
 }
+
+/* Pastikan ikon putih dan jelas */
+.nav-btn-icon i {
+    color: white !important;
+    font-size: 1.2rem;
+}
+
+/* Kesan bila hover */
+.nav-btn-icon:hover i {
+    color: #a855f7 !important; /* Warna ungu StoryVerse */
+}
+
+/* Memastikan Nav Bar Desktop sentiasa di atas */
+.fixed.top-5.right-5 {
+    z-index: 10000 !important;
+}
+/* Sembunyikan dropdown secara default */
+#genreDropdown.hidden {
+    display: none;
+}
+
+/* Fix Ikon untuk Light Mode */
+body.light-mode .nav-btn-icon i {
+    color: #1b1b1b !important;
+}
+
+body.light-mode .nav-btn-icon:hover i {
+    color: #a855f7 !important;
+}
+
+/* Pastikan Table Header nampak profesional */
+thead th {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.light-mode thead th {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
