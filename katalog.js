@@ -1,22 +1,11 @@
-// --- 1. FIREBASE AUTH & USER PROFILE ---
+// --- 1. FIREBASE AUTH ---
 firebase.auth().onAuthStateChanged(async (user) => {
     if (!user) {
         window.location.href = "auth.html";
     } else {
         const navProfileImg = document.getElementById('navProfileImg');
         if (navProfileImg) {
-            const fallbackAvatar = `https://ui-avatars.com/api/?name=${user.email}&background=a855f7&color=fff`;
-            navProfileImg.src = user.photoURL || fallbackAvatar;
-
-            try {
-                const db = firebase.firestore();
-                const doc = await db.collection('users').doc(user.uid).get();
-                if (doc.exists && doc.data().photoURL) {
-                    navProfileImg.src = doc.data().photoURL;
-                }
-            } catch (error) {
-                console.log("Ralat profil:", error);
-            }
+            navProfileImg.src = user.photoURL || `https://ui-avatars.com/api/?name=${user.email}&background=a855f7&color=fff`;
         }
         loadKatalog(); 
     }
@@ -42,6 +31,8 @@ window.onclick = function(event) {
 // --- 3. DATA & RENDER ---
 async function loadKatalog() {
     const grid = document.getElementById('katalogGrid');
+    if (!grid || typeof db === 'undefined') return; // Pastikan 'db' dari config sedia
+
     const searchInput = document.getElementById('searchInput');
     const term = searchInput?.value.toLowerCase() || "";
     
@@ -49,7 +40,7 @@ async function loadKatalog() {
     const selectedStatus = document.querySelector('input[name="status"]:checked')?.value || "";
 
     try {
-        const db = firebase.firestore();
+        // Gunakan 'db' terus dari firebase-config.js
         const snapshot = await db.collection('novels').orderBy('createdAt', 'desc').get();
         
         let allNovels = [];
@@ -58,7 +49,7 @@ async function loadKatalog() {
         });
 
         const filtered = allNovels.filter(n => {
-            const matchSearch = n.title.toLowerCase().includes(term);
+            const matchSearch = (n.title || "").toLowerCase().includes(term);
             const novelGenres = Array.isArray(n.genres) ? n.genres : (n.genre ? [n.genre] : []);
             const matchGenre = selectedGenres.length === 0 || novelGenres.some(g => selectedGenres.includes(g));
             const matchStatus = selectedStatus === "" || n.status === selectedStatus;
@@ -69,7 +60,7 @@ async function loadKatalog() {
         renderGrid(filtered);
     } catch (error) {
         console.error("Ralat Firestore:", error);
-        if(grid) grid.innerHTML = `<p class="col-span-full text-center py-10 opacity-50 text-[10px]">Gagal memuatkan data.</p>`;
+        grid.innerHTML = `<p class="col-span-full text-center py-10 opacity-50 text-[10px]">Gagal memuatkan data.</p>`;
     }
 }
 
@@ -116,12 +107,9 @@ function logout() {
     firebase.auth().signOut().then(() => { window.location.href = "auth.html"; });
 }
 
-// --- 5. GLOBAL EVENT LISTENERS (Letakkan di sini) ---
-
-// 1. Untuk Carian (Search)
+// --- 5. GLOBAL LISTENERS ---
 document.getElementById('searchInput')?.addEventListener('input', loadKatalog);
 
-// 2. Untuk Checkbox Genre & Radio Status
 document.addEventListener('change', (e) => {
     if (e.target.name === 'genre' || e.target.name === 'status') {
         loadKatalog(); 
