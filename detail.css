@@ -27,6 +27,20 @@ main { animation: fadeInUp 1s cubic-bezier(0.19, 1, 0.22, 1); }
     transition: all 0.4s ease;
 }
 
+/* --- PROFILE BUTTON LOGIC (Penyelesaian Ungu) --- */
+/* Keadaan asal: Kelabu/Transparent */
+.nav-pill button {
+    transition: all 0.3s ease;
+}
+
+/* Keadaan bila cursor di atas ikon profil atau mana-mana butang dalam pill */
+.nav-pill button:hover {
+    background-color: #a855f7 !important; /* Purple-500 */
+    color: white !important;
+    border-color: #a855f7 !important;
+    transform: scale(1.1);
+}
+
 /* Sinopsis Clamp */
 .line-clamp-3 {
     display: -webkit-box;
@@ -57,7 +71,10 @@ body.light-mode .nav-pill {
 
 /* Icon & Button Colors in Light Mode */
 body.light-mode .nav-pill button { color: #64748b !important; }
-body.light-mode .nav-pill button:hover { color: #0f172a !important; background: rgba(0,0,0,0.05); }
+body.light-mode .nav-pill button:hover { 
+    color: #fff !important; 
+    background-color: #9333ea !important; /* Purple-600 untuk light mode */
+}
 
 /* Fix for independent buttons (Back & Like) */
 body.light-mode nav button.pointer-events-auto,
@@ -77,7 +94,6 @@ body.light-mode .bg-white\/10 {
 
 body.light-mode .text-gray-400 { color: #64748b !important; }
 body.light-mode .text-purple-400 { color: #7e22ce !important; }
-body.light-mode .bg-purple-500\/20 { background-color: rgba(168, 85, 247, 0.1) !important; }
 
 /* Chapter List Hover in Light Mode */
 body.light-mode #chapterList > div:hover {
