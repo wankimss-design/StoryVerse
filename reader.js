@@ -1,4 +1,5 @@
-// Global State - Mengambil tetapan simpanan pengguna
+// --- 1. GLOBAL STATE & CONFIG ---
+const db = firebase.firestore();
 let currentFontSize = parseInt(localStorage.getItem('readerFontSize')) || 18;
 let currentFontFamily = localStorage.getItem('readerFontFamily') || 'Lora';
 
@@ -7,55 +8,107 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = params.get('title') || "Novel StoryVerse";
     const chapter = parseInt(params.get('chapter')) || 1;
 
-    // 1. Inisialisasi Paparan & Kandungan
+    // Inisialisasi Paparan & Kandungan
     updateHeaderUI(title, chapter);
     loadChapterContent(chapter);
     applyStoredSettings();
-    
-    // 2. Muat Custom Dropdown Bab (Set kepada 10 bab)
-    populateChapterDropdown(10); 
+    populateChapterDropdown(10); // Muat 10 bab
+    loadComments(); // Muat komen Firestore
 
-    // 3. Semak tema asal dari localStorage
+    // Semak tema asal
     if (localStorage.getItem('readerTheme') === 'light') {
         document.body.classList.add('light-mode');
         const icon = document.getElementById('themeIcon');
         if (icon) icon.classList.replace('fa-moon', 'fa-sun');
     }
 
-    // 4. Firebase Sync (Sejarah Pembacaan)
-    if (typeof firebase !== 'undefined' && typeof db !== 'undefined') {
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                saveHistoryToFirebase(user.uid, title, chapter);
-            }
-        });
-    }
+    // Firebase Sync (Sejarah Pembacaan)
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            saveHistoryToFirebase(user.uid, title, chapter);
+        }
+    });
+
+    // Detect navigasi browser (back/forward)
+    window.addEventListener('popstate', () => {
+        loadComments();
+    });
 });
 
-// --- PENGURUSAN CUSTOM DROPDOWN ---
+// --- 2. SISTEM KOMEN FIRESTORE ---
 
-function toggleChapterList() {
-    const dropdown = document.getElementById('chapterDropdown');
-    const chevron = document.getElementById('chapterChevron');
-    if (dropdown) dropdown.classList.toggle('active');
-    if (chevron) chevron.classList.toggle('rotate');
+async function postComment() {
+    const commentInput = document.getElementById('commentInput');
+    const commentText = commentInput.value;
+    if (!commentText.trim()) return;
+
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        alert("Sila login terlebih dahulu untuk memberi komen.");
+        return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const title = params.get('title') || "Novel-Tanpa-Tajuk";
+    const chapter = params.get('chapter') || "1";
+    const novelId = title.replace(/\s+/g, '-').toLowerCase();
+
+    try {
+        await db.collection('novels').doc(novelId)
+            .collection('chapters').doc(`chapter-${chapter}`)
+            .collection('comments').add({
+                uid: user.uid,
+                userName: user.displayName || "Pembaca StoryVerse",
+                userPhoto: user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName || 'User'}&background=random`,
+                text: commentText,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+        commentInput.value = ''; 
+    } catch (e) {
+        console.error("Ralat komen:", e);
+    }
 }
 
-// Tutup dropdown jika klik di luar kawasan menu
-document.addEventListener('click', (e) => {
-    const dropdown = document.getElementById('chapterDropdown');
-    const btn = document.getElementById('chapterBtn');
-    if (dropdown && btn && !btn.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.classList.remove('active');
-        document.getElementById('chapterChevron').classList.remove('rotate');
-    }
-});
+function loadComments() {
+    const params = new URLSearchParams(window.location.search);
+    const title = params.get('title') || "Novel-Tanpa-Tajuk";
+    const chapter = params.get('chapter') || "1";
+    const novelId = title.replace(/\s+/g, '-').toLowerCase();
+    const list = document.getElementById('commentsList');
+
+    db.collection('novels').doc(novelId)
+        .collection('chapters').doc(`chapter-${chapter}`)
+        .collection('comments')
+        .orderBy('timestamp', 'desc')
+        .onSnapshot((snapshot) => {
+            list.innerHTML = '';
+            if (snapshot.empty) {
+                list.innerHTML = '<p class="text-gray-600 text-xs text-center uppercase tracking-widest py-10 opacity-50">Belum ada komen.</p>';
+                return;
+            }
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const date = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString('ms-MY') : 'Baru sahaja';
+                list.innerHTML += `
+                    <div class="comment-card flex gap-4 transition-all duration-300 mb-4">
+                        <img src="${data.userPhoto}" class="w-10 h-10 rounded-full border-2 border-purple-500/20 object-cover">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-center mb-1">
+                                <h4 class="text-sm font-bold text-purple-500">${data.userName}</h4>
+                                <span class="text-[10px] text-gray-500">${date}</span>
+                            </div>
+                            <p class="text-sm text-gray-400">${data.text}</p>
+                        </div>
+                    </div>`;
+            });
+        });
+}
+
+// --- 3. UI & NAVIGATION ---
 
 function populateChapterDropdown(totalChapters) {
     const list = document.getElementById('chapterList');
-    const currentChapterText = document.getElementById('currentChapterText');
     if (!list) return;
-
     const params = new URLSearchParams(window.location.search);
     const currentChapter = parseInt(params.get('chapter')) || 1;
 
@@ -63,66 +116,44 @@ function populateChapterDropdown(totalChapters) {
     for (let i = 1; i <= totalChapters; i++) {
         const li = document.createElement('li');
         li.className = `chapter-item ${i === currentChapter ? 'active' : ''}`;
-        
-        li.innerHTML = `
-            <span>Bab ${i.toString().padStart(2, '0')}</span>
-            ${i === currentChapter ? '<i class="fa-solid fa-check text-[8px]"></i>' : ''}
-        `;
-        
+        li.innerHTML = `<span>Bab ${i.toString().padStart(2, '0')}</span> ${i === currentChapter ? '<i class="fa-solid fa-check text-[8px]"></i>' : ''}`;
         li.onclick = () => {
-            const newParams = new URLSearchParams(window.location.search);
-            newParams.set('chapter', i);
-            window.location.href = `reader.html?${newParams.toString()}`;
+            params.set('chapter', i);
+            window.location.href = `reader.html?${params.toString()}`;
         };
-        
         list.appendChild(li);
-    }
-    
-    // Update teks pada butang navigasi utama
-    if (currentChapterText) {
-        currentChapterText.innerText = `Bab ${currentChapter.toString().padStart(2, '0')}`;
     }
 }
 
-// --- PENGURUSAN UI & KANDUNGAN ---
-
 function updateHeaderUI(title, chapter) {
-    const titleEl = document.getElementById('readerNovelTitle');
-    const chapDisplayEl = document.getElementById('chapterTitleDisplay');
-    const prevBtn = document.getElementById('prevBtn');
-
-    if (titleEl) titleEl.innerText = title;
-    if (chapDisplayEl) chapDisplayEl.innerText = `Bahagian Ke-${chapter}`;
-    
+    document.getElementById('readerNovelTitle').innerText = title;
+    document.getElementById('chapterTitleDisplay').innerText = `Bahagian Ke-${chapter}`;
+    document.getElementById('prevBtn').disabled = (chapter <= 1);
     document.title = `Bab ${chapter} - ${title}`;
-    if (prevBtn) prevBtn.disabled = (chapter <= 1);
 }
 
 function loadChapterContent(chapter) {
     const content = document.getElementById('novelContent');
-    if (!content) return;
-
-    // Placeholder content - Gantikan dengan fetch data dari database nanti
-    content.innerHTML = `
-        <p>Dia berdiri di sana, di bawah rintik hujan yang kian lebat, memerhatikan bayang-bayang yang semakin menjauh. Aliff tahu, setiap langkah yang diambilnya malam ini adalah satu pengkhianatan kepada hatinya sendiri.</p>
-        <p>"Kenapa sekarang?" bisiknya perlahan. Suaranya hilang ditelan deru angin. Di tangannya, sehelai nota lama yang kian luntur tulisannya digenggam erat. Rahsia yang disimpan selama sepuluh tahun akhirnya terbongkar di hadapan matanya.</p>
-        <p>Tiba-tiba, satu cahaya lembut muncul dari hujung jalan. Bukan cahaya lampu jalan, tetapi sesuatu yang lebih murni. Cinta ini mungkin mustahil, tetapi Aliff tidak akan sesekali berpaling lagi.</p>
-    `;
+    // Placeholder - Sila gantikan dengan fetch Firestore jika perlu
+    content.innerHTML = `<p>Bahagian kandungan bab ${chapter} akan muncul di sini secara dinamik...</p>`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// --- SISTEM TETAPAN (FONT & TEMA) ---
+// --- 4. SETTINGS & THEME ---
 
 function toggleSettings() {
-    const panel = document.getElementById('settingsPanel');
-    if (panel) panel.classList.toggle('translate-y-full');
+    document.getElementById('settingsPanel').classList.toggle('translate-y-full');
+}
+
+function toggleTheme() {
+    const isLight = document.body.classList.toggle('light-mode');
+    localStorage.setItem('readerTheme', isLight ? 'light' : 'dark');
+    const icon = document.getElementById('themeIcon');
+    icon.classList.replace(isLight ? 'fa-moon' : 'fa-sun', isLight ? 'fa-sun' : 'fa-moon');
 }
 
 function changeFontSize(delta) {
-    currentFontSize += delta;
-    if (currentFontSize < 14) currentFontSize = 14;
-    if (currentFontSize > 32) currentFontSize = 32;
-    
+    currentFontSize = Math.min(Math.max(currentFontSize + delta, 14), 32);
     updateTypography();
     localStorage.setItem('readerFontSize', currentFontSize);
 }
@@ -133,47 +164,21 @@ function changeFontFace(family) {
     localStorage.setItem('readerFontFamily', family);
 }
 
-function applyStoredSettings() {
-    updateTypography();
-}
-
 function updateTypography() {
     const content = document.getElementById('novelContent');
-    const display = document.getElementById('fontSizeDisplay');
-    
     if (content) {
         content.style.fontSize = `${currentFontSize}px`;
         content.style.fontFamily = currentFontFamily;
     }
-    if (display) display.innerText = `${currentFontSize}px`;
+    document.getElementById('fontSizeDisplay').innerText = `${currentFontSize}px`;
 }
 
-function toggleTheme() {
-    document.body.classList.toggle('light-mode');
-    const icon = document.getElementById('themeIcon');
-    const isLight = document.body.classList.contains('light-mode');
-    
-    localStorage.setItem('readerTheme', isLight ? 'light' : 'dark');
-    
-    if (icon) {
-        if (isLight) {
-            icon.classList.replace('fa-moon', 'fa-sun');
-        } else {
-            icon.classList.replace('fa-sun', 'fa-moon');
-        }
-    }
-}
-
-// --- NAVIGASI & FIREBASE ---
+function applyStoredSettings() { updateTypography(); }
 
 function changeChapter(direction) {
     const params = new URLSearchParams(window.location.search);
     let chapter = parseInt(params.get('chapter')) || 1;
-    
-    chapter += direction;
-    if (chapter < 1) return;
-
-    params.set('chapter', chapter);
+    params.set('chapter', chapter + direction);
     window.location.href = `reader.html?${params.toString()}`;
 }
 
@@ -181,12 +186,22 @@ async function saveHistoryToFirebase(uid, title, chapter) {
     const novelId = title.replace(/\s+/g, '-').toLowerCase();
     try {
         await db.collection('users').doc(uid).collection('history').doc(novelId).set({
-            title: title,
-            lastChapter: chapter,
-            lastRead: firebase.firestore.FieldValue.serverTimestamp(),
-            novelId: novelId
+            title, lastChapter: chapter, lastRead: firebase.firestore.FieldValue.serverTimestamp(), novelId
         }, { merge: true });
-    } catch (e) {
-        console.error("Sejarah tidak dapat disimpan:", e);
+    } catch (e) { console.error("History error:", e); }
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', (e) => {
+    const dropdown = document.getElementById('chapterDropdown');
+    const btn = document.getElementById('chapterBtn');
+    if (dropdown && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove('active');
+        document.getElementById('chapterChevron').classList.remove('rotate');
     }
+});
+
+function toggleChapterList() {
+    document.getElementById('chapterDropdown').classList.toggle('active');
+    document.getElementById('chapterChevron').classList.toggle('rotate');
 }
