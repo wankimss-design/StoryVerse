@@ -227,3 +227,53 @@ textarea.admin-input {
 .profile-novel-card {
     min-height: 250px;
 }
+
+/* --- LOGIK LIGHT MODE --- */
+/* Memaksa latar belakang body berubah */
+body.light-mode {
+    background: #f8fafc !important; /* Warna putih kelabu lembut */
+    color: #1a1a1a !important;
+}
+
+/* Navigasi dalam mod cerah */
+body.light-mode nav {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Card Profile & Container Novel */
+body.light-mode .bg-[#121212], 
+body.light-mode .bg-white\/5,
+body.light-mode .profile-novel-card {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+/* Warna Teks & Nama (Sangat Penting) */
+body.light-mode h1, 
+body.light-mode h3, 
+body.light-mode h4, 
+body.light-mode #userName {
+    color: #0f172a !important;
+    background: none !important; /* Buang gradient teks putih */
+    -webkit-text-fill-color: #0f172a !important; /* Paksa teks jadi hitam */
+}
+
+body.light-mode #userBio, 
+body.light-mode .text-gray-400,
+body.light-mode .text-gray-500 {
+    color: #64748b !important;
+}
+
+/* Input Modal dalam mod cerah */
+body.light-mode .admin-input {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #1a1a1a !important;
+}
+
+/* Ikon Navigasi */
+body.light-mode nav .text-gray-400 {
+    color: #64748b !important;
+}
