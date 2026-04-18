@@ -105,25 +105,35 @@ body.light-mode #chapterChevron {
     color: #a855f7 !important;
 }
 
-/* Kandungan Utama (PENTING UNTUK PEMBACAAN) */
+/* Kandungan Utama */
 body.light-mode #chapterTitleDisplay {
-    color: #1a1a1a !important; /* Tajuk Bab Hitam Tajam */
+    color: #1a1a1a !important;
     text-shadow: none !important;
 }
 
 body.light-mode #novelContent {
-    color: #2d3436 !important; /* Teks Novel Gelap Jelas */
+    color: #2d3436 !important;
 }
 
 body.light-mode #novelContent::first-letter {
     color: #9333ea !important;
 }
 
-/* Dropdown Menu Light Mode */
+/* Dropdown Menu Light Mode Fix */
 body.light-mode #chapterDropdown {
     background: #ffffff !important;
     border: 1px solid rgba(168, 85, 247, 0.3) !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* INI PEMBETULAN TEKS "PILIH BAB" */
+body.light-mode #chapterDropdown p {
+    color: #a855f7 !important; /* Gunakan warna ungu agar nampak premium */
+    opacity: 0.8;
+}
+
+body.light-mode #chapterDropdown .border-b {
+    border-color: rgba(0, 0, 0, 0.05) !important;
 }
 
 body.light-mode .chapter-item {
@@ -132,6 +142,7 @@ body.light-mode .chapter-item {
 
 body.light-mode .chapter-item:hover {
     background: rgba(168, 85, 247, 0.1) !important;
+    color: #a855f7 !important;
 }
 
 /* Panel Tetapan Font */
