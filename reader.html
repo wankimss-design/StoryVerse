@@ -9,13 +9,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 </head>
 
 <body class="bg-[#0f0f0f] text-gray-300 min-h-screen font-['Plus_Jakarta_Sans'] transition-colors duration-500">
 
-    <nav class="fixed top-0 w-full z-50 bg-[#0f0f0f]/80 backdrop-blur-lg border-bottom border-white/5 px-6 h-20 flex items-center justify-between">
+    <nav class="fixed top-0 w-full z-50 bg-[#0f0f0f]/80 backdrop-blur-lg border-b border-white/5 px-6 h-20 flex items-center justify-between">
         <div class="flex items-center gap-4">
-            <button onclick="history.back()" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/5 transition-all">
+            <button onclick="history.back()" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/5 transition-all text-white">
                 <i class="fa-solid fa-chevron-left"></i>
             </button>
             <div>
@@ -26,39 +30,66 @@
 
         <div class="flex items-center gap-2">
             <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl hover:bg-white/5 flex items-center justify-center transition-all">
-                <i id="themeIcon" class="fa-solid fa-moon"></i>
+                <i id="themeIcon" class="fa-solid fa-moon text-white"></i>
             </button>
-            <button class="w-10 h-10 rounded-xl hover:bg-white/5 flex items-center justify-center transition-all">
-                <i class="fa-solid fa-font"></i>
+            <button onclick="toggleSettings()" class="w-10 h-10 rounded-xl hover:bg-white/5 flex items-center justify-center transition-all">
+                <i class="fa-solid fa-font text-white"></i>
             </button>
         </div>
     </nav>
 
     <main class="pt-32 pb-20 px-6 max-w-3xl mx-auto">
         <header class="mb-12 text-center">
-            <h1 id="chapterTitleDisplay" class="text-3xl md:text-5xl font-black text-white italic tracking-tighter mb-4 uppercase">Tajuk Bab</h1>
+            <h1 id="chapterTitleDisplay" class="text-3xl md:text-5xl font-black text-white italic tracking-tighter mb-4 uppercase leading-none">Tajuk Bab</h1>
             <div class="w-20 h-1 bg-purple-600 mx-auto rounded-full"></div>
         </header>
 
-        <article id="novelContent" class="font-['Lora'] text-lg md:text-xl leading-[1.8] text-gray-400 space-y-8 first-letter:text-5xl first-letter:font-black first-letter:text-purple-500 first-letter:mr-3 first-letter:float-left">
+        <article id="novelContent" class="font-['Lora'] text-lg md:text-xl leading-[1.9] text-gray-400 space-y-8 text-justify first-letter:text-5xl first-letter:font-black first-letter:text-purple-500 first-letter:mr-3 first-letter:float-left transition-all duration-300">
             Memuatkan cerita...
         </article>
 
         <div class="mt-20 flex flex-col items-center gap-8 pt-10 border-t border-white/5">
             <div class="flex items-center gap-4 w-full">
-                <button id="prevBtn" onclick="changeChapter(-1)" class="flex-1 py-4 bg-white/5 border border-white/10 rounded-2xl font-bold hover:bg-white/10 transition-all disabled:opacity-20 disabled:cursor-not-allowed">
-                    <i class="fa-solid fa-arrow-left mr-2"></i> Bab Sebelum
+                <button id="prevBtn" onclick="changeChapter(-1)" class="flex-1 py-4 bg-white/5 border border-white/10 rounded-2xl font-bold hover:bg-white/10 transition-all disabled:opacity-20">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Sebelum
                 </button>
                 <button id="nextBtn" onclick="changeChapter(1)" class="flex-1 py-4 bg-purple-600 text-white rounded-2xl font-bold hover:bg-purple-500 transition-all shadow-lg shadow-purple-600/20">
-                    Bab Seterusnya <i class="fa-solid fa-arrow-right ml-2"></i>
+                    Seterusnya <i class="fa-solid fa-arrow-right ml-2"></i>
                 </button>
             </div>
-            
             <button onclick="location.href='katalog.html'" class="text-[10px] font-black uppercase tracking-[0.3em] text-gray-600 hover:text-purple-500 transition-colors">
                 Kembali ke Katalog
             </button>
         </div>
     </main>
+
+    <div id="settingsPanel" class="fixed inset-x-0 bottom-0 z-[60] bg-[#1a1a1a]/95 backdrop-blur-xl border-t border-white/10 p-8 transform translate-y-full transition-transform duration-500 rounded-t-[3rem] shadow-2xl">
+        <div class="max-w-xl mx-auto space-y-8">
+            <div class="flex justify-between items-center">
+                <h3 class="text-white font-black uppercase tracking-widest text-[10px]">Tetapan Pembacaan</h3>
+                <button onclick="toggleSettings()" class="w-8 h-8 rounded-full bg-white/5 text-gray-400 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Jenis Tulisan</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="changeFontFace('Lora')" class="py-3 rounded-xl bg-white/5 border border-white/10 text-sm font-serif hover:border-purple-500 transition-all">Serif (Klasik)</button>
+                    <button onclick="changeFontFace('Plus Jakarta Sans')" class="py-3 rounded-xl bg-white/5 border border-white/10 text-sm font-sans hover:border-purple-500 transition-all">Sans (Moden)</button>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Saiz Tulisan</p>
+                <div class="flex items-center gap-6 bg-white/5 p-2 rounded-2xl">
+                    <button onclick="changeFontSize(-2)" class="flex-1 py-3 hover:bg-white/10 rounded-xl transition-all text-white"><i class="fa-solid fa-minus"></i></button>
+                    <span id="fontSizeDisplay" class="font-black text-purple-500 min-w-[50px] text-center">18px</span>
+                    <button onclick="changeFontSize(2)" class="flex-1 py-3 hover:bg-white/10 rounded-xl transition-all text-white"><i class="fa-solid fa-plus"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="reader.js"></script>
 </body>
