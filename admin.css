@@ -53,3 +53,34 @@ table tr:last-child { border-bottom: none; }
     border-color: rgba(168, 85, 247, 0.3);
     box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(168, 85, 247, 0.1);
 }
+/* Definisi Light Mode untuk Admin Panel */
+body.light-mode {
+    background-color: #f3f4f6; /* Abu-abu sangat cair */
+    color: #111827; /* Hitam pekat */
+}
+
+body.light-mode aside {
+    background-color: #ffffff;
+    border-right: 1px solid #e5e7eb;
+}
+
+body.light-mode section {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .admin-input {
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    color: #111827;
+}
+
+body.light-mode h1, body.light-mode h2 {
+    color: #111827;
+}
+
+body.light-mode .nav-container-floating {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
