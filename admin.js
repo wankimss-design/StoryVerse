@@ -4,6 +4,7 @@ let selectedGenres = [];
 document.addEventListener('DOMContentLoaded', () => {
     initGenreLogic();
     initThemeLogic();
+    initNovelDropdownLogic(); // Logik untuk buka/tutup dropdown novel
     fetchNovels(); // Memanggil data table & dropdown
     
     // Listener untuk Form Novel Baru
@@ -26,16 +27,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// 2. PAPAR DATA REAL-TIME (TABLE & DROPDOWN)
+// 2. PAPAR DATA REAL-TIME (TABLE & CUSTOM DROPDOWN)
 async function fetchNovels() {
     const tbody = document.getElementById('novelTableBody');
-    const selectNovel = document.getElementById('selectNovel'); 
+    const optionsList = document.getElementById('novelOptionsList'); // Custom List
+    const novelDisplay = document.getElementById('selectedNovelDisplay');
+    const hiddenInput = document.getElementById('selectNovel'); // Hidden Input
+
     if (!tbody) return;
 
     db.collection('novels').orderBy('createdAt', 'desc').onSnapshot((snapshot) => {
         tbody.innerHTML = ''; 
-        // Reset dropdown pilihan novel untuk bab
-        if (selectNovel) selectNovel.innerHTML = '<option value="" disabled selected>PILIH NOVEL UNTUK BAB...</option>';
+        if (optionsList) optionsList.innerHTML = ''; // Reset list custom
 
         if (snapshot.empty) {
             tbody.innerHTML = `<tr><td colspan="4" class="text-center py-10 text-gray-500">Tiada karya dijumpai.</td></tr>`;
@@ -45,7 +48,7 @@ async function fetchNovels() {
         snapshot.forEach((doc) => {
             const data = doc.data();
             
-            // Masukkan data ke Table
+            // --- MASUKKAN DATA KE TABLE ---
             const row = `
                 <tr class="bg-white/5 rounded-2xl overflow-hidden hover:bg-white/10 transition-all group">
                     <td class="px-6 py-4">
@@ -68,18 +71,47 @@ async function fetchNovels() {
                 </tr>`;
             tbody.innerHTML += row;
 
-            // Masukkan data ke Dropdown Bab
-            if (selectNovel) {
-                const option = document.createElement('option');
-                option.value = doc.id;
-                option.textContent = data.title.toUpperCase();
-                selectNovel.appendChild(option);
+            // --- MASUKKAN DATA KE CUSTOM DROPDOWN NOVEL ---
+            if (optionsList) {
+                const item = document.createElement('div');
+                item.className = "p-4 cursor-pointer border-b border-white/5 last:border-0 transition-all uppercase text-[11px] font-bold";
+                item.innerText = data.title;
+                item.onclick = () => {
+                    hiddenInput.value = doc.id; // Simpan ID ke hidden input
+                    novelDisplay.innerText = data.title.toUpperCase();
+                    novelDisplay.classList.remove('text-gray-400');
+                    novelDisplay.classList.add('text-white');
+                    document.getElementById('novelDropdown').classList.add('hidden');
+                    document.getElementById('novelChevron').classList.remove('rotate-180');
+                };
+                optionsList.appendChild(item);
             }
         });
     });
 }
 
-// 3. FUNGSI SIMPAN NOVEL BARU
+// 3. LOGIK UI UNTUK DROPDOWN NOVEL
+function initNovelDropdownLogic() {
+    const novelToggle = document.getElementById('novelToggle');
+    const novelDropdown = document.getElementById('novelDropdown');
+    const novelChevron = document.getElementById('novelChevron');
+
+    if (novelToggle) {
+        novelToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            novelDropdown.classList.toggle('hidden');
+            novelChevron.classList.toggle('rotate-180');
+        });
+    }
+
+    // Klik luar untuk tutup
+    window.addEventListener('click', () => {
+        novelDropdown?.classList.add('hidden');
+        novelChevron?.classList.remove('rotate-180');
+    });
+}
+
+// 4. FUNGSI SIMPAN NOVEL BARU (Kekal)
 async function saveNovel(e) {
     e.preventDefault();
     const btn = document.getElementById('mainSubmitBtn');
@@ -129,17 +161,17 @@ async function saveNovel(e) {
     }
 }
 
-// 4. FUNGSI SIMPAN BAB
+// 5. FUNGSI SIMPAN BAB (Guna Hidden Input ID)
 async function saveChapter(e) {
     e.preventDefault();
-    const novelId = document.getElementById('selectNovel').value;
+    const novelId = document.getElementById('selectNovel').value; // Mengambil ID dari hidden input
     const chapterNum = document.getElementById('chapterNum').value;
     const chapterTitle = document.getElementById('chapterTitle').value;
     const content = document.getElementById('chapterContent').value;
     const btn = e.target.querySelector('button');
 
     if (!novelId || !chapterNum || !chapterTitle || !content) {
-        alert("Sila lengkapkan semua maklumat bab!");
+        alert("Sila pilih novel dan lengkapkan maklumat bab!");
         return;
     }
 
@@ -147,6 +179,7 @@ async function saveChapter(e) {
         btn.disabled = true;
         btn.innerHTML = 'Menyimpan... <i class="fa-solid fa-spinner fa-spin"></i>';
 
+        // Simpan ke sub-collection 'chapters'
         await db.collection('novels').doc(novelId).collection('chapters').doc(chapterNum).set({
             chapterNumber: parseInt(chapterNum),
             title: chapterTitle,
@@ -156,6 +189,9 @@ async function saveChapter(e) {
 
         alert(`Bab ${chapterNum} berjaya disimpan!`);
         e.target.reset();
+        document.getElementById('selectedNovelDisplay').innerText = "Pilih Novel Untuk Bab...";
+        document.getElementById('selectedNovelDisplay').classList.add('text-gray-400');
+        document.getElementById('selectNovel').value = ""; // Reset hidden ID
 
     } catch (err) {
         console.error("Ralat bab:", err);
@@ -204,7 +240,8 @@ function initGenreLogic() {
 }
 
 function resetGenreUI() {
-    document.getElementById('selectedGenresDisplay').innerText = "PILIH GENRE...";
+    const display = document.getElementById('selectedGenresDisplay');
+    if(display) display.innerText = "PILIH GENRE...";
     document.querySelectorAll('.genre-item').forEach(item => {
         item.classList.remove('selected');
         const icon = item.querySelector('i');
@@ -213,7 +250,7 @@ function resetGenreUI() {
 }
 
 function initThemeLogic() {
-    const themeBtns = document.querySelectorAll('.themeToggle');
+    const themeBtns = document.querySelectorAll('.themeToggle, .theme-toggle-btn');
     const applyTheme = (isLight) => {
         if (isLight) {
             document.body.classList.add('light-mode');
@@ -234,7 +271,9 @@ function initThemeLogic() {
 }
 
 async function deleteNovel(id) {
-    if (confirm('Padam karya ini?')) await db.collection('novels').doc(id).delete();
+    if (confirm('Padam karya ini? Tindakan ini tidak boleh diundur.')) {
+        await db.collection('novels').doc(id).delete();
+    }
 }
 
 function convertToBase64(file) {
