@@ -173,69 +173,67 @@ body {
 
 .novel-card:hover .card-img { transform: scale(1.1); }
 
-/* --- 5. PRELOADER --- */
-/* --- 5. PRELOADER (VERSI CENTER TEPAT) --- */
+/* --- 5. PRELOADER (VERSI FIX CENTER) --- */
 #preloader {
     position: fixed;
-    top: 0; 
-    left: 0; 
-    width: 100vw; /* Guna vw untuk lebar penuh */
-    height: 100vh; /* Guna vh untuk tinggi penuh */
-    background: #050505; 
-    
-    /* Kuasa Flexbox untuk centering */
-    display: flex; 
-    flex-direction: column; /* Susun circle di atas, teks di bawah */
-    justify-content: center; 
-    align-items: center;
-    
+    inset: 0; /* Menutup keseluruhan skrin (top, left, bottom, right: 0) */
+    width: 100vw;
+    height: 100vh;
+    background: #050505;
+    display: flex;
+    justify-content: center; /* Center melintang */
+    align-items: center;     /* Center menegak */
     z-index: 99999;
     transition: transform 1.5s cubic-bezier(1, 0, 0, 1);
     pointer-events: none;
 }
 
-#preloader.lift-up { transform: translateY(-100%); }
+.loader-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px; /* Memberi ruang yang cukup untuk teks */
+}
 
-/* Circle sekarang akan duduk tepat di tengah sebelum unravel */
 .loader-circle {
-    width: 100px; 
+    width: 100px;
     height: 100px;
     border: 3px solid transparent;
     border-top: 3px solid var(--accent-purple);
     border-radius: 50%;
     animation: spin 0.8s linear infinite, unravel 0.6s ease-in forwards 1.5s;
-    margin-bottom: -40px; /* Tarik sedikit ke bawah supaya SVG nampak seimbang */
+    margin-bottom: 20px; /* Jarak antara bulatan dan teks */
 }
 
-.snake-svg { 
-    width: 100%; 
-    max-width: 500px; /* Hadkan saiz maksimum */
+.snake-svg {
+    width: 90%; /* Supaya tidak terkeluar skrin pada mobile */
+    max-width: 500px;
     height: auto;
-    overflow: visible; 
-    display: block;
+    overflow: visible;
 }
 
 .snake-text {
     font-family: 'Dancing Script', cursive;
-    font-size: 80px;
+    font-size: 80px; /* Saiz asal anda */
     fill: transparent;
     stroke: var(--accent-purple);
     stroke-width: 1.5;
     stroke-dasharray: 1200;
     stroke-dashoffset: 1200;
-    /* Pastikan anchor berada di tengah koordinat SVG */
+    /* Teknik rahsia untuk centering teks dalam SVG */
     text-anchor: middle;
-    dominant-baseline: middle;
+    dominant-baseline: central; 
     animation: drawCursive 3.5s ease-in-out forwards 1.8s;
 }
 
-/* Responsif untuk Mobile */
+/* Penyelarasan untuk Mobile */
 @media (max-width: 768px) {
-    .snake-svg { max-width: 300px; }
-    .snake-text { font-size: 50px; }
-    .loader-circle { width: 70px; height: 70px; }
+    .snake-text { font-size: 60px; }
+    .loader-circle { width: 80px; height: 80px; }
 }
-
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes unravel {
     0% { transform: rotate(360deg) scale(1); opacity: 1; }
