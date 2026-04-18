@@ -15,41 +15,55 @@ document.addEventListener('DOMContentLoaded', () => {
 function initGenreLogic() {
     const genreToggle = document.getElementById('genreToggle');
     const genreDropdown = document.getElementById('genreDropdown');
+    const genreChevron const db = firebase.firestore();
+let selectedGenres = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    initGenreLogic();
+    // Tambah fungsi lain jika perlu (Theme, Form Submit, dll)
+});
+
+function initGenreLogic() {
+    const genreToggle = document.getElementById('genreToggle');
+    const genreDropdown = document.getElementById('genreDropdown');
     const genreChevron = document.getElementById('genreChevron');
     const genreDisplay = document.getElementById('selectedGenresDisplay');
 
     if (!genreToggle || !genreDropdown) return;
 
+    // BUKA / TUTUP DROPDOWN
     genreToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
+        e.stopPropagation(); // PENTING: Supaya klik ini tidak dikesan oleh window.onclick
         genreDropdown.classList.toggle('active');
-        genreChevron?.classList.toggle('rotate');
+        if (genreChevron) genreChevron.classList.toggle('rotate-180');
     });
 
+    // PILIH GENRE
     document.querySelectorAll('.genre-item').forEach(item => {
         item.addEventListener('click', (e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // PENTING: Supaya menu tak tutup bila kita pilih item
             const val = item.getAttribute('data-value');
             const icon = item.querySelector('i');
 
             if (selectedGenres.includes(val)) {
                 selectedGenres = selectedGenres.filter(g => g !== val);
                 item.classList.remove('selected');
-                icon.style.opacity = "0";
+                if (icon) icon.style.opacity = "0";
             } else {
                 selectedGenres.push(val);
                 item.classList.add('selected');
-                icon.style.opacity = "1";
+                if (icon) icon.style.opacity = "1";
             }
 
+            // Kemaskini teks pada butang
             genreDisplay.innerText = selectedGenres.length > 0 ? selectedGenres.join(', ').toUpperCase() : "PILIH GENRE...";
-            genreDisplay.style.color = selectedGenres.length > 0 ? (document.body.classList.contains('light-mode') ? "#1b1b1b" : "white") : "#9ca3af";
         });
     });
 
+    // TUTUP BILA KLIK DI LUAR
     window.addEventListener('click', () => {
         genreDropdown.classList.remove('active');
-        genreChevron?.classList.remove('rotate');
+        if (genreChevron) genreChevron.classList.remove('rotate-180');
     });
 }
 
