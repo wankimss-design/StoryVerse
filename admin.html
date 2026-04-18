@@ -119,25 +119,50 @@
                 </section>
 
                 <section class="bg-[#121212] p-8 rounded-[2.5rem] border border-white/5 shadow-2xl">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="w-12 h-12 bg-blue-600/20 rounded-2xl flex items-center justify-center text-blue-500">
-                            <i class="fa-solid fa-pen-nib text-xl"></i>
-                        </div>
-                        <h2 class="text-xl font-bold text-white">Tambah & Edit Bab</h2>
-                    </div>
+    <div class="flex items-center gap-4 mb-8">
+        <div class="w-12 h-12 bg-blue-600/20 rounded-2xl flex items-center justify-center text-blue-500">
+            <i class="fa-solid fa-pen-nib text-xl"></i>
+        </div>
+        <h2 class="text-xl font-bold text-white">Tambah & Edit Bab</h2>
+    </div>
 
-                    <form id="updateChapterForm" class="space-y-6">
-                        <select id="selectNovel" class="admin-input"></select>
-                        <div class="grid grid-cols-2 gap-4">
-                            <input type="number" id="chapterNum" placeholder="No. Bab" class="admin-input">
-                            <input type="text" id="chapterTitle" placeholder="Tajuk Bab" class="admin-input">
-                        </div>
-                        <textarea id="chapterContent" rows="8" placeholder="Tuliskan cerita anda..." class="admin-input font-serif"></textarea>
-                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest py-5 rounded-2xl transition-all flex items-center justify-center gap-3">
-                            Simpan Bab <i class="fa-solid fa-floppy-disk text-xs"></i>
-                        </button>
-                    </form>
-                </section>
+    <form id="updateChapterForm" class="space-y-6">
+        <div class="relative" id="customNovelSelect">
+            <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Pilih Karya</label>
+            <div id="novelToggle" class="admin-input flex justify-between items-center cursor-pointer uppercase">
+                <span id="selectedNovelDisplay" class="text-xs font-bold text-gray-400">Pilih Novel Untuk Bab...</span>
+                <i class="fa-solid fa-chevron-down text-[10px] transition-transform" id="novelChevron"></i>
+            </div>
+            
+            <div id="novelDropdown" class="hidden absolute top-full left-0 right-0 z-[9999] bg-[#151515] border border-purple-500/30 rounded-2xl mt-2 shadow-2xl overflow-hidden">
+                <div id="novelOptionsList" class="max-h-60 overflow-y-auto">
+                    </div>
+            </div>
+        </div>
+        
+        <input type="hidden" id="selectNovel" value="">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">No. Bab</label>
+                <input type="number" id="chapterNum" placeholder="Contoh: 1" class="admin-input">
+            </div>
+            <div>
+                <label class="text-[10px] uppercase font-black tracking-widest text-gray-gray-500 ml-2 mb-2 block">Tajuk Bab</label>
+                <input type="text" id="chapterTitle" placeholder="Tajuk bab..." class="admin-input">
+            </div>
+        </div>
+
+        <div>
+            <label class="text-[10px] uppercase font-black tracking-widest text-gray-500 ml-2 mb-2 block">Isi Cerita</label>
+            <textarea id="chapterContent" rows="8" placeholder="Tuliskan bab anda di sini..." class="admin-input font-serif"></textarea>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-widest py-5 rounded-2xl transition-all flex items-center justify-center gap-3">
+            Simpan Bab <i class="fa-solid fa-floppy-disk text-xs"></i>
+        </button>
+    </form>
+</section>
                 <section class="mt-12 bg-[#121212] p-8 rounded-[2.5rem] border border-white/5 shadow-2xl col-span-1 lg:col-span-2">
     <div class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-4">
