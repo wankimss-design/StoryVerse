@@ -143,8 +143,172 @@ function goToChapter(num) {
     window.location.href = `reader.html?id=${novelId}&chapter=${num}`;
 }
 
-// JALANKAN SEMUA FUNGSI
+// JALANKAN SEMUA FUNGSI// 1. PENGURUSAN DATA & DATABASE
+if (typeof db === 'undefined') {
+    var db = firebase.firestore();
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const novelId = urlParams.get('id');
+
+async function fetchNovelDetail() {
+    if (!novelId) {
+        console.error("ID Novel tidak dijumpai dalam URL");
+        return;
+    }
+
+    const docRef = db.collection('novels').doc(novelId);
+
+    try {
+        docRef.onSnapshot((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                
+                // Papar Data Asas
+                document.getElementById('detailTitle').innerText = data.title || "Untitled";
+                
+                // Papar Genre (Array check)
+                const genreLabel = document.getElementById('detailGenre');
+                if (Array.isArray(data.genre)) {
+                    genreLabel.innerText = data.genre[0] || "Novel";
+                } else {
+                    genreLabel.innerText = data.genre || "Novel";
+                }
+
+                document.getElementById('detailStatus').innerText = data.status || "Ongoing";
+                document.getElementById('detailCover').src = data.coverImage || data.image || "";
+                
+                // Papar Sinopsis (Guna field description)
+                document.getElementById('detailSinopsis').innerText = data.description || "Tiada sinopsis tersedia.";
+                
+                document.title = `${data.title} | StoryVerse`;
+                
+                // Update Latar Belakang Glow
+                const glow = document.getElementById('bgGlow');
+                if (glow) {
+                    const cover = data.coverImage || data.image;
+                    glow.style.background = `radial-gradient(circle at center, rgba(168,85,247,0.4) 0%, rgba(10,10,10,1) 80%), url('${cover}')`;
+                    glow.style.backgroundSize = "cover";
+                }
+
+                // Papar Senarai Bab Ikut Database Sahaja
+                renderChapters(data.chapters || []);
+            } else {
+                console.error("Novel tidak wujud di database.");
+            }
+        });
+    } catch (error) {
+        console.error("Ralat mengambil detail:", error);
+    }
+}
+
+// 2. RENDER SENARAI BAB (IKUT DATABASE)
+function renderChapters(chapters) {
+    const list = document.getElementById('chapterList');
+    if (!list) return;
+    
+    list.innerHTML = '';
+    
+    if (chapters.length === 0) {
+        // Papar mesej jika tiada bab langsung di database
+        list.innerHTML = `
+            <div class="col-span-full py-10 text-center opacity-40">
+                <i class="fa-solid fa-scroll text-3xl mb-3"></i>
+                <p class="text-sm uppercase tracking-widest">Belum ada bab dimuat naik</p>
+            </div>
+        `;
+    } else {
+        // Papar bab yang wujud sahaja
+        chapters.forEach((chap, index) => {
+            list.innerHTML += `
+                <button onclick="goToChapter(${index + 1})" class="flex items-center justify-between p-6 rounded-2xl bg-white/5 border border-white/5 hover:bg-purple-500/10 hover:border-purple-500/30 transition-all group">
+                    <span class="font-bold text-gray-400 group-hover:text-purple-400">${chap.title || `BAB ${index + 1}`}</span>
+                    <i class="fa-solid fa-play text-[10px] opacity-0 group-hover:opacity-100 transition-all"></i>
+                </button>
+            `;
+        });
+    }
+}
+
+// 3. LOGIK NAVIGATION & LIKE
+function goToChapter(num) {
+    window.location.href = `reader.html?id=${novelId}&chapter=${num}`;
+}
+
+async function toggleBookmark() {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        alert("Sila log masuk untuk menyukai karya ini!");
+        return;
+    }
+
+    const userBookmarkRef = db.collection('users').doc(user.uid).collection('bookmarks').doc(novelId);
+    const novelRef = db.collection('novels').doc(novelId);
+
+    try {
+        const doc = await userBookmarkRef.get();
+        if (doc.exists) {
+            await userBookmarkRef.delete();
+            await novelRef.update({ likes: firebase.firestore.FieldValue.increment(-1) });
+        } else {
+            const title = document.getElementById('detailTitle').innerText;
+            const image = document.getElementById('detailCover').src;
+
+            await userBookmarkRef.set({
+                novelId: novelId,
+                title: title,
+                image: image,
+                savedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            await novelRef.update({ likes: firebase.firestore.FieldValue.increment(1) });
+        }
+    } catch (error) {
+        console.error("Ralat Toggle Like:", error);
+    }
+}
+
+function watchLikeStatus() {
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user && novelId) {
+            db.collection('users').doc(user.uid).collection('bookmarks').doc(novelId)
+                .onSnapshot((doc) => {
+                    const likeIcon = document.getElementById('likeIcon');
+                    if (doc.exists) {
+                        likeIcon.classList.replace('fa-regular', 'fa-solid');
+                        likeIcon.classList.add('text-pink-500');
+                        likeIcon.style.opacity = "1";
+                    } else {
+                        likeIcon.classList.replace('fa-solid', 'fa-regular');
+                        likeIcon.classList.remove('text-pink-500');
+                        likeIcon.style.opacity = "0.4";
+                    }
+                });
+        }
+    });
+}
+
+// INITIALIZE
 document.addEventListener('DOMContentLoaded', () => {
     fetchNovelDetail();
     watchLikeStatus();
 });
+document.addEventListener('DOMContentLoaded', () => {
+    fetchNovelDetail();
+    watchLikeStatus();
+});
+// Di dalam fetchNovelDetail (onSnapshot)
+const data = doc.data();
+
+// Papar Genre (Sebab genre anda adalah array dalam Firestore)
+if (Array.isArray(data.genre)) {
+    document.getElementById('detailGenre').innerText = data.genre[0]; // Ambil yang pertama
+} else {
+    document.getElementById('detailGenre').innerText = data.genre || "Novel";
+}
+
+// Papar Sinopsis (Guna description)
+document.getElementById('detailSinopsis').innerText = data.description || "Memuatkan...";
+
+// Papar Bab
+renderChapters(data.chapters || []);
