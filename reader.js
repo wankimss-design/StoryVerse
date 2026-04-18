@@ -42,9 +42,11 @@ async function loadNovelDetails() {
             currentNovelData = doc.data();
             document.getElementById('readerNovelTitle').innerText = currentNovelData.title;
             
-            // MUATKAN BAB: Gunakan 'chapterNumber' (kerana admin.js guna ini)
+            // GUNAKAN 'chapterNumber' bukannya 'order'
             const chaptersSnap = await db.collection('novels').doc(novelId)
-                                     .collection('chapters').orderBy('chapterNumber', 'asc').get();
+                                     .collection('chapters')
+                                     .orderBy('chapterNumber', 'asc') 
+                                     .get();
             
             chaptersList = [];
             chaptersSnap.forEach(snap => {
@@ -52,26 +54,17 @@ async function loadNovelDetails() {
             });
 
             if (chaptersList.length > 0) {
-                // Check jika URL ada spesifik bab
-                const requestedChapNum = parseInt(urlParams.get('chapter'));
-                
-                // Cari index berdasarkan chapterNumber
-                let targetIndex = chaptersList.findIndex(c => c.chapterNumber === requestedChapNum);
-                
-                // Jika tak jumpa, guna index 0 (Bab 1)
-                if (targetIndex === -1) targetIndex = 0;
-                
-                renderChapter(targetIndex);
+                // Ambil bab dari URL atau default ke bab pertama
+                const urlChapter = parseInt(urlParams.get('chapter')) || 1;
+                const targetIndex = chaptersList.findIndex(c => c.chapterNumber === urlChapter);
+                renderChapter(targetIndex !== -1 ? targetIndex : 0);
                 renderChapterDropdown();
-            } else {
-                document.getElementById('novelContent').innerText = "Maaf, belum ada bab yang dimuat naik untuk novel ini.";
             }
         }
     } catch (e) {
         console.error("Ralat muat novel:", e);
     }
 }
-
 /* --- 3. RENDERING & NAVIGATION --- */
 
 function renderChapter(index) {
