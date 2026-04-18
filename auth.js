@@ -3,7 +3,103 @@ function togglePassword(inputId, eyeId) {
     const passwordInput = document.getElementById(inputId);
     const eyeIcon = document.getElementById(eyeId);
 
-    if (!passwordInput || !eyeIcon) return;
+    if (!passwordInput || !eyeIcon) return;// --- 1. TUNJUK/SOROK PASSWORD ---
+function togglePassword(inputId, eyeId) {
+    const input = document.getElementById(inputId);
+    const eye = document.getElementById(eyeId);
+    if (input.type === "password") {
+        input.type = "text";
+        eye.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+        input.type = "password";
+        eye.classList.replace("fa-eye-slash", "fa-eye");
+    }
+}
+
+// --- 2. TUKAR LOGIN/REGISTER (WITH ANIMATION) ---
+function toggleAuth() {
+    const loginSec = document.getElementById('loginSection');
+    const regSec = document.getElementById('registerSection');
+
+    if (loginSec.style.display === 'none') {
+        loginSec.style.display = 'block';
+        regSec.style.display = 'none';
+    } else {
+        loginSec.style.display = 'none';
+        regSec.style.display = 'block';
+    }
+}
+
+// --- 3. LOGIK LOGIN + EMAIL CHECK ---
+document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const pass = document.getElementById('loginPassword').value;
+
+    try {
+        const userCredential = await firebase.auth().signInWithEmailAndPassword(email, pass);
+        const user = userCredential.user;
+
+        if (user.emailVerified) {
+            window.location.href = 'index.html';
+        } else {
+            alert("Sila sahkan e-mel anda sebelum log masuk. Semak inbox/spam.");
+            await firebase.auth().signOut();
+        }
+    } catch (error) {
+        alert("Ralat: " + error.message);
+    }
+});
+
+// --- 4. LOGIK DAFTAR + SEND VERIFICATION ---
+document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const nickname = document.getElementById('regNickname').value;
+    const email = document.getElementById('regEmail').value;
+    const pass = document.getElementById('regPassword').value;
+    const confirm = document.getElementById('regConfirmPassword').value;
+
+    if (pass !== confirm) return alert("Kata laluan tidak sepadan!");
+
+    try {
+        const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, pass);
+        const user = userCredential.user;
+
+        // Simpan Nickname & Hantar E-mel
+        await user.updateProfile({ displayName: nickname });
+        await user.sendEmailVerification();
+        
+        // Simpan ke Firestore (kerana anda sudah tambah library Firestore tadi)
+        await firebase.firestore().collection('users').doc(user.uid).set({
+            username: nickname,
+            email: email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        alert("Pendaftaran Berjaya! Sila semak e-mel anda untuk pautan pengesahan.");
+        toggleAuth();
+    } catch (error) {
+        alert("Gagal Daftar: " + error.message);
+    }
+});
+
+// --- 5. LOGIK FORGOT PASSWORD ---
+function handleForgotPassword() {
+    const email = document.getElementById('loginEmail').value;
+
+    if (!email) {
+        alert("Sila masukkan e-mel anda di ruangan 'Emel' terlebih dahulu.");
+        return;
+    }
+
+    firebase.auth().sendPasswordResetEmail(email)
+        .then(() => {
+            alert("Pautan set semula kata laluan telah dihantar ke e-mel: " + email);
+        })
+        .catch((error) => {
+            alert("Ralat: " + error.message);
+        });
+}
 
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
