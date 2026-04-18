@@ -22,7 +22,7 @@ function initGenreLogic() {
 
     genreToggle.addEventListener('click', (e) => {
         e.stopPropagation();
-        genreDropdown.classList.toggle('active');
+        genreDropdown.classList.toggle('hidden');
         genreChevron?.classList.toggle('rotate');
     });
 
