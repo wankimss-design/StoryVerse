@@ -1,18 +1,43 @@
-/* --- STORYVERSE PROFILE ENGINE ---
-   Fungsi: Mengurus data user, tab sejarah, simpanan, dan karya penulis.
-*/
+/* --- STORYVERSE PROFILE ENGINE --- */
 
 document.addEventListener('DOMContentLoaded', () => {
     initFirebase();
     initTabs();
+    initTheme(); // <--- Tambah ini untuk fungsi Light/Dark mode
 });
 
-// 1. INITIALIZATION & AUTH CHECK
+// 1. TEMA (LIGHT/DARK MODE)
+function initTheme() {
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle?.querySelector('i');
+    
+    const applyTheme = (theme) => {
+        if (theme === 'light') {
+            document.body.classList.add('light-mode');
+            if(themeIcon) themeIcon.className = 'fa-solid fa-sun text-xs';
+        } else {
+            document.body.classList.remove('light-mode');
+            if(themeIcon) themeIcon.className = 'fa-solid fa-moon text-xs';
+        }
+    };
+
+    // Muat tema dari storage
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    applyTheme(savedTheme);
+
+    themeToggle?.addEventListener('click', () => {
+        const isLight = document.body.classList.contains('light-mode');
+        const newTheme = isLight ? 'dark' : 'light';
+        localStorage.setItem('theme', newTheme);
+        applyTheme(newTheme);
+    });
+}
+
+// 2. INITIALIZATION & AUTH CHECK
 function initFirebase() {
     firebase.auth().onAuthStateChanged(async (user) => {
         if (user) {
             document.getElementById('userEmail').innerHTML = `<i class="fa-regular fa-envelope opacity-50"></i> ${user.email}`;
-            
             const db = firebase.firestore();
             try {
                 const doc = await db.collection('users').doc(user.uid).get();
@@ -20,16 +45,9 @@ function initFirebase() {
                     const data = doc.data();
                     document.getElementById('userName').innerText = data.name || user.displayName || "Pembaca StoryVerse";
                     document.getElementById('userBio').innerText = data.bio || "Tiada bio lagi.";
-                    
-                    if (data.photoURL) {
-                        document.getElementById('userAvatar').src = data.photoURL;
-                    }
+                    if (data.photoURL) document.getElementById('userAvatar').src = data.photoURL;
                 }
-            } catch (e) {
-                console.error("Ralat memuatkan profil:", e);
-            }
-            
-            // Muatkan tab sejarah secara automatik semasa login
+            } catch (e) { console.error(e); }
             loadHistory(); 
         } else {
             window.location.href = "auth.html";
@@ -37,26 +55,26 @@ function initFirebase() {
     });
 }
 
-// 2. TABS NAVIGATION LOGIC
+// 3. TABS NAVIGATION
 function initTabs() {
     const tabs = document.querySelectorAll('.tab-btn');
     const indicator = document.getElementById('tabIndicator');
 
-    if(indicator && tabs[0]) {
-        indicator.style.width = tabs[0].offsetWidth + "px";
-        indicator.style.left = tabs[0].offsetLeft + "px";
-    }
+    const updateIndicator = (btn) => {
+        if(indicator && btn) {
+            indicator.style.width = btn.offsetWidth + "px";
+            indicator.style.left = btn.offsetLeft + "px";
+        }
+    };
+
+    // Set indicator awal
+    setTimeout(() => updateIndicator(tabs[0]), 500);
 
     tabs.forEach(btn => {
         btn.onclick = () => {
             tabs.forEach(t => t.classList.remove('active'));
             btn.classList.add('active');
-            
-            if (indicator) {
-                indicator.style.width = btn.offsetWidth + "px";
-                indicator.style.left = btn.offsetLeft + "px";
-            }
-            
+            updateIndicator(btn);
             switchTabContent(btn.getAttribute('data-tab'));
         };
     });
@@ -65,12 +83,8 @@ function initTabs() {
 function switchTabContent(tab) {
     const grid = document.getElementById('readingList');
     const analytics = document.getElementById('analyticsSection');
-    const scrollWrapper = document.getElementById('scrollWrapper');
-
-    if(scrollWrapper) scrollWrapper.scrollTop = 0;
-    
     analytics.classList.add('hidden');
-    grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50 text-[10px] uppercase tracking-widest animate-pulse italic">Memuatkan data...</p>';
+    grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50 text-[10px] uppercase animate-pulse">Memuatkan...</p>';
 
     if (tab === 'reading') loadHistory();
     else if (tab === 'saved') loadBookmarks();
@@ -80,9 +94,7 @@ function switchTabContent(tab) {
     }
 }
 
-// 3. DATABASE LOADERS
-
-// --- FUNGSI SEJARAH & PENGIRAAN JUMLAH DIBACA ---
+// 4. DATABASE LOADERS (LOGIK GAMBAR DIPERBAIKI)
 async function loadHistory() {
     const grid = document.getElementById('readingList');
     const totalReadEl = document.getElementById('totalRead');
@@ -91,40 +103,31 @@ async function loadHistory() {
 
     try {
         const historyRef = db.collection('users').doc(user.uid).collection('history');
-        
-        // Kemaskini statistik "Novel Dibaca" di sidebar
         const totalSnapshot = await historyRef.get();
         if(totalReadEl) totalReadEl.innerText = totalSnapshot.size;
 
         const snapshot = await historyRef.orderBy('lastRead', 'desc').limit(6).get();
-
         if (snapshot.empty) {
-            grid.innerHTML = '<p class="col-span-full text-center py-20 opacity-30 text-[10px] uppercase tracking-[0.3em]">Tiada sejarah pembacaan</p>';
+            grid.innerHTML = '<p class="col-span-full text-center py-20 opacity-30 text-[10px] uppercase tracking-[0.3em]">Tiada sejarah</p>';
             return;
         }
 
         grid.innerHTML = '';
         snapshot.forEach(doc => {
             const n = doc.data();
-            const currentCover = n.coverImage || n.cover || 'https://via.placeholder.com/150';
+            // Cuba ambil coverImage, jika tiada ambil cover, jika tiada guna placeholder
+            const currentCover = n.coverImage || n.cover || 'https://via.placeholder.com/300x400?text=No+Cover';
             grid.innerHTML += `
                 <div class="group cursor-pointer" onclick="window.location.href='detail.html?id=${doc.id}'">
                     <div class="aspect-[3/4] rounded-2xl overflow-hidden mb-4 shadow-xl border border-white/5 group-hover:scale-105 transition-all duration-500">
                         <img src="${currentCover}" class="w-full h-full object-cover">
                     </div>
-                    <h4 class="text-xs font-bold truncate group-hover:text-purple-400 transition-colors">${n.title}</h4>
-                    <div class="mt-2 h-1 bg-white/5 rounded-full overflow-hidden">
-                        <div class="h-full bg-purple-500" style="width: ${n.progress || 0}%"></div>
-                    </div>
+                    <h4 class="text-xs font-bold truncate group-hover:text-purple-400 transition-colors uppercase italic">${n.title}</h4>
                 </div>`;
         });
-    } catch (e) { 
-        console.error(e);
-        grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50 text-xs">Ralat memuatkan sejarah.</p>'; 
-    }
+    } catch (e) { console.error(e); }
 }
 
-// --- FUNGSI SIMPANAN (BOOKMARKS) ---
 async function loadBookmarks() {
     const grid = document.getElementById('readingList');
     const user = firebase.auth().currentUser;
@@ -132,16 +135,15 @@ async function loadBookmarks() {
 
     try {
         const snapshot = await db.collection('users').doc(user.uid).collection('bookmarks').get();
-        
         if (snapshot.empty) {
-            grid.innerHTML = '<p class="col-span-full text-center py-20 opacity-30 text-[10px] uppercase tracking-[0.3em]">Tiada novel disimpan</p>';
+            grid.innerHTML = '<p class="col-span-full text-center py-20 opacity-30 text-[10px] uppercase tracking-[0.3em]">Tiada simpanan</p>';
             return;
         }
 
         grid.innerHTML = '';
         snapshot.forEach(doc => {
             const n = doc.data();
-            const currentCover = n.coverImage || n.cover || 'https://via.placeholder.com/150';
+            const currentCover = n.coverImage || n.cover || 'https://via.placeholder.com/300x400?text=No+Cover';
             grid.innerHTML += `
                 <div class="group cursor-pointer" onclick="window.location.href='detail.html?id=${doc.id}'">
                     <div class="aspect-[3/4] rounded-2xl overflow-hidden mb-4 shadow-xl border border-white/5 group-hover:scale-105 transition-all">
@@ -150,10 +152,7 @@ async function loadBookmarks() {
                     <h4 class="text-xs font-bold truncate italic uppercase tracking-tighter">${n.title}</h4>
                 </div>`;
         });
-    } catch (e) { 
-        console.error(e);
-        grid.innerHTML = '<p class="col-span-full text-center py-10 opacity-50 text-xs">Ralat memuatkan simpanan.</p>'; 
-    }
+    } catch (e) { console.error(e); }
 }
 
 async function loadMyNovels() {
@@ -164,20 +163,17 @@ async function loadMyNovels() {
 
     try {
         const snapshot = await db.collection('novels').where('authorId', '==', user.uid).get();
-        
         if (snapshot.empty) {
-            grid.innerHTML = '<p class="col-span-full text-center py-20 opacity-30 text-[10px] uppercase tracking-[0.3em]">Anda belum menerbitkan karya</p>';
-            tableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 opacity-50 text-[10px]">Tiada data trafik</td></tr>';
+            grid.innerHTML = '<p class="col-span-full text-center py-20 opacity-30 text-[10px] uppercase tracking-[0.3em]">Tiada karya</p>';
+            tableBody.innerHTML = '<tr><td colspan="3" class="text-center py-4 opacity-50 text-[10px]">Tiada data</td></tr>';
             return;
         }
 
         grid.innerHTML = '';
         tableBody.innerHTML = '';
-
         snapshot.forEach(doc => {
             const n = doc.data();
-            const currentCover = n.coverImage || n.cover || 'https://via.placeholder.com/150';
-            
+            const currentCover = n.coverImage || n.cover || 'https://via.placeholder.com/300x400?text=No+Cover';
             grid.innerHTML += `
                 <div class="group cursor-pointer" onclick="window.location.href='detail.html?id=${doc.id}'">
                     <div class="aspect-[3/4] rounded-2xl overflow-hidden mb-4 shadow-xl border border-white/5 group-hover:border-purple-500/50 transition-all">
@@ -197,67 +193,38 @@ async function loadMyNovels() {
                     </td>
                 </tr>`;
         });
-    } catch (e) { 
-        console.error("Ralat loadMyNovels:", e); 
-    }
+    } catch (e) { console.error(e); }
 }
 
-// 4. PROFILE EDITING SYSTEM
+// 5. PROFILE EDITING & UTILITY
 window.toggleEditModal = function() {
     const modal = document.getElementById('editModal');
     modal.classList.toggle('hidden');
-    if (!modal.classList.contains('hidden')) {
-        document.getElementById('editName').value = document.getElementById('userName').innerText;
-        document.getElementById('editBio').value = document.getElementById('userBio').innerText;
-    }
-};
-
-window.previewImage = function(input) {
-    const fileName = input.files[0]?.name || "Pilih fail gambar...";
-    document.getElementById('fileNameDisplay').innerText = fileName;
 };
 
 window.saveProfile = async function() {
     const user = firebase.auth().currentUser;
     const db = firebase.firestore();
-    const newName = document.getElementById('editName').value.trim();
-    const newBio = document.getElementById('editBio').value.trim();
+    const newName = document.getElementById('editName').value;
+    const newBio = document.getElementById('editBio').value;
     const photoFile = document.getElementById('editPhotoFile').files[0];
-
-    if (!newName) return alert("Nama tidak boleh kosong!");
 
     try {
         let photoURL = document.getElementById('userAvatar').src;
-
         if (photoFile) {
-            if (photoFile.size > 1048487) return alert("Gambar terlalu besar! Had 1MB.");
-            photoURL = await new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
+            const reader = new FileReader();
+            photoURL = await new Promise(r => {
+                reader.onload = () => r(reader.result);
                 reader.readAsDataURL(photoFile);
             });
         }
 
         await db.collection('users').doc(user.uid).set({
-            name: newName,
-            bio: newBio,
-            photoURL: photoURL
+            name: newName, bio: newBio, photoURL: photoURL
         }, { merge: true });
 
-        document.getElementById('userName').innerText = newName;
-        document.getElementById('userBio').innerText = newBio;
-        document.getElementById('userAvatar').src = photoURL;
-        
-        toggleEditModal();
-        alert("Profil berjaya dikemaskini!");
-    } catch (e) {
-        alert("Ralat menyimpan data.");
-    }
+        location.reload();
+    } catch (e) { alert("Gagal mengemaskini profil."); }
 };
 
-// 5. UTILITY
-window.logout = () => {
-    firebase.auth().signOut().then(() => {
-        window.location.href = "auth.html";
-    });
-};
+window.logout = () => firebase.auth().signOut().then(() => window.location.href = "auth.html");
