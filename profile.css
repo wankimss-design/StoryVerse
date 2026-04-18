@@ -343,3 +343,25 @@ body.light-mode a[href="admin.html"] i {
 body.light-mode a[href="admin.html"]:hover i {
     color: #7e22ce !important; /* Ungu lebih pekat bila hover */
 }
+/* --- FIX BUTANG LOG KELUAR (LIGHT MODE) --- */
+
+/* Gaya asal butang Log Keluar dalam Light Mode */
+body.light-mode button[onclick*="logout"] {
+    background-color: rgba(0, 0, 0, 0.03) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: #4b5563 !important; /* Warna teks kelabu gelap */
+    transition: all 0.3s ease !important;
+}
+
+/* Kesan HOVER: Tukar jadi merah */
+body.light-mode button[onclick*="logout"]:hover {
+    background-color: #fef2f2 !important; /* Latar belakang merah sangat pudar */
+    border-color: #fca5a5 !important; /* Border merah lembut */
+    color: #ef4444 !important; /* Teks jadi merah */
+}
+
+/* Pastikan IKON di dalam butang juga jadi merah bila hover */
+body.light-mode button[onclick*="logout"]:hover i {
+    color: #ef4444 !important;
+    transform: scale(1.1);
+}
