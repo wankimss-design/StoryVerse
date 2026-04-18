@@ -7,70 +7,85 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="detail.css">
+    <link rel="stylesheet" href="katalog.css">
 </head>
-<body class="bg-[#0a0a0a] text-white min-h-screen transition-colors duration-500">
+<body class="bg-[#0a0a0a] text-white min-h-screen">
 
-    <nav class="fixed top-0 left-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md border-b border-white/5 h-20 flex items-center">
-        <div class="max-w-7xl mx-auto px-6 w-full flex justify-between items-center">
-            <a href="katalog.html" class="flex items-center gap-3 group">
-                <i class="fa-solid fa-arrow-left text-gray-400 group-hover:text-purple-500 transition-colors"></i>
-                <span class="text-xl font-black italic tracking-tighter uppercase">Story<span class="text-purple-500">Verse</span></span>
-            </a>
-            <div class="flex items-center gap-4">
-                <button onclick="toggleTheme()" class="text-gray-400 hover:text-purple-400 p-2"><i class="fa-solid fa-circle-half-stroke text-lg"></i></button>
-            </div>
-        </div>
+    <nav class="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-md px-6 h-20 flex items-center justify-between border-b border-white/5">
+        <button onclick="history.back()" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-purple-500 transition-all">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <button class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:text-pink-500">
+            <i class="fa-solid fa-heart"></i>
+        </button>
     </nav>
 
-    <main class="max-w-6xl mx-auto px-6 pt-32 pb-20">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            
-            <div class="lg:col-span-4 sticky top-32">
-                <div class="cover-container relative group">
-                    <img id="novelCover" src="" alt="Cover" class="w-full rounded-[32px] shadow-2xl shadow-purple-500/10 object-cover aspect-[3/4]">
-                    <div class="absolute inset-0 rounded-[32px] border border-white/10 pointer-events-none"></div>
+    <main class="pt-32 max-w-5xl mx-auto px-6 pb-20">
+        <div class="flex flex-col md:flex-row gap-10 mb-16">
+            <div class="w-full md:w-72 shrink-0">
+                <div class="aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl shadow-purple-500/20 border border-white/10">
+                    <img id="detailCover" src="" class="w-full h-full object-cover">
                 </div>
             </div>
 
-            <div class="lg:col-span-8">
-                <div class="flex flex-wrap gap-2 mb-6">
-                    <span id="novelGenre" class="bg-purple-500/10 text-purple-400 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full border border-purple-500/20">Genre</span>
-                    <span id="novelStatus" class="bg-white/5 text-gray-400 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full border border-white/10">Status</span>
-                </div>
-
-                <h1 id="novelTitle" class="text-5xl md:text-7xl font-black italic tracking-tighter uppercase mb-6 leading-tight">Tajuk Novel</h1>
+            <div class="flex-1">
+                <span id="detailGenre" class="text-purple-500 font-black uppercase text-[10px] tracking-[0.3em] mb-4 block">Genre</span>
+                <h1 id="detailTitle" class="text-4xl md:text-6xl font-black tracking-tighter mb-6 italic uppercase">Tajuk Novel</h1>
                 
-                <div class="flex items-center gap-4 mb-10 pb-10 border-b border-white/5">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center font-bold text-xs" id="authorInitial">A</div>
-                    <div>
-                        <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Penulis</p>
-                        <p id="novelAuthor" class="text-sm font-bold">Nama Penulis</p>
-                    </div>
+                <div class="flex gap-8 mb-8 opacity-60 text-xs font-bold uppercase tracking-widest">
+                    <span><i class="fa-solid fa-eye mr-2 text-purple-500"></i> 1.2k Views</span>
+                    <span><i class="fa-solid fa-star mr-2 text-yellow-500"></i> 4.8 Rating</span>
+                    <span><i class="fa-solid fa-list mr-2 text-blue-500"></i> 10 Bab</span>
                 </div>
 
-                <div class="mb-12">
-                    <h2 class="text-xs font-black uppercase tracking-[0.3em] text-purple-500 mb-4">Sinopsis</h2>
-                    <p id="novelSinopsis" class="text-gray-400 leading-relaxed text-lg">
-                        Memuatkan sinopsis novel...
-                    </p>
-                </div>
+                <p id="detailSinopsis" class="text-gray-400 leading-relaxed mb-10 text-sm md:text-base">
+                    Memuatkan sinopsis...
+                </p>
 
-               <div class="flex gap-4">
-                    <button onclick="startReading()" class="btn-primary flex-1">Mula Membaca</button>
-                    
-                    <button id="saveBtn" onclick="toggleBookmark()" class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all">
-                        <i class="fa-regular fa-bookmark text-xl" id="saveIcon"></i>
-                    </button>
-                </div>
+                <button onclick="startReading()" class="bg-purple-600 hover:bg-purple-700 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all transform active:scale-95 shadow-lg shadow-purple-500/20">
+                    Mula Membaca
+                </button>
             </div>
+        </div>
 
+        <div class="border-t border-white/5 pt-10">
+            <h3 class="text-xl font-black uppercase italic tracking-tighter mb-8">Senarai <span class="text-purple-500">Bab</span></h3>
+            <div id="chapterList" class="grid gap-3">
+                </div>
         </div>
     </main>
 
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="firebase-config.js"></script>
-    <script src="detail.js"></script>
+    <script>
+        // Logik untuk ambil data dari URL
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const title = params.get('title') || "Novel Tanpa Tajuk";
+            
+            // Simulasi data (Nanti boleh ambil dari Firebase)
+            document.getElementById('detailTitle').innerText = title;
+            document.getElementById('detailCover').src = "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400"; // Contoh cover
+            document.getElementById('detailGenre').innerText = "Romantik / Fantasi";
+            document.getElementById('detailSinopsis').innerText = "Ini adalah sinopsis epik bagi novel " + title + ". Kisah tentang pengembaraan seorang penulis yang terperangkap dalam dunianya sendiri dan perlu mencari jalan keluar melalui bab-bab yang ditulisnya.";
+
+            // Jana Senarai Bab
+            const list = document.getElementById('chapterList');
+            for(let i=1; i<=10; i++) {
+                list.innerHTML += `
+                    <div class="group flex items-center justify-between p-5 bg-white/5 border border-white/5 rounded-2xl hover:border-purple-500/50 transition-all cursor-pointer">
+                        <div class="flex items-center gap-4">
+                            <span class="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center text-[10px] font-black text-purple-500">${i}</span>
+                            <span class="text-sm font-bold opacity-80 group-hover:opacity-100 group-hover:text-purple-400">Bab ${i}: Tajuk Bab Menarik Disini</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[10px] opacity-20"></i>
+                    </div>
+                `;
+            }
+        });
+
+        function startReading() {
+            const title = document.getElementById('detailTitle').innerText;
+            window.location.href = `reader.html?title=${encodeURIComponent(title)}`;
+        }
+    </script>
 </body>
 </html>
