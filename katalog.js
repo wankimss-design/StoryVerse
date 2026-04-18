@@ -78,22 +78,22 @@ function renderGrid(data) {
         return;
     }
 
-    grid.innerHTML = data.map(n => `
-        <div class="novel-card group cursor-pointer" onclick="location.href='reader.html?title=${encodeURIComponent(n.title)}'">
-            <div class="card-image-container">
-                <img src="${n.cover}" alt="${n.title}">
-                <div class="read-overlay">
-                    <div class="read-btn-ui">Mula Membaca</div>
-                </div>
-            </div>
-            <h3 class="font-bold mt-5 text-sm tracking-tight truncate px-1 group-hover:text-purple-500 transition-colors">${n.title}</h3>
-            <div class="flex items-center gap-2 mt-1.5 px-1">
-                <span class="text-[9px] font-black text-purple-500 uppercase tracking-tighter">${n.genre}</span>
-                <span class="text-[9px] text-gray-700">•</span>
-                <span class="text-[9px] font-bold text-gray-500 uppercase tracking-tighter">${n.status}</span>
+   grid.innerHTML = data.map(n => `
+    <div class="novel-card group cursor-pointer" onclick="location.href='detail.html?title=${encodeURIComponent(n.title)}&genre=${encodeURIComponent(n.genre)}&status=${encodeURIComponent(n.status)}&cover=${encodeURIComponent(n.cover)}'">
+        <div class="card-image-container">
+            <img src="${n.cover}" alt="${n.title}">
+            <div class="read-overlay">
+                <div class="read-btn-ui">Lihat Detail</div>
             </div>
         </div>
-    `).join('');
+        <h3 class="font-bold mt-5 text-sm tracking-tight truncate px-1 group-hover:text-purple-500 transition-colors">${n.title}</h3>
+        <div class="flex items-center gap-2 mt-1.5 px-1">
+            <span class="text-[9px] font-black text-purple-500 uppercase tracking-tighter">${n.genre}</span>
+            <span class="text-[9px] text-gray-700">•</span>
+            <span class="text-[9px] font-bold text-gray-500 uppercase tracking-tighter">${n.status}</span>
+        </div>
+    </div>
+`).join('');
 }
 
 // --- 4. THEME & UTILITY ---
