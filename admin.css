@@ -1,10 +1,10 @@
-/* --- 1. ASAS --- */
+/* --- 1. ASAS & TEMA --- */
 body { 
     font-family: 'Plus Jakarta Sans', sans-serif; 
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- 2. INPUTS (FIX KOTAK PUTIH) --- */
+/* --- 2. INPUTS (Kekal Konsisten) --- */
 .admin-input {
     width: 100%;
     background: rgba(255, 255, 255, 0.05) !important;
@@ -22,8 +22,9 @@ body {
     background: rgba(168, 85, 247, 0.05) !important;
 }
 
-/* --- 3. GENRE DROPDOWN (FLOATING) --- */
-#genreDropdown {
+/* --- 3. DROPDOWNS (Genre & Novel) --- */
+/* Kita satukan gaya untuk kedua-dua dropdown */
+#genreDropdown, #novelDropdown {
     position: absolute;
     top: 100%;
     left: 0;
@@ -37,48 +38,64 @@ body {
     overflow: hidden;
 }
 
-.rotate {
-    transform: rotate(180deg);
-}
-
-.genre-item {
-    padding: 12px 20px;
+.genre-item, #novelOptionsList div {
+    padding: 14px 20px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.genre-item:hover {
+.genre-item:hover, #novelOptionsList div:hover {
     background: rgba(168, 85, 247, 0.1);
+    color: #a855f7;
+    padding-left: 25px; /* Efek anjakan */
 }
 
-.genre-item.selected {
-    background: rgba(168, 85, 247, 0.2) !important;
-    color: white !important;
+.genre-item:last-child, #novelOptionsList div:last-child {
+    border-bottom: none;
 }
 
-.genre-item.selected i {
-    opacity: 1 !important;
+.rotate-180 { transform: rotate(180deg); }
+
+/* --- 4. FLOATING NAV (Desktop Fix) --- */
+.fixed.top-5.right-5 {
+    display: flex !important; 
+    z-index: 10000 !important;
+    background: rgba(15, 15, 15, 0.8) !important;
+    backdrop-filter: blur(12px);
+    padding: 10px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    gap: 12px;
 }
 
-/* --- 4. FLOATING NAV --- */
 .nav-btn-icon {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 12px;
-    color: #9ca3af !important;
-    transition: all 0.3s ease !important;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
     cursor: pointer;
+}
+
+/* Warna ikon diatur di sini */
+.nav-btn-icon i {
+    color: #a855f7 !important; /* Kekalkan ungu StoryVerse */
+    font-size: 1.1rem;
 }
 
 .nav-btn-icon:hover {
     background: rgba(168, 85, 247, 0.2) !important;
-    color: #a855f7 !important;
     transform: translateY(-3px);
 }
 
@@ -92,60 +109,24 @@ body.light-mode main {
     border-color: #e5e7eb !important;
 }
 
-body.light-mode .admin-input {
-    background-color: #f9fafb !important;
+body.light-mode .admin-input,
+body.light-mode #genreDropdown,
+body.light-mode #novelDropdown {
+    background-color: #ffffff !important;
     border: 1px solid #d1d5db !important;
     color: #1b1b1b !important;
 }
 
-body.light-mode #genreDropdown {
-    background-color: #ffffff !important;
-    border: 1px solid #e5e7eb !important;
-}
-
-body.light-mode h1, body.light-mode h2, body.light-mode span:not(.text-purple-500) {
-    color: #1b1b1b !important;
-}
-
-body.light-mode .nav-container-floating {
+body.light-mode .fixed.top-5.right-5 {
     background: rgba(255, 255, 255, 0.9) !important;
     border: 1px solid #e5e7eb !important;
 }
 
-/* Pastikan ikon putih dan jelas */
-.nav-btn-icon i {
-    color: white !important;
-    font-size: 1.2rem;
+body.light-mode .nav-btn-icon {
+    background: rgba(0, 0, 0, 0.05);
 }
 
-/* Kesan bila hover */
-.nav-btn-icon:hover i {
-    color: #a855f7 !important; /* Warna ungu StoryVerse */
-}
-
-/* Memastikan Nav Bar Desktop sentiasa di atas */
-.fixed.top-5.right-5 {
-    z-index: 10000 !important;
-}
-/* Sembunyikan dropdown secara default */
-#genreDropdown.hidden {
-    display: none;
-}
-
-/* Fix Ikon untuk Light Mode */
-body.light-mode .nav-btn-icon i {
-    color: #1b1b1b !important;
-}
-
-body.light-mode .nav-btn-icon:hover i {
-    color: #a855f7 !important;
-}
-
-/* Pastikan Table Header nampak profesional */
-thead th {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-body.light-mode thead th {
+body.light-mode .genre-item, 
+body.light-mode #novelOptionsList div {
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
