@@ -54,6 +54,62 @@ function initGenreLogic() {
     });
 }
 
+let selectedGenres = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    initGenreLogic();
+    initThemeLogic();
+    
+    const novelForm = document.getElementById('newNovelForm');
+    if (novelForm) {
+        novelForm.addEventListener('submit', saveNovel);
+    }
+});
+
+function initGenreLogic() {
+    const genreToggle = document.getElementById('genreToggle');
+    const genreDropdown = document.getElementById('genreDropdown');
+    const genreChevron = document.getElementById('genreChevron');
+    const genreDisplay = document.getElementById('selectedGenresDisplay');
+
+    if (!genreToggle || !genreDropdown) return;
+
+    genreToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        genreDropdown.classList.toggle('hidden');
+        genreChevron?.classList.toggle('rotate');
+    });
+
+    document.querySelectorAll('.genre-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const val = item.getAttribute('data-value');
+            const icon = item.querySelector('i');
+
+            if (selectedGenres.includes(val)) {
+                selectedGenres = selectedGenres.filter(g => g !== val);
+                item.classList.remove('selected');
+                icon.style.opacity = "0";
+            } else {
+                selectedGenres.push(val);
+                item.classList.add('selected');
+                icon.style.opacity = "1";
+            }
+
+            genreDisplay.innerText = selectedGenres.length > 0 
+                ? selectedGenres.join(', ').toUpperCase() 
+                : "PILIH GENRE...";
+        });
+    });
+
+    window.addEventListener('click', (e) => {
+        if (!genreToggle.contains(e.target) && !genreDropdown.contains(e.target)) {
+            genreDropdown.classList.add('hidden');
+            genreChevron?.classList.remove('rotate');
+        }
+    });
+}
+
 // LOGIK TEMA
 function initThemeLogic() {
     const themeToggle = document.getElementById('themeToggle');
