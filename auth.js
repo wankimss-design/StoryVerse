@@ -35,76 +35,91 @@ function toggleAuth() {
     }
 }
 
-// --- 3. LOGIK LOGIN (Dengan Semakan Verifikasi) ---
-document.getElementById('loginForm')?.addEventListener('submit', (e) => {
+// --- 3. LOGIK LOGIN (Dengan Semakan E-mel Pengesahan) ---
+document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('loginEmail').value;
     const pass = document.getElementById('loginPassword').value;
+    const btn = e.target.querySelector('button[type="submit"]');
 
-    firebase.auth().signInWithEmailAndPassword(email, pass)
-        .then((userCredential) => {
-            const user = userCredential.user;
+    try {
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Memproses...`;
 
-            // Semak jika email sudah disahkan
-            if (user.emailVerified) {
-                window.location.href = 'index.html';
-            } else {
-                alert("Akaun anda belum disahkan. Sila semak e-mel anda dan klik pautan pengesahan.");
-                firebase.auth().signOut(); // Log keluar semula jika belum verified
-            }
-        })
-        .catch(error => {
-            alert("Ralat Log Masuk: " + error.message);
-        });
+        const userCredential = await firebase.auth().signInWithEmailAndPassword(email, pass);
+        const user = userCredential.user;
+
+        // Semak jika email sudah disahkan
+        if (user.emailVerified) {
+            window.location.href = 'index.html';
+        } else {
+            alert("⚠️ Akaun belum disahkan! Sila semak peti masuk e-mel anda dan klik pautan pengesahan.");
+            await firebase.auth().signOut();
+            btn.disabled = false;
+            btn.innerHTML = "Masuk Sekarang";
+        }
+    } catch (error) {
+        alert("Ralat Log Masuk: " + error.message);
+        btn.disabled = false;
+        btn.innerHTML = "Masuk Sekarang";
+    }
 });
 
-// --- 4. LOGIK DAFTAR (Dengan Email Verification) ---
-document.getElementById('registerForm')?.addEventListener('submit', (e) => {
+// --- 4. LOGIK DAFTAR (Dengan Hantaran E-mel Pengesahan) ---
+document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const nickname = document.getElementById('regNickname').value;
     const email = document.getElementById('regEmail').value;
     const pass = document.getElementById('regPassword').value;
     const confirmPass = document.getElementById('regConfirmPassword').value;
+    const btn = e.target.querySelector('button[type="submit"]');
 
     if (pass !== confirmPass) {
         alert("Ralat: Kata laluan tidak sepadan!");
         return;
     }
 
-    firebase.auth().createUserWithEmailAndPassword(email, pass)
-        .then((userCredential) => {
-            const user = userCredential.user;
+    try {
+        btn.disabled = true;
+        btn.innerText = "Mencipta Akaun...";
 
-            // 1. Kemaskini Profile (Nickname)
-            user.updateProfile({ displayName: nickname });
+        const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, pass);
+        const user = userCredential.user;
 
-            // 2. Hantar E-mel Pengesahan (Verification)
-            return user.sendEmailVerification();
-        })
-        .then(() => {
-            alert("Pendaftaran berjaya! E-mel pengesahan telah dihantar ke " + email + ". Sila sahkan e-mel anda sebelum log masuk.");
-            toggleAuth(); // Tukar ke skrin login
-        })
-        .catch(error => {
-            alert("Gagal Daftar: " + error.message);
-        });
+        // 1. Simpan Nickname
+        await user.updateProfile({ displayName: nickname });
+
+        // 2. Hantar E-mel Pengesahan
+        await user.sendEmailVerification();
+
+        alert("✅ Pendaftaran Berjaya! Satu e-mel pengesahan telah dihantar ke " + email + ". Sila sahkan e-mel anda sebelum log masuk.");
+        
+        // Reset form dan tukar ke Login
+        e.target.reset();
+        toggleAuth();
+        
+    } catch (error) {
+        alert("Gagal Daftar: " + error.message);
+        btn.disabled = false;
+        btn.innerText = "CIPTA AKAUN";
+    }
 });
 
 // --- 5. LOGIK LUPA KATA LALUAN (FORGOT PASSWORD) ---
-function handleForgotPassword() {
+window.handleForgotPassword = function() {
     const email = document.getElementById('loginEmail').value;
 
     if (!email) {
-        alert("Sila masukkan e-mel anda di ruangan 'Emel' untuk set semula kata laluan.");
+        alert("Sila masukkan e-mel anda di ruangan 'Emel' untuk kami hantar pautan set semula kata laluan.");
         return;
     }
 
     firebase.auth().sendPasswordResetEmail(email)
         .then(() => {
-            alert("Pautan set semula kata laluan telah dihantar ke e-mel anda.");
+            alert("📧 Pautan set semula kata laluan telah dihantar! Sila semak folder Inbox atau Spam e-mel anda.");
         })
         .catch((error) => {
             alert("Ralat: " + error.message);
         });
-}
+};
