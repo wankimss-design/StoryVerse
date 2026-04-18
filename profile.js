@@ -212,17 +212,31 @@ window.toggleEditModal = function() {
     }
 }
 
-// 6. TEMA & LOGOUT
 function initTheme() {
     const themeBtn = document.getElementById('themeToggle');
-    if (themeBtn) {
-        themeBtn.onclick = () => {
-            document.body.classList.toggle('light-mode');
-            const icon = themeBtn.querySelector('i');
-            icon.classList.toggle('fa-moon');
-            icon.classList.toggle('fa-sun');
-        };
+    if (!themeBtn) return;
+
+    const icon = themeBtn.querySelector('i');
+
+    // 1. SEMAK SEMASA LOAD: Ambil tema yang disimpan sebelum ini
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        icon.classList.replace('fa-moon', 'fa-sun');
     }
+
+    // 2. LOGIK KLIK: Tukar tema bila butang ditekan
+    themeBtn.onclick = () => {
+        document.body.classList.toggle('light-mode');
+        
+        if (document.body.classList.contains('light-mode')) {
+            icon.classList.replace('fa-moon', 'fa-sun');
+            localStorage.setItem('theme', 'light');
+        } else {
+            icon.classList.replace('fa-sun', 'fa-moon');
+            localStorage.setItem('theme', 'dark');
+        }
+    };
 }
 
 window.logout = () => firebase.auth().signOut().then(() => window.location.href = "index.html");
